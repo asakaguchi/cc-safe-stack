@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Python | Sync backend deps
+        working-directory: backend
+        run: uv sync --frozen
+
+      - name: Python | Ruff format check
+        working-directory: backend
+        run: uv run ruff format . --check --diff
+
+      - name: Python | Ruff lint
+        working-directory: backend
+        run: uv run ruff check --output-format=github .
+
+      - name: Python | mypy
+        working-directory: backend
+        run: uv run mypy .
+
+      - name: Python | pytest
+        working-directory: backend
+        run: uv run pytest -q
+
+      - name: Node | Install workspace deps
+        run: bun install
+
+      - name: Frontend | Type check
+        working-directory: frontend
+        run: bun run type-check
+
+      - name: Frontend | ESLint
+        working-directory: frontend
+        run: bun run lint
+
+      - name: Frontend | Unit tests
+        working-directory: frontend
+        run: bun run test --run
+
+      - name: Docs | textlint
+        run: bun run lint:text
