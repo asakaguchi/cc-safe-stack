@@ -1,0 +1,137 @@
+{
+  "name": "Secure Python & TypeScript Development Environment",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+  "containerEnv": {
+    "DISPLAY": "${localEnv:DISPLAY}",
+    "PYTHONUNBUFFERED": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "UV_CACHE_DIR": "${containerWorkspaceFolder}/.cache/uv",
+    "UV_LINK_MODE": "copy",
+    "UV_PROJECT_ENVIRONMENT": "/home/vscode/.venv",
+    "UV_COMPILE_BYTECODE": "1",
+    "NODE_ENV": "development",
+    "NODE_OPTIONS": "--max-old-space-size=4096",
+    "CLAUDE_CONFIG_DIR": "/home/vscode/.claude",
+    "POWERLEVEL9K_DISABLE_GITSTATUS": "true",
+    // Comma or space-separated additional domains to allow (IPv4 A records or CIDR)
+    // Example: "pypi.org,files.pythonhosted.org"
+    "ADDITIONAL_ALLOWED_DOMAINS": ""
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "configureZshAsDefaultShell": true
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/git:1": {
+      "version": "latest"
+    },
+    "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
+      "packages": "curl,wget,jq,ca-certificates,build-essential,ripgrep,iptables,ipset,aggregate,dnsutils"
+    },
+    "ghcr.io/va-h/devcontainers-features/uv:1": {
+      "shellAutocompletion": true
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    },
+    "ghcr.io/shyim/devcontainers-features/bun:0": {},
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {}
+  },
+  "runArgs": ["--init", "--rm", "--cap-add=NET_ADMIN", "--cap-add=NET_RAW"],
+  "hostRequirements": {
+    "gpu": "optional"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        // Python development
+        "ms-python.python",
+        "charliermarsh.ruff",
+        "ms-toolsai.jupyter",
+
+        // TypeScript/JavaScript development
+        "ms-vscode.vscode-typescript-next",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "biomejs.biome",
+        "bradlc.vscode-tailwindcss",
+
+        // General development
+        "eamodio.gitlens",
+        "tamasfe.even-better-toml",
+        "yzhang.markdown-all-in-one",
+        "ms-vscode.vscode-json",
+
+        // Text and documentation
+        "textlint.textlint",
+
+        // Additional utilities
+        "usernamehw.errorlens",
+        "gruntfuggly.todo-tree"
+      ],
+      "settings": {
+        // Python settings
+        "python.defaultInterpreterPath": "/home/vscode/.venv/bin/python",
+
+        // TypeScript/JavaScript settings
+        "typescript.preferences.importModuleSpecifier": "relative",
+        "typescript.suggest.autoImports": true,
+        "javascript.suggest.autoImports": true,
+
+        // Editor settings
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit",
+          "source.organizeImports": "explicit"
+        },
+
+        // File associations
+        "files.associations": {
+          "*.json": "jsonc"
+        },
+
+        // Terminal settings
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "bash",
+            "icon": "terminal-bash"
+          },
+          "zsh": {
+            "path": "zsh"
+          }
+        },
+
+        // Multi-language support
+        "[python]": {
+          "editor.defaultFormatter": "charliermarsh.ruff",
+          "editor.formatOnSave": true
+        },
+        "[typescript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[javascript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[json]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[markdown]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        }
+      }
+    }
+  },
+  "mounts": [
+    "source=claude-code-bashhistory-${devcontainerId},target=/commandhistory,type=volume",
+    "source=claude-code-config-${devcontainerId},target=/home/vscode/.claude,type=volume",
+    "source=python-cache-secure-${devcontainerId},target=/home/vscode/.cache,type=volume"
+  ],
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=delegated",
+  "workspaceFolder": "/workspace",
+  "onCreateCommand": "sudo mkdir -p /home/vscode/.cache && sudo chown -R vscode:vscode /home/vscode/.cache",
+  "postCreateCommand": ".devcontainer/scripts/postCreateCommand.sh",
+  "postStartCommand": "sudo bash .devcontainer/secure/init-firewall.sh",
+  "waitFor": "postStartCommand"
+}
