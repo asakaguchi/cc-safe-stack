@@ -19,9 +19,9 @@ jobs:
       - name: Set up Bun
         uses: oven-sh/setup-bun@v1
 
-      - name: Python | Sync backend deps
+      - name: Python | Sync backend deps (incl. dev)
         working-directory: backend
-        run: uv sync --frozen
+        run: uv sync --frozen --group dev
 
       - name: Python | Ruff format check
         working-directory: backend
@@ -36,6 +36,7 @@ jobs:
         run: uv run mypy .
 
       - name: Python | pytest
+        if: ${{ hashFiles('backend/**/test*.py', 'backend/**/tests/**/*.py') != '' }}
         working-directory: backend
         run: uv run pytest -q
 
