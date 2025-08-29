@@ -20,7 +20,7 @@ app = FastAPI(
 )
 
 # Configure CORS from environment (JSON list or comma-separated)
-_cors_env = os.getenv("CORS_ORIGINS", "[\"http://localhost:3000\"]")
+_cors_env = os.getenv("CORS_ORIGINS", '["http://localhost:3000"]')
 try:
     allow_origins: List[str] = json.loads(_cors_env)
     if not isinstance(allow_origins, list):
