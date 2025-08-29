@@ -54,3 +54,7 @@ warn_unused_configs = true
 [[tool.mypy.overrides]]
 module = ["uvicorn.*"]
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["dotenv", "dotenv.*"]
+ignore_missing_imports = true
