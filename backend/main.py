@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import os
-from typing import List
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
@@ -22,7 +21,7 @@ app = FastAPI(
 # Configure CORS from environment (JSON list or comma-separated)
 _cors_env = os.getenv("CORS_ORIGINS", '["http://localhost:3000"]')
 try:
-    allow_origins: List[str] = json.loads(_cors_env)
+    allow_origins: list[str] = json.loads(_cors_env)
     if not isinstance(allow_origins, list):
         raise ValueError
 except Exception:
