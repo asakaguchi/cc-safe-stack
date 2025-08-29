@@ -1,0 +1,12 @@
+{
+  // Local overrides for Dev Container (not committed)
+  // Rename to: .devcontainer/devcontainer.local.json
+  "containerEnv": {
+    // Disable secure firewall (default is true)
+    // "SECURE_MODE": "false",
+
+    // Additional allowlist (comma/space-separated or CIDR)
+    // Example for PyPI access (keeps secure mode enabled):
+    "ADDITIONAL_ALLOWED_DOMAINS": "pypi.org, files.pythonhosted.org"
+  }
+}
