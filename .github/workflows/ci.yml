@@ -35,10 +35,30 @@ jobs:
         working-directory: backend
         run: uv run mypy .
 
-      - name: Python | pytest
-        if: ${{ hashFiles('backend/**/test*.py', 'backend/**/tests/**/*.py') != '' }}
+      - name: Python | pytest (backend)
         working-directory: backend
-        run: uv run pytest -q
+        run: |
+          set +e
+          uv run pytest -q
+          ec=$?
+          if [ "$ec" -eq 5 ]; then
+            echo "No backend tests found. Skipping."
+            exit 0
+          fi
+          exit "$ec"
+
+      - name: Python | pytest (root)
+        run: |
+          set -e
+          uv sync --frozen --group dev
+          set +e
+          uv run pytest -q
+          ec=$?
+          if [ "$ec" -eq 5 ]; then
+            echo "No root-level tests found. Skipping."
+            exit 0
+          fi
+          exit "$ec"
 
       - name: Node | Install workspace deps
         run: bun install
