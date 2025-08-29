@@ -309,3 +309,6 @@ test.tsx
 # Project scripts directory (override virtualenv pattern)
 !scripts/
 !scripts/**
+
+# Backup of npm lockfile
+package-lock.json.backup
