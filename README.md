@@ -29,7 +29,7 @@ docker compose up
 - VS Code DevContainer（推奨／デフォルトでセキュア）
 - Docker 単体（エディタ不問: Vim/Emacs/IntelliJ 等）
 
-### 1) VS Code DevContainer（推奨）
+### 1. VS Code DevContainer（推奨）
 
 - 必要条件: VS Code + Dev Containers 拡張機能 + Docker
 - 使い方:
@@ -101,7 +101,7 @@ devcontainer exec --workspace-folder . bun run dev
 devcontainer down --workspace-folder . --remove-volumes
 ```
 
-### 2) Docker（エディタ不問）
+### 2. Docker（エディタ不問）
 
 - 必要条件: Docker（お好みのエディタで編集）
 - 使い方:
@@ -128,7 +128,7 @@ docker compose up  # app と frontend の両方を起動
   `docker compose up` で拡張してください。
 - `SECURE_MODE` は DevContainer のみの設定で、Docker Compose には影響しません。
 
-### 技術スタック
+### 3. 技術スタック
 
 #### バックエンド（Python）
 
