@@ -559,6 +559,15 @@ export interface MessageResponse {
 4. ブランチをプッシュ: `git push origin feature/new-feature`
 5. プルリクエストを作成
 
+## 🙏 参考・クレジット
+
+本 README は、以下の記事およびリポジトリをもとに作成しています。
+
+- 記事: https://zenn.dev/mjun0812/articles/0ae2325d40ed20
+- 記事: https://docs.anthropic.com/en/docs/claude-code/devcontainer
+- リポジトリ: https://github.com/mjun0812/python-project-template
+- リポジトリ: https://github.com/anthropics/claude-code/tree/main/.devcontainer
+
 ## 📄 ライセンス
 
 MIT License - 詳細は[LICENSE](LICENSE)ファイルを参照。
