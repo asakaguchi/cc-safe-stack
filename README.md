@@ -35,12 +35,15 @@ docker compose up
 - 使い方:
   1. リポジトリを VS Code で開く
   2. コマンドパレットで「Reopen in Container」を実行（次のどちらかを選択）
-     - "Python & TypeScript Development Environment"（ルート定義・推奨。既定で `SECURE_MODE=true`）
-     - "Secure Python & TypeScript Development Environment"（`.devcontainer/secure` の専用プロファイル。より厳格・追加ツール有）
+     - "Python & TypeScript Development Environment"（ルート定義・推奨。既定で
+       `SECURE_MODE=true`）
+     - "Secure Python & TypeScript Development
+       Environment"（`.devcontainer/secure` の専用プロファイル。より厳格・追加
+       ツール有）
      - 迷ったら前者で問題ありません（どちらもセキュア運用が可能）。
   3. コンテナ内で `bun run dev` を実行（フロントエンド+バックエンド同時起動）
 
-選択ダイアログ（イメージ）:
+選択ダイアログのイメージは次のとおりです。
 
 ```text
 Reopen in Container →
@@ -48,7 +51,7 @@ Reopen in Container →
   • Secure Python & TypeScript Development Environment
 ```
 
-セキュア設定（デフォルトで有効）:
+セキュア設定はデフォルトで有効になっています。
 
 - 既定で `SECURE_MODE=true` が有効です（許可ドメイン以外の外部通信を遮断）
 - 無効化したい場合のみ、ローカル上書きで切り替え
@@ -66,13 +69,13 @@ cp .devcontainer/devcontainer.local.json.sample .devcontainer/devcontainer.local
 
     // セキュアのまま追加許可（例: PyPI）
     "ADDITIONAL_ALLOWED_DOMAINS": "pypi.org, files.pythonhosted.org"
- }
+  }
 }
 ```
 
 反映は「Rebuild and Reopen in Container」で行います。
 
-オプション（VS Code なしで DevContainer を使う場合）:
+VS Code なしで DevContainer を使用する場合のオプションです。
 
 ```bash
 # Dev Containers CLI を利用
@@ -80,12 +83,12 @@ devcontainer up --workspace-folder .
 devcontainer exec --workspace-folder . bash
 ```
 
-前提条件:
+前提条件は以下のとおりです。
 
 - Docker がインストール済み
 - Dev Containers CLI をインストール: `npm i -g @devcontainers/cli`
 
-主なコマンド:
+主なコマンドは以下のとおりです。
 
 ```bash
 # 起動（コンテナ作成・ビルド）
@@ -118,9 +121,11 @@ bun run dev:frontend
 docker compose up  # app と frontend の両方を起動
 ```
 
-補足:
+補足事項は以下のとおりです。
 
-- Compose は標準でバックエンド用コンテナのみ起動します。フロントエンドはホストで並行起動するか、必要に応じて Compose を拡張してください。
+- Compose は標準でバックエンド用コンテナのみ起動します。フロントエンドはホストで
+  並行起動するか、フルスタック開発をコンテナで統一したい場合は
+  `docker compose up` で拡張してください。
 - `SECURE_MODE` は DevContainer のみの設定で、Docker Compose には影響しません。
 
 ### 技術スタック
@@ -273,12 +278,14 @@ code .
 
 ### セキュア開発環境（Claude Code／デフォルト）
 
-2通りの使い方が可能です。
+2 通りの使い方が可能です。
 
-1) デフォルト設定（おすすめ）
+1. デフォルト設定（おすすめ）
 
-- ルートの `.devcontainer/devcontainer.json` では `SECURE_MODE` はデフォルトで `true` に設定されています（起動時にファイアウォール適用）。
-- 無効化する場合のみ、`SECURE_MODE=false` を設定してください。反映は「Rebuild and Reopen in Container」で実施。
+- ルートの `.devcontainer/devcontainer.json` では `SECURE_MODE` はデフォルトで
+  `true` に設定されています（起動時にファイアウォール適用）。
+- 無効化する場合のみ、`SECURE_MODE=false` を設定してください。反映は「Rebuild
+  and Reopen in Container」で実施。
 
 ```jsonc
 // .devcontainer/devcontainer.json の一部
@@ -290,7 +297,7 @@ code .
 }
 ```
 
-2) サブフォルダ構成（従来どおり）
+1. サブフォルダ構成（従来どおり）
 
 ```bash
 # セキュア設定ディレクトリを開いてから、コンテナーで再度開く
@@ -314,26 +321,39 @@ code .devcontainer/secure
 
 ### プロファイル比較（簡易）
 
-| 項目 | ルート: Python & TypeScript Development Environment | セキュア: Secure Python & TypeScript Development Environment |
-|---|---|---|
-| 定義ファイル | `.devcontainer/devcontainer.json` | `.devcontainer/secure/devcontainer.json` |
-| セキュア既定 | `SECURE_MODE=true`（postStart でFW自動） | 常にセキュア（postStart でFW強制） |
-| 追加ツール | iptables/ipset/aggregate/dig など導入済み | 同等（セキュア向けに最適化） |
-| 主要起動手順 | Reopen →「Python & TypeScript ...」 | Reopen →「Secure Python & TypeScript ...」 |
-| 追加許可設定 | `.devcontainer/devcontainer.local.json`の`ADDITIONAL_ALLOWED_DOMAINS` | `.devcontainer/secure/devcontainer.json`の`ADDITIONAL_ALLOWED_DOMAINS` |
-| 主な用途 | 一般開発・OSS・学習（必要に応じて無制限化も可） | 機密/監査/厳格なネットワーク制限が必要な開発 |
+| 項目         | 環境名                                             | 詳細                         |
+| ------------ | -------------------------------------------------- | ---------------------------- |
+| ルート環境   | Python & TypeScript Development Environment        | 標準開発環境                 |
+| セキュア環境 | Secure Python & TypeScript Development Environment | ネットワーク制限付き         |
+| ---          | ---                                                | ---                          |
+| 定義ファイル | `.devcontainer/devcontainer.json`                  | ルート設定                   |
+|              | `.devcontainer/secure/devcontainer.json`           | セキュア専用                 |
+| セキュア既定 | `SECURE_MODE=true`                                 | デフォルト有効               |
+|              | 常にセキュア                                       | 強制適用                     |
+| 追加ツール   | iptables/ipset/aggregate/dig                       | セキュリティツール           |
+|              | 同等（セキュア向けに最適化）                       | 最適化済み                   |
+| 主要起動手順 | Reopen → Python & TypeScript                       | 標準環境                     |
+|              | Reopen → Secure Python & TypeScript                | セキュア環境                 |
+| 追加許可設定 | `devcontainer.local.json`                          | `ADDITIONAL_ALLOWED_DOMAINS` |
+|              | `secure/devcontainer.json`                         | セキュア専用設定             |
+| 主な用途     | 一般開発・OSS・学習                                | 柔軟な開発                   |
+|              | 機密/監査/ネットワーク制限                         | 厳格なセキュリティ           |
 
 ### トラブルシュート（セキュア環境）
 
-ネットワーク制限により、外部アクセスが既定で遮断されます。問題発生時は以下を確認してください。
+ネットワーク制限により、外部アクセスが既定で遮断されます。問題発生時は以下を確認
+してください。
 
-- 許可ドメイン（初期値）: GitHub（web/api/git 範囲）、`registry.npmjs.org`、`api.anthropic.com`、`sentry.io`、`statsig.anthropic.com`、`statsig.com`
-- 代表的な症状: `uv sync` で PyPI への接続失敗、`bun install` の外部取得失敗、`curl` が `icmp-admin-prohibited` で拒否
+- 許可ドメイン（初期値）: GitHub（web/api/git 範囲）、
+  `registry.npmjs.org`、`api.anthropic.com`、`sentry.io`、
+  `statsig.anthropic.com`、`statsig.com`
+- 代表的な症状: `uv sync` で PyPI への接続失敗、 `bun install` の外部取得失敗、
+  `curl` が `icmp-admin-prohibited` で拒否
 - 追加で許可が必要になりがちなドメイン例: `pypi.org`、`files.pythonhosted.org`
 
-手順:
+手順は以下のとおりです。
 
-1) 接続可否の確認
+1. 接続可否の確認
 
 ```bash
 # 許可外サイトには到達不可（OK）
@@ -343,7 +363,7 @@ curl -I https://example.com || true
 curl -s https://api.github.com/zen
 ```
 
-2) ドメインのホワイトリスト追加
+1. ドメインのホワイトリスト追加
 
 ```bash
 # ファイアウォール設定スクリプトを編集
@@ -354,21 +374,21 @@ code .devcontainer/secure/init-firewall.sh
 #   "files.pythonhosted.org" \
 ```
 
-3) ルールの再適用
+1. ルールの再適用
 
 ```bash
 # セキュアコンテナ内で実行（sudo 必須）
 sudo .devcontainer/secure/init-firewall.sh
 ```
 
-4) ルールの確認
+1. ルールの確認
 
 ```bash
 sudo ipset list allowed-domains | head
 sudo iptables -S OUTPUT | head
 ```
 
-補足:
+補足事項は以下のとおりです。
 
 - DNS は UDP/53 を許可済み。名前解決は `dig example.com +short` で確認
 - 失敗する場合はコンテナを「Rebuild」しスクリプトの初期化を再実行
@@ -376,7 +396,9 @@ sudo iptables -S OUTPUT | head
 
 ### 追加許可ドメイン（環境変数）
 
-セキュア環境では、追加で許可したいドメインを環境変数で指定できます。コンテナ起動時に `ADDITIONAL_ALLOWED_DOMAINS` を読み取り、A レコードを ipset に登録します（CIDR も可）。
+セキュア環境では、追加で許可したいドメインを環境変数で指定できます。コンテナ起動
+時に `ADDITIONAL_ALLOWED_DOMAINS` を読み取り、A レコードを ipset に登録します
+（CIDR も可）。
 
 ```jsonc
 // 例1（推奨）: ローカル上書きで追加ドメインを設定
@@ -396,16 +418,17 @@ sudo iptables -S OUTPUT | head
 }
 ```
 
-反映手順:
+反映手順は以下のとおりです。
 
-1) VS Code の「コンテナーで再度開く」または Rebuild
-2) 必要に応じて、コンテナ内で再適用
+1. VS Code の「コンテナーで再度開く」または Rebuild
+1. ファイアウォールルールが正常に適用されない場合（コンテナ再起動後など）、コン
+   テナ内で手動再適用してください
 
 ```bash
 sudo .devcontainer/secure/init-firewall.sh
 ```
 
-書式:
+書式は以下のとおりです。
 
 - 区切り: カンマ`,`/セミコロン`;`/スペースいずれも可
 - スキーム/パス付き OK（`https://pypi.org/simple` など）
@@ -430,14 +453,15 @@ sudo .devcontainer/secure/init-firewall.sh
 
 ### ローカル上書き（devcontainer.local.json）
 
-個人環境だけで設定を上書きしたい場合は、ローカル上書きを利用できます（Git 管理外）。
+個人環境だけで設定を上書きしたい場合は、ローカル上書きを利用できます（Git 管理
+外）。
 
 ```bash
 cp .devcontainer/devcontainer.local.json.sample .devcontainer/devcontainer.local.json
 code .devcontainer/devcontainer.local.json
 ```
 
-例1: セキュアモードを無効化（ネットワーク制限なしで利用したい場合）
+例 1: セキュアモードを無効化（ネットワーク制限なしで利用したい場合）
 
 ```jsonc
 {
@@ -447,7 +471,7 @@ code .devcontainer/devcontainer.local.json
 }
 ```
 
-例2: 追加許可ドメインのみ指定（セキュアモードのまま）
+例 2: 追加許可ドメインのみ指定（セキュアモードのまま）
 
 ```jsonc
 {
@@ -457,7 +481,8 @@ code .devcontainer/devcontainer.local.json
 }
 ```
 
-注意: `.devcontainer/devcontainer.local.json` は Git にコミットされません（`.gitignore` 済み）。
+注意: `.devcontainer/devcontainer.local.json` は Git にコミットされません
+（`.gitignore` 済み）。
 
 ## 🌟 特徴
 
@@ -508,7 +533,8 @@ async def hello_name(name: str) -> MessageResponse:
 
 ### CORS 設定
 
-バックエンドでは、`.env` の `CORS_ORIGINS` で許可オリジンを制御できます（JSON 配列 or カンマ区切り）。未設定時は `http://localhost:3000` のみ許可されます。
+バックエンドでは、`.env` の `CORS_ORIGINS` で許可オリジンを制御できます（JSON 配
+列 or カンマ区切り）。未設定時は `http://localhost:3000` のみ許可されます。
 
 ```env
 # backend/.env 例（JSON 配列）
@@ -518,7 +544,8 @@ CORS_ORIGINS=["http://localhost:3000", "https://example.com"]
 # CORS_ORIGINS=http://localhost:3000,https://example.com
 ```
 
-`backend/main.py` では、`CORS_ORIGINS` を読み取り `CORSMiddleware` を自動設定しています。
+`backend/main.py` では、`CORS_ORIGINS` を読み取り `CORSMiddleware` を自動設定し
+ています。
 
 ### フロントエンド開発（TypeScript）
 
@@ -563,10 +590,14 @@ export interface MessageResponse {
 
 本 README は、以下の記事およびリポジトリをもとに作成しています。
 
-- 記事: https://zenn.dev/mjun0812/articles/0ae2325d40ed20
-- 記事: https://docs.anthropic.com/en/docs/claude-code/devcontainer
-- リポジトリ: https://github.com/mjun0812/python-project-template
-- リポジトリ: https://github.com/anthropics/claude-code/tree/main/.devcontainer
+- 記事:
+  [Python プロジェクトのためのテンプレート](https://zenn.dev/mjun0812/articles/0ae2325d40ed20)
+- 記事:
+  [Claude Code DevContainer](https://docs.anthropic.com/en/docs/claude-code/devcontainer)
+- リポジトリ:
+  [Python Project Template](https://github.com/mjun0812/python-project-template)
+- リポジトリ:
+  [Claude Code DevContainer](https://github.com/anthropics/claude-code/tree/main/.devcontainer)
 
 ## 📄 ライセンス
 

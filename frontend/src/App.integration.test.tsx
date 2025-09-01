@@ -17,4 +17,3 @@ describe('App (integration with MSW)', () => {
     expect(await screen.findByText(/Hello, Alice!/i)).toBeInTheDocument()
   })
 })
-

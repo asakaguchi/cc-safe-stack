@@ -246,7 +246,8 @@ style(shared): format type definitions
 
 ### DevContainer対応
 
-- **標準環境**: `.devcontainer/devcontainer.json`（`SECURE_MODE=true` がデフォルト）
+- **標準環境**: `.devcontainer/devcontainer.json`（`SECURE_MODE=true` がデフォル
+  ト）
 - **セキュア環境**: `.devcontainer/secure/`
 - **共通基盤**: Python 3.12+ + Node.js 18+ + Claude Code CLI
 
