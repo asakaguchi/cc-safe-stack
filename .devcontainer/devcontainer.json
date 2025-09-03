@@ -106,7 +106,10 @@
 
         // Additional utilities
         "usernamehw.errorlens",
-        "gruntfuggly.todo-tree"
+        "gruntfuggly.todo-tree",
+
+        // Claude Code
+        "anthropic.claude-code"
       ]
     }
   },
