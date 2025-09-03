@@ -15,7 +15,7 @@
     "POWERLEVEL9K_DISABLE_GITSTATUS": "true",
     // Ensure npm global installs are user-writable and take precedence in PATH
     "NPM_CONFIG_PREFIX": "/home/vscode/.npm-global",
-    "PATH": "/home/vscode/.npm-global/bin:${containerEnv:PATH}",
+    "PATH": "/home/vscode/.npm-global/bin:${localEnv:PATH}",
     // Comma or space-separated additional domains to allow (IPv4 A records or CIDR)
     // Example: "pypi.org,files.pythonhosted.org"
     "ADDITIONAL_ALLOWED_DOMAINS": ""
@@ -39,7 +39,7 @@
     },
     "ghcr.io/shyim/devcontainers-features/bun:0": {}
   },
-  "runArgs": ["--init", "--rm", "--cap-add=NET_ADMIN", "--cap-add=NET_RAW"],
+  "runArgs": ["--init", "--cap-add=NET_ADMIN", "--cap-add=NET_RAW"],
   "hostRequirements": {
     "gpu": "optional"
   },
