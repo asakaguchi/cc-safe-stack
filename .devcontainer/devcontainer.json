@@ -10,9 +10,8 @@
     "UV_COMPILE_BYTECODE": "1",
     "NODE_ENV": "development",
     "PRE_COMMIT_HOME": "${containerWorkspaceFolder}/.cache/pre-commit",
-    // Ensure npm global installs are user-writable and take precedence in PATH
+    // Ensure npm global installs are user-writable (PATH configured in postCreateCommand)
     "NPM_CONFIG_PREFIX": "/home/vscode/.npm-global",
-    "PATH": "/home/vscode/.npm-global/bin:${localEnv:PATH}",
     // Secure firewall policies on start (default: true)
     // Set to "false" to skip running .devcontainer/secure/init-firewall.sh
     "SECURE_MODE": "true"

@@ -14,28 +14,49 @@ popd >/dev/null
 
 # JavaScript/TypeScript グローバルツールのインストール（features で提供されないもの）
 echo "📦 JavaScript ツールインストール中..."
-# npm のグローバルプレフィックスをユーザー書き込み可能に設定
-mkdir -p "$HOME/.npm-global"
-npm config set prefix "$HOME/.npm-global"
-# PATH 永続化（bash / zsh）
-for rc in "$HOME/.bashrc" "$HOME/.zshrc"; do
-  grep -q 'NPM_CONFIG_PREFIX' "$rc" 2>/dev/null || echo 'export NPM_CONFIG_PREFIX="$HOME/.npm-global"' >> "$rc"
-  grep -q '.npm-global/bin' "$rc" 2>/dev/null || echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> "$rc"
-done
 
-npm install -g \
-  textlint@latest \
-  textlint-rule-preset-ja-technical-writing@latest \
-  textlint-rule-preset-ja-spacing@latest \
-  @textlint-ja/textlint-rule-preset-ai-writing@latest \
-  textlint-filter-rule-comments@latest \
-  markdownlint-cli2@latest
+# NVM環境をソースして npm/node を利用可能にする
+export NVM_DIR="/usr/local/share/nvm"
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+  . "$NVM_DIR/nvm.sh"
+  echo "✓ NVM 環境をロード完了"
+else
+  echo "⚠️  NVM が見つかりません。代替方法を試行..."
+fi
 
-# Claude Code（最新）をユーザー権限でインストール
-echo "🤖 Claude Code をインストール中..."
-npm i -g @anthropic-ai/claude-code@latest
-hash -r || true
-claude --version || true
+# npm が利用可能かチェック
+if command -v npm >/dev/null 2>&1; then
+  echo "✓ npm が利用可能です"
+  # npm のグローバルプレフィックスをユーザー書き込み可能に設定
+  mkdir -p "$HOME/.npm-global"
+  npm config set prefix "$HOME/.npm-global"
+  
+  # PATH 永続化（bash / zsh）
+  for rc in "$HOME/.bashrc" "$HOME/.zshrc"; do
+    grep -q 'NPM_CONFIG_PREFIX' "$rc" 2>/dev/null || echo 'export NPM_CONFIG_PREFIX="$HOME/.npm-global"' >> "$rc"
+    grep -q '.npm-global/bin' "$rc" 2>/dev/null || echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> "$rc"
+  done
+
+  # グローバルパッケージのインストール
+  echo "📦 npm グローバルパッケージをインストール中..."
+  npm install -g \
+    textlint@latest \
+    textlint-rule-preset-ja-technical-writing@latest \
+    textlint-rule-preset-ja-spacing@latest \
+    @textlint-ja/textlint-rule-preset-ai-writing@latest \
+    textlint-filter-rule-comments@latest \
+    markdownlint-cli2@latest
+
+  # Claude Code（最新）をユーザー権限でインストール
+  echo "🤖 Claude Code をインストール中..."
+  npm i -g @anthropic-ai/claude-code@latest
+  hash -r || true
+  claude --version || true
+else
+  echo "❌ npm が利用できません。手動でツールをインストールしてください。"
+  echo "   または、コンテナ内で以下を実行してください："
+  echo "   source /usr/local/share/nvm/nvm.sh && npm install -g <packages>"
+fi
 
 # Git 設定の確認と修正
 echo "🔧 Git 設定修正中..."
