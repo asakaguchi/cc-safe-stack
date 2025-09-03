@@ -10,6 +10,9 @@
     "UV_COMPILE_BYTECODE": "1",
     "NODE_ENV": "development",
     "PRE_COMMIT_HOME": "${containerWorkspaceFolder}/.cache/pre-commit",
+    // Ensure npm global installs are user-writable and take precedence in PATH
+    "NPM_CONFIG_PREFIX": "/home/vscode/.npm-global",
+    "PATH": "/home/vscode/.npm-global/bin:${containerEnv:PATH}",
     // Secure firewall policies on start (default: true)
     // Set to "false" to skip running .devcontainer/secure/init-firewall.sh
     "SECURE_MODE": "true"
@@ -31,8 +34,7 @@
     "ghcr.io/devcontainers/features/node:1": {
       "version": "20"
     },
-    "ghcr.io/shyim/devcontainers-features/bun:0": {},
-    "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {}
+    "ghcr.io/shyim/devcontainers-features/bun:0": {}
   },
   "runArgs": ["--init", "--rm", "--cap-add=NET_ADMIN", "--cap-add=NET_RAW"],
   "hostRequirements": {

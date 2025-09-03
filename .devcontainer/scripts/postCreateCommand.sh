@@ -14,6 +14,15 @@ popd >/dev/null
 
 # JavaScript/TypeScript グローバルツールのインストール（features で提供されないもの）
 echo "📦 JavaScript ツールインストール中..."
+# npm のグローバルプレフィックスをユーザー書き込み可能に設定
+mkdir -p "$HOME/.npm-global"
+npm config set prefix "$HOME/.npm-global"
+# PATH 永続化（bash / zsh）
+for rc in "$HOME/.bashrc" "$HOME/.zshrc"; do
+  grep -q 'NPM_CONFIG_PREFIX' "$rc" 2>/dev/null || echo 'export NPM_CONFIG_PREFIX="$HOME/.npm-global"' >> "$rc"
+  grep -q '.npm-global/bin' "$rc" 2>/dev/null || echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> "$rc"
+done
+
 npm install -g \
   textlint@latest \
   textlint-rule-preset-ja-technical-writing@latest \
@@ -21,6 +30,12 @@ npm install -g \
   @textlint-ja/textlint-rule-preset-ai-writing@latest \
   textlint-filter-rule-comments@latest \
   markdownlint-cli2@latest
+
+# Claude Code（最新）をユーザー権限でインストール
+echo "🤖 Claude Code をインストール中..."
+npm i -g @anthropic-ai/claude-code@latest
+hash -r || true
+claude --version || true
 
 # Git 設定の確認と修正
 echo "🔧 Git 設定修正中..."
