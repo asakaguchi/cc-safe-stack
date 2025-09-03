@@ -13,8 +13,6 @@
     "NODE_OPTIONS": "--max-old-space-size=4096",
     "CLAUDE_CONFIG_DIR": "/home/vscode/.claude",
     "POWERLEVEL9K_DISABLE_GITSTATUS": "true",
-    // Ensure npm global installs are user-writable (PATH configured in postCreateCommand)
-    "NPM_CONFIG_PREFIX": "/home/vscode/.npm-global",
     // Comma or space-separated additional domains to allow (IPv4 A records or CIDR)
     // Example: "pypi.org,files.pythonhosted.org"
     "ADDITIONAL_ALLOWED_DOMAINS": ""

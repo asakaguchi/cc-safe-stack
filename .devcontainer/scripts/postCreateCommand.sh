@@ -15,29 +15,27 @@ popd >/dev/null
 # JavaScript/TypeScript グローバルツールのインストール（features で提供されないもの）
 echo "📦 JavaScript ツールインストール中..."
 
+# NPM_CONFIG_PREFIXをunsetしてNVMとの競合を回避
+unset NPM_CONFIG_PREFIX
+
 # NVM環境をソースして npm/node を利用可能にする
 export NVM_DIR="/usr/local/share/nvm"
 if [ -s "$NVM_DIR/nvm.sh" ]; then
   . "$NVM_DIR/nvm.sh"
   echo "✓ NVM 環境をロード完了"
+  
+  # NVMでNode.jsのバージョンを選択（デフォルト → LTS → 最新の順で試行）
+  nvm use default 2>/dev/null || nvm use --lts 2>/dev/null || nvm use node 2>/dev/null
+  echo "✓ Node.js $(node --version) を使用中"
 else
   echo "⚠️  NVM が見つかりません。代替方法を試行..."
 fi
 
 # npm が利用可能かチェック
 if command -v npm >/dev/null 2>&1; then
-  echo "✓ npm が利用可能です"
-  # npm のグローバルプレフィックスをユーザー書き込み可能に設定
-  mkdir -p "$HOME/.npm-global"
-  npm config set prefix "$HOME/.npm-global"
+  echo "✓ npm が利用可能です（NVMにより管理）"
   
-  # PATH 永続化（bash / zsh）
-  for rc in "$HOME/.bashrc" "$HOME/.zshrc"; do
-    grep -q 'NPM_CONFIG_PREFIX' "$rc" 2>/dev/null || echo 'export NPM_CONFIG_PREFIX="$HOME/.npm-global"' >> "$rc"
-    grep -q '.npm-global/bin' "$rc" 2>/dev/null || echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> "$rc"
-  done
-
-  # グローバルパッケージのインストール
+  # グローバルパッケージのインストール（NVMのディレクトリに自動配置）
   echo "📦 npm グローバルパッケージをインストール中..."
   npm install -g \
     textlint@latest \
@@ -51,11 +49,11 @@ if command -v npm >/dev/null 2>&1; then
   echo "🤖 Claude Code をインストール中..."
   npm i -g @anthropic-ai/claude-code@latest
   hash -r || true
-  claude --version || true
+  claude --version || echo "Claude Code のインストールが完了しました"
 else
   echo "❌ npm が利用できません。手動でツールをインストールしてください。"
-  echo "   または、コンテナ内で以下を実行してください："
-  echo "   source /usr/local/share/nvm/nvm.sh && npm install -g <packages>"
+  echo "   コンテナ内で以下を実行してください："
+  echo "   source /usr/local/share/nvm/nvm.sh && nvm use --lts && npm install -g <packages>"
 fi
 
 # Git 設定の確認と修正
