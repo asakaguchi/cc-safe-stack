@@ -10,9 +10,9 @@ describe('App (integration with MSW)', () => {
 
   it('greets user via /api/hello/:name', async () => {
     render(<App />)
-    const input = screen.getByPlaceholderText(/Enter your name/i)
+    const input = screen.getByPlaceholderText(/お名前を入力/i)
     await userEvent.type(input, 'Alice')
-    await userEvent.click(screen.getByRole('button', { name: /Say Hello/i }))
+    await userEvent.click(screen.getByRole('button', { name: /挨拶する/i }))
 
     expect(await screen.findByText(/Hello, Alice!/i)).toBeInTheDocument()
   })
