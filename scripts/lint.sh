@@ -40,7 +40,7 @@ cd backend
 
 # Run Ruff linting
 log_info "Running Ruff checks..."
-if uv run ruff check .; then
+if VIRTUAL_ENV= uv run ruff check .; then
     log_success "Ruff checks passed"
 else
     log_error "Ruff checks failed"
@@ -49,7 +49,7 @@ fi
 
 # Run Ruff formatting check
 log_info "Checking Python code formatting..."
-if uv run ruff format --check .; then
+if VIRTUAL_ENV= uv run ruff format --check .; then
     log_success "Python formatting is correct"
 else
     log_warning "Python code needs formatting (run: bun run format:backend)"
@@ -57,9 +57,9 @@ else
 fi
 
 # Run mypy if available
-if uv run python -c "import mypy" 2>/dev/null; then
+if VIRTUAL_ENV= uv run python -c "import mypy" 2>/dev/null; then
     log_info "Running type checks with mypy..."
-    if uv run mypy .; then
+    if VIRTUAL_ENV= uv run mypy .; then
         log_success "Type checks passed"
     else
         log_error "Type checks failed"

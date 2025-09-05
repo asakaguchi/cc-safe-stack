@@ -50,7 +50,7 @@ fi
 
 log_info "Starting backend server (Python/FastAPI)..."
 cd backend
-uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000 &
+VIRTUAL_ENV= uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000 &
 BACKEND_PID=$!
 cd ..
 

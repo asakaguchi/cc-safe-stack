@@ -38,18 +38,18 @@ cd backend
 
 # Ensure dependencies are up to date
 log_info "Syncing Python dependencies..."
-uv sync --frozen
+VIRTUAL_ENV= uv sync --frozen
 
 # Run type checking with mypy if available
-if uv run python -c "import mypy" 2>/dev/null; then
+if VIRTUAL_ENV= uv run python -c "import mypy" 2>/dev/null; then
     log_info "Running type checks..."
-    uv run mypy . || log_warning "Type checking failed"
+    VIRTUAL_ENV= uv run mypy . || log_warning "Type checking failed"
 fi
 
 # Run tests if they exist
 if [ -d "tests" ] && [ "$(ls -A tests)" ]; then
     log_info "Running backend tests..."
-    uv run pytest || {
+    VIRTUAL_ENV= uv run pytest || {
         log_error "Backend tests failed"
         exit 1
     }

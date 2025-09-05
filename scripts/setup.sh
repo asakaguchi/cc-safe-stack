@@ -65,12 +65,12 @@ cd backend
 
 # Install Python dependencies
 log_info "Installing Python dependencies with uv..."
-uv sync
+VIRTUAL_ENV= uv sync
 
 # Install pre-commit hooks if available
 if [ -f "../.pre-commit-config.yaml" ]; then
     log_info "Installing pre-commit hooks..."
-    uv run pre-commit install
+    VIRTUAL_ENV= uv run pre-commit install
 fi
 
 cd ..

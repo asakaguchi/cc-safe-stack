@@ -28,7 +28,7 @@ cd backend
 
 # Run Ruff formatting
 log_info "Running Ruff formatter..."
-uv run ruff format .
+VIRTUAL_ENV= uv run ruff format .
 log_success "Python code formatted"
 
 cd ..

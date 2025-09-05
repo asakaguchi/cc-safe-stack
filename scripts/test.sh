@@ -40,7 +40,7 @@ cd backend
 
 if [ -d "tests" ] && [ "$(ls -A tests)" ]; then
     log_info "Running pytest..."
-    if uv run pytest -v; then
+    if VIRTUAL_ENV= uv run pytest -v; then
         log_success "Backend tests passed"
     else
         log_error "Backend tests failed"
@@ -93,7 +93,7 @@ EOF
     fi
 
     log_info "Running newly created tests..."
-    if uv run pytest -v; then
+    if VIRTUAL_ENV= uv run pytest -v; then
         log_success "Sample backend tests created and passed"
     else
         log_warning "Sample tests created but some failed"
