@@ -1,20 +1,3 @@
-[project]
-name = "Claude-Code-Polyglot-Starter"
-version = "0.0.1"
-description = "Modern Python Project"
-readme = "README.md"
-authors = [{ name = "SAKAGUCHI Akiyoshi", email = "a-sakaguchi@groovenauts.jp" }]
-requires-python = ">=3.12"
-dependencies = []
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-[tool.hatch.build.targets.wheel]
-# Explicitly include the src-based package so editable installs work in DevContainer
-packages = ["src/my_package"]
-
 [dependency-groups]
 dev = ["pre-commit>=4.2.0", "pytest>=8.4.0", "ruff>=0.11.12"]
 
