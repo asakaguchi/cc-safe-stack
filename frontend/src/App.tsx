@@ -20,7 +20,7 @@ function App() {
       })
       .catch(error => {
         console.error('Error fetching from backend:', error)
-        setBackendMessage('Failed to connect to backend')
+        setBackendMessage('バックエンドへの接続に失敗しました')
       })
   }, [])
 
@@ -33,37 +33,37 @@ function App() {
       setGreeting(data.message)
     } catch (error) {
       console.error('Error fetching greeting:', error)
-      setGreeting('Error fetching greeting')
+      setGreeting('挨拶の取得に失敗しました')
     }
   }
 
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Full-Stack Development Environment</h1>
-        <p className="subtitle">Python Backend + TypeScript Frontend</p>
+        <h1>フルスタック開発環境</h1>
+        <p className="subtitle">Python バックエンド + TypeScript フロントエンド</p>
       </header>
 
       <main className="App-main">
         <section className="status-section">
-          <h2>Backend Status</h2>
+          <h2>バックエンドステータス</h2>
           <p className={backendMessage.includes('running') ? 'status-ok' : 'status-error'}>
             {backendMessage}
           </p>
         </section>
 
         <section className="interaction-section">
-          <h2>API Interaction</h2>
+          <h2>API操作</h2>
           <div className="input-group">
             <input
               type="text"
               value={name}
               onChange={e => setName(e.target.value)}
-              placeholder="Enter your name"
+              placeholder="お名前を入力"
               onKeyPress={e => e.key === 'Enter' && handleGreeting()}
             />
             <button onClick={handleGreeting} disabled={!name.trim()}>
-              Say Hello
+              挨拶する
             </button>
           </div>
           {greeting && (
@@ -74,10 +74,10 @@ function App() {
         </section>
 
         <section className="tech-stack">
-          <h2>Technology Stack</h2>
+          <h2>技術スタック</h2>
           <div className="tech-grid">
             <div className="tech-item">
-              <h3>Backend</h3>
+              <h3>バックエンド</h3>
               <ul>
                 <li>Python 3.12+</li>
                 <li>FastAPI</li>
@@ -86,7 +86,7 @@ function App() {
               </ul>
             </div>
             <div className="tech-item">
-              <h3>Frontend</h3>
+              <h3>フロントエンド</h3>
               <ul>
                 <li>TypeScript</li>
                 <li>React 18</li>
@@ -95,7 +95,7 @@ function App() {
               </ul>
             </div>
             <div className="tech-item">
-              <h3>Development</h3>
+              <h3>開発環境</h3>
               <ul>
                 <li>VS Code DevContainers</li>
                 <li>Claude Code CLI</li>
