@@ -34,3 +34,23 @@ services:
       bash -lc "bun install && bun run dev --host 0.0.0.0"
     depends_on:
       - app
+
+  streamlit:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    restart: unless-stopped
+    working_dir: /app/backend
+    environment:
+      # Point to backend service for API calls
+      API_BASE_URL: http://app:8000
+    volumes:
+      - .:/app
+      # Use anonymous volumes to avoid sharing host's .venv
+      - /app/.venv
+    ports:
+      - "8501:8501"
+    command: >
+      bash -c "uv sync --group streamlit && uv run --group streamlit streamlit run ../streamlit/app.py --server.port 8501 --server.address 0.0.0.0"
+    depends_on:
+      - app

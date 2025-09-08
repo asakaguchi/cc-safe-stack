@@ -53,9 +53,10 @@ Claude Code: 全自動で↓
 Claude Code と一緒に、次の機能を持つ TODO アプリを構築します。
 
 - CRUD 操作: TODO の作成・読み取り・更新・削除
-- リアルタイム UI: React による動的なユーザーインターフェース
+- **3つのフロントエンド**: React (プロダクション)、Streamlit (データアプリ)、FastAPI Docs (API)
 - 型安全性: TypeScript と Python Pydantic による型安全な開発
 - REST API: FastAPI による高パフォーマンス API
+- データ可視化: Streamlit による統計ダッシュボード
 - モダンツール: uv・bun による高速パッケージ管理
 
 ## 前提条件
@@ -121,13 +122,43 @@ Claude Code との効果的な対話方法を学びましょう。
 - 🔍 既存の設定ファイルを確認
 - プロジェクトの特徴を報告
 
+## Streamlit統合開発
+
+### なぜStreamlitも使うのか
+
+**React (フロントエンド)**
+- プロダクション向けUI
+- 高度なインタラクティブ性
+- カスタムデザイン
+
+**Streamlit (データアプリ)**  
+- Pythonのみで完結
+- 迅速なプロトタイピング
+- データ可視化に特化
+- 内部ツール・管理画面に最適
+
+### Claude Codeとの対話例
+
+**あなた:**
+```text
+StreamlitでTODOアプリのダッシュボードを作って。
+DataFrameとチャートで統計も表示して
+```
+
+**Claude Code:**
+- streamlit/ディレクトリ作成
+- マルチページアプリ構築
+- FastAPI統合
+- Plotlyでインタラクティブチャート
+- セッション状態管理
+
 ### Step 2: 開発環境の起動
 
 **あなた:**
 
 ```text
 開発環境を起動して、
-バックエンドとフロントエンドが正常に動作するか確認して
+バックエンド、フロントエンド、Streamlitが正常に動作するか確認して
 ```
 
 **Claude Code が自動実行:**
@@ -135,11 +166,16 @@ Claude Code との効果的な対話方法を学びましょう。
 ```bash
 # 依存関係のインストール
 bun install
-cd backend && uv sync && cd -
+cd backend && uv sync && uv sync --group streamlit && cd -
 
-# 開発サーバーの起動
+# 3つのサーバー同時起動
 bun run dev
 ```
+
+**起動確認:**
+- 🌐 React: http://localhost:3000
+- 🐍 FastAPI: http://localhost:8000
+- 🎈 Streamlit: http://localhost:8501
 
 ### Step 3: TODO 型定義の作成
 
@@ -202,30 +238,57 @@ React コンポーネントを実装して：
 - TypeScript で API の型安全な通信
 - Jest と React Testing Library でテスト
 
-### Step 6: 統合と動作確認
+### Step 6: Streamlit データアプリの実装
 
 **あなた:**
 
 ```text
-フロントエンドとバックエンドを統合して、
-動作確認とテストを実行して
+Streamlit でTODO管理ダッシュボードを作成して：
+- FastAPI と統合した TODO 管理
+- DataFrame での一覧表示
+- Plotly でのグラフ・統計表示
+- リアルタイムデータ更新
+```
+
+**Claude Code の実行:**
+
+1. Streamlit アプリケーション構築
+2. マルチページ構成（TODO管理・ダッシュボード・API Explorer）
+3. データ可視化とチャート作成
+4. API との統合とエラーハンドリング
+
+### Step 7: 統合と動作確認
+
+**あなた:**
+
+```text
+3つのフロントエンド（React・Streamlit・FastAPI Docs）を
+統合して動作確認とテストを実行して
 ```
 
 **Claude Code の自動実行:**
 
 ```bash
-# 型チェック
+# Streamlit依存関係インストール
+bun run build:streamlit
+
+# 型チェック（全体）
 bun run type-check
 
-# リント・フォーマット
+# リント・フォーマット（全体）
 bun run lint:fix
 
-# テスト実行
+# テスト実行（全体）
 bun run test
 
-# 開発サーバー起動
+# 3つのサーバー同時起動
 bun run dev
 ```
+
+**起動後のアクセスポイント:**
+- 🌐 React UI: http://localhost:3000
+- 🎈 Streamlit: http://localhost:8501  
+- 📚 FastAPI Docs: http://localhost:8000/docs
 
 ## Claude Code の高度な機能
 
@@ -245,10 +308,12 @@ bun run dev
 あなた: 「バックエンドとフロントエンドを並行して実装して」
 
 Claude Code: 同時実行 ↓
-🐍 Python API 実装
-React コンポーネント実装
+🐍 Python FastAPI 実装
+⚛️ React コンポーネント実装  
+🎈 Streamlit ダッシュボード実装
 🧪 テストファイル作成
-型定義の同期
+📝 型定義の同期
+📊 データ可視化チャート作成
 ```
 
 ### Task Tool による自動化
@@ -478,6 +543,24 @@ TODO にカテゴリ機能を追加して
 
 ## 発展的な機能
 
+### Streamlit 専用機能
+
+**あなた:**
+
+```text
+Streamlit ダッシュボードに高度な分析機能を追加して：
+- TODO 完了率の時系列分析
+- カテゴリ別パフォーマンス比較
+- ユーザー行動の可視化
+```
+
+**Claude Code:**
+
+- 📊 高度なPlotlyチャート作成
+- 📈 時系列データ分析
+- 🎛️ インタラクティブフィルタ
+- 📋 データエクスポート機能
+
 ### データベース統合
 
 **あなた:**
@@ -492,10 +575,11 @@ TODO にカテゴリ機能を追加して
 - マイグレーション設定
 - 🔌 データベース接続設定
 - 🧪 データベーステスト追加
+- 🎈 Streamlit での データベース統合
 
 ### 認証システム
 
-**あなり:**
+**あなた:**
 
 ```text
 ユーザー認証を JWT で実装して
@@ -507,6 +591,7 @@ TODO にカテゴリ機能を追加して
 - 👤 ユーザーモデル作成
 - 🚪 ログイン・サインアップ機能
 - 認証ミドルウェア実装
+- 🎈 Streamlit セッション管理
 
 ### リアルタイム機能
 
@@ -522,6 +607,7 @@ WebSocket で TODO の変更をリアルタイム同期して
 - 📡 リアルタイム通信
 - 状態同期ロジック
 - 最適化とエラーハンドリング
+- 🎈 Streamlit auto-refresh 統合
 
 ## 学習リソース
 
@@ -540,6 +626,8 @@ WebSocket で TODO の変更をリアルタイム同期して
 
 - [uv Python Package Manager](https://github.com/astral-sh/uv)
 - [Bun JavaScript Runtime](https://bun.sh/)
+- [Streamlit Documentation](https://docs.streamlit.io/)
+- [Plotly Python Documentation](https://plotly.com/python/)
 
 ## まとめ
 
@@ -566,6 +654,8 @@ WebSocket で TODO の変更をリアルタイム同期して
 - 並列開発: 複数タスクの同時進行
 - 自動化: テスト・リント・Git を含む開発フロー自動化
 - フルスタック: 型安全なエンドツーエンド開発
+- **ハイブリッドUI開発**: React（プロダクション）+ Streamlit（データアプリ）の組み合わせ
+- **データ可視化**: Streamlit + Plotly による統計ダッシュボード作成
 
 ### 次のステップ
 

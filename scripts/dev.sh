@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-echo "🚀 Starting Full-Stack Development Servers..."
+echo "🚀 Starting Full-Stack Development Servers (React + FastAPI + Streamlit)..."
 
 # Colors for output
 GREEN='\033[0;32m'
@@ -48,6 +48,15 @@ if [ ! -d "frontend/node_modules" ]; then
     ./scripts/setup.sh
 fi
 
+# Check if Streamlit dependencies are installed
+log_info "Checking Streamlit dependencies..."
+cd backend
+if ! VIRTUAL_ENV= uv run --group streamlit python -c "import streamlit" 2>/dev/null; then
+    log_warning "Streamlit dependencies not found. Installing..."
+    VIRTUAL_ENV= uv sync --group streamlit
+fi
+cd ..
+
 log_info "Starting backend server (Python/FastAPI)..."
 cd backend
 VIRTUAL_ENV= uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000 &
@@ -60,11 +69,18 @@ bun dev --host 0.0.0.0 &
 FRONTEND_PID=$!
 cd ..
 
-log_success "Development servers started!"
+log_info "Starting Streamlit server (Data Application)..."
+cd backend
+VIRTUAL_ENV= uv run --group streamlit streamlit run ../streamlit/app.py --server.port 8501 --server.address 0.0.0.0 &
+STREAMLIT_PID=$!
+cd ..
+
+log_success "All development servers started!"
 echo ""
-echo "🌐 Frontend: http://localhost:3000"
-echo "🐍 Backend:  http://localhost:8000"
-echo "📚 API Docs: http://localhost:8000/docs"
+echo "🌐 React UI:    http://localhost:3000"
+echo "🐍 FastAPI:     http://localhost:8000"
+echo "🎈 Streamlit:   http://localhost:8501"
+echo "📚 API Docs:    http://localhost:8000/docs"
 echo ""
 echo "Press Ctrl+C to stop all servers"
 echo ""

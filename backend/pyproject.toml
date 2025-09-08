@@ -27,6 +27,14 @@ dev = [
     "ruff>=0.11.12",
     "mypy>=1.7.0",
 ]
+streamlit = [
+    "streamlit>=1.32.0",
+    "pandas>=2.0.0",
+    "plotly>=5.0.0",
+    "httpx>=0.25.0",
+    "python-dotenv>=1.0.0",
+    "psutil>=5.9.0",
+]
 
 [tool.ruff]
 line-length = 100
