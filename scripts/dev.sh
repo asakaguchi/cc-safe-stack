@@ -56,7 +56,7 @@ cd ..
 
 log_info "Starting frontend server (TypeScript/React)..."
 cd frontend
-bun dev &
+bun dev --host 0.0.0.0 &
 FRONTEND_PID=$!
 cd ..
 
