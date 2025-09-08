@@ -1,12 +1,10 @@
 # Claude Code で学ぶフルスタック開発
 
-## Claude Code と一緒に作るTODOアプリチュートリアル
+## Claude Code と一緒に作る株式市場分析プラットフォーム
 
-本チュートリアルでは、**Claude Code** を活用して TODO アプリケーションを構築しま
-す。  
-従来のような手動コーディングではなく、AI アシスタント Claude Code との対話を通じ
-て、  
-効率的なフルスタック開発を体験します。
+本チュートリアルでは、**Claude Code** を活用して株式市場分析プラットフォームを構築します。  
+従来のような手動コーディングではなく、AI アシスタント Claude Code との対話を通じて、  
+データ分析に特化した効率的なフルスタック開発を体験します。
 
 ## Claude Code とは
 
@@ -38,26 +36,28 @@
 **Claude Code での開発:**
 
 ```text
-あなた: 「TODOアプリを作って」
+あなた: 「株式市場分析プラットフォームを作って」
 Claude Code: 全自動で↓
-- タスクを分解・管理
-- ファイル構造を作成
-- バックエンド API を実装
-- フロントエンド UI を実装
-- テスト・リント・フォーマット
+- 金融データ分析タスクを分解・管理
+- yfinance統合ファイル構造を作成
+- 株価データ・テクニカル指標 API を実装
+- ポートフォリオ管理 UI を実装
+- Streamlitで高度な分析ダッシュボードを構築
+- 金融データ処理テスト・リント・フォーマット
 - Git コミット作成
 ```
 
 ## 作成するアプリケーション
 
-Claude Code と一緒に、次の機能を持つ TODO アプリを構築します。
+Claude Code と一緒に、次の機能を持つ株式市場分析プラットフォームを構築します。
 
-- CRUD 操作: TODO の作成・読み取り・更新・削除
-- **3つのフロントエンド**: React (プロダクション)、Streamlit (データアプリ)、FastAPI Docs (API)
-- 型安全性: TypeScript と Python Pydantic による型安全な開発
-- REST API: FastAPI による高パフォーマンス API
-- データ可視化: Streamlit による統計ダッシュボード
-- モダンツール: uv・bun による高速パッケージ管理
+- **リアルタイム株価データ**: yfinance API による価格データ取得・更新
+- **3つのフロントエンド**: React (ポートフォリオ管理)、Streamlit (分析ダッシュボード)、FastAPI Docs (API)
+- **高度なデータ可視化**: Plotlyによるローソク足チャート、テクニカル分析、リスク分析
+- **型安全性**: TypeScript と Python Pydantic による型安全な開発
+- **WebSocketリアルタイム通信**: 価格データの即座更新
+- **金融工学機能**: ポートフォリオ最適化、バックテスト、VaR計算
+- **モダンツール**: uv・bun による高速パッケージ管理
 
 ## 前提条件
 
@@ -82,8 +82,8 @@ Claude Code との効果的な対話方法を学びましょう。
 #### 良い指示の例
 
 ```text
-「shared/types/todo.ts に TODO 用の型定義を作成して。
- Todo 型には id, title, completed, created_at, updated_at を含めて」
+「shared/types/stock.ts に株式・ポートフォリオ用の型定義を作成して。
+ Stock 型には symbol, name, price, volume, sector を含めて」
 ```
 
 #### 曖昧な指示の例
@@ -95,9 +95,9 @@ Claude Code との効果的な対話方法を学びましょう。
 #### プロフェッショナルな指示の例
 
 ```text
-「TODO アプリのバックエンド API を実装して。
- FastAPI を使用、CRUD 操作、エラーハンドリング、
- 型安全性を重視、テストも含めて」
+「株式市場分析プラットフォームのバックエンド API を実装して。
+ yfinance統合、株価データ取得、テクニカル指標計算、
+ WebSocketリアルタイム価格配信、テストも含めて」
 ```
 
 ## Claude Code との対話的実装
@@ -112,14 +112,15 @@ Claude Code との効果的な対話方法を学びましょう。
 
 ```text
 このプロジェクトの構造を調査して、
-フルスタック開発環境として何ができるか教えて
+株式市場分析プラットフォーム開発環境として何ができるか教えて
 ```
 
 **Claude Code:**
 
 - Glob/Grep ツールでファイル構造を分析
 - TodoWrite でタスクリストを作成
-- 🔍 既存の設定ファイルを確認
+- 🔍 既存の設定ファイルを確認（yfinance、plotly対応確認）
+- 金融データ分析に必要なライブラリの確認
 - プロジェクトの特徴を報告
 
 ## Streamlit統合開発
@@ -177,85 +178,102 @@ bun run dev
 - 🐍 FastAPI: http://localhost:8000
 - 🎈 Streamlit: http://localhost:8501
 
-### Step 3: TODO 型定義の作成
+### Step 3: 株式・ポートフォリオ型定義の作成
 
 **あなた:**
 
 ```text
-shared/types/todo.ts に以下の型定義を作成して：
-- Todo 型（id, title, completed, created_at, updated_at）
-- CRUD 操作用のリクエスト・レスポンス型
+shared/types/ 以下に株式分析用の型定義を作成して：
+- Stock 型（symbol, name, sector, price_data）
+- Portfolio 型（holdings, transactions, performance）
+- TechnicalIndicator 型（sma, ema, rsi, macd）
 - Python Pydantic と互換性のある形式で
 ```
 
 **Claude Code の応答:**
 
-- TypeScript interface と union types を生成
+- 金融データ用 TypeScript interface を生成
+- 時系列データ型（価格、出来高）の定義
+- テクニカル指標用の複雑な型構造
 - Python との互換性を考慮
-- JSDoc コメントを追加
+- JSDoc で金融用語の説明を追加
 - エクスポート設定を完了
 
-### Step 4: バックエンド API の実装
+### Step 4: 株式分析 API の実装
 
 **あなた:**
 
 ```text
-backend/src/ 以下に TODO API を実装して：
-- models/todo.py: Pydantic モデル
-- routers/todo.py: FastAPI ルーター
-- CRUD 操作（GET, POST, PUT, DELETE）
-- エラーハンドリング
-- インメモリストレージで十分
+backend/src/ 以下に株式分析 API を実装して：
+- models/stock.py: 株式データ用 Pydantic モデル
+- services/market_data.py: yfinance統合サービス
+- routers/stocks.py: 価格データ・テクニカル指標API
+- routers/portfolio.py: ポートフォリオ管理API
+- WebSocketエンドポイントでリアルタイム価格配信
+- 金融計算ロジック（リターン、ボラティリティ計算）
 ```
 
 **Claude Code が実行:**
 
 1. TodoWrite でサブタスクを管理
-2. 必要なディレクトリ構造を作成
-3. Pydantic モデルを実装
-4. FastAPI ルーターを実装
-5. main.py にルーターを統合
-6. 型チェック・リントを実行
+2. 金融データ用ディレクトリ構造を作成
+3. **yfinance統合とデータキャッシング**
+4. **テクニカル指標計算機能**
+5. **WebSocketでリアルタイム価格配信**
+6. Pydantic モデルを実装
+7. FastAPI ルーターを実装
+8. main.py にルーターを統合
+9. 型チェック・リントを実行
 
-### Step 5: フロントエンド実装
+### Step 5: React ポートフォリオ管理UI実装
 
 **あなた:**
 
 ```text
 React コンポーネントを実装して：
-- components/TodoList.tsx: メインのリスト表示
-- components/TodoItem.tsx: 個別の TODO 項目
-- components/AddTodo.tsx: 新規追加フォーム
-- hooks/useTodos.ts: カスタムフック
-- api/todos.ts: API 通信ロジック
+- components/Portfolio.tsx: ポートフォリオ概要表示
+- components/StockWatchlist.tsx: ウォッチリスト管理
+- components/TransactionForm.tsx: 取引記録フォーム
+- components/PriceChart.tsx: 簡易価格チャート
+- hooks/useStocks.ts: 株式データ用カスタムフック
+- hooks/useWebSocket.ts: リアルタイム価格用フック
+- api/stocks.ts: API 通信ロジック
 ```
 
 **Claude Code の並列実行:**
 
 - 複数ファイルを同時作成
+- **WebSocketフック実装**
+- **リアルタイム価格更新機能**
+- 金融データ表示用コンポーネント
 - React ベストプラクティスを適用
 - CSS modules と responsive design を適用
 - TypeScript で API の型安全な通信
 - Jest と React Testing Library でテスト
 
-### Step 6: Streamlit データアプリの実装
+### Step 6: Streamlit 分析ダッシュボードの実装
 
 **あなた:**
 
 ```text
-Streamlit でTODO管理ダッシュボードを作成して：
-- FastAPI と統合した TODO 管理
-- DataFrame での一覧表示
-- Plotly でのグラフ・統計表示
-- リアルタイムデータ更新
+Streamlit で株式分析ダッシュボードを作成して：
+- **ローソク足チャート（OHLCV）とテクニカル指標オーバーレイ**
+- **ポートフォリオパフォーマンス分析（損益、リターン）**
+- **リスク分析ツール（VaR、シャープレシオ、最大ドローダウン）**
+- **セクター別パフォーマンス比較**
+- **バックテストシミュレーター**
+- **相関マトリックス・ヒートマップ**
+- FastAPIとのリアルタイムデータ統合
 ```
 
 **Claude Code の実行:**
 
-1. Streamlit アプリケーション構築
-2. マルチページ構成（TODO管理・ダッシュボード・API Explorer）
-3. データ可視化とチャート作成
-4. API との統合とエラーハンドリング
+1. **多機能金融分析ダッシュボード構築**
+2. **マルチページ構成（チャート分析・ポートフォリオ・リスク分析・バックテスト）**
+3. **Plotlyでインタラクティブな金融チャート**
+4. **pandas/numpyによる高度な金融計算**
+5. **streamlit-autorefreshでリアルタイム更新**
+6. API との統合とエラーハンドリング
 
 ### Step 7: 統合と動作確認
 
@@ -263,13 +281,14 @@ Streamlit でTODO管理ダッシュボードを作成して：
 
 ```text
 3つのフロントエンド（React・Streamlit・FastAPI Docs）を
-統合して動作確認とテストを実行して
+統合して株式分析プラットフォームの動作確認とテストを実行して
 ```
 
 **Claude Code の自動実行:**
 
 ```bash
-# Streamlit依存関係インストール
+# 金融ライブラリ依存関係インストール
+uv add yfinance plotly pandas numpy scipy
 bun run build:streamlit
 
 # 型チェック（全体）
@@ -278,7 +297,7 @@ bun run type-check
 # リント・フォーマット（全体）
 bun run lint:fix
 
-# テスト実行（全体）
+# 金融データ処理テスト実行
 bun run test
 
 # 3つのサーバー同時起動
@@ -286,9 +305,10 @@ bun run dev
 ```
 
 **起動後のアクセスポイント:**
-- 🌐 React UI: http://localhost:3000
-- 🎈 Streamlit: http://localhost:8501  
-- 📚 FastAPI Docs: http://localhost:8000/docs
+- 🌐 **React ポートフォリオ管理**: http://localhost:3000
+- 🎈 **Streamlit 分析ダッシュボード**: http://localhost:8501  
+- 📚 **FastAPI 株式データAPI**: http://localhost:8000/docs
+- 📊 **リアルタイム価格WebSocket**: ws://localhost:8000/ws/prices
 
 ## Claude Code の高度な機能
 
@@ -412,7 +432,7 @@ TODO リストのレンダリングが遅い。最適化して
 **あなた:**
 
 ```text
-TODO アプリの実装をコミットして
+株式分析プラットフォームの実装をコミットして
 ```
 
 **Claude Code:**
@@ -424,13 +444,16 @@ git diff
 
 # 適切なコミットメッセージで自動コミット
 git add .
-git commit -m "feat: implement TODO app with CRUD operations
+git commit -m "feat: implement stock market analysis platform
 
-- Add shared TypeScript types
-- Implement FastAPI backend with Pydantic models
-- Create React components with hooks
-- Add responsive CSS styling
-- Include comprehensive error handling
+- Add stock/portfolio TypeScript types with financial data models
+- Implement FastAPI backend with yfinance integration
+- Create WebSocket real-time price streaming
+- Add technical indicator calculation (SMA, EMA, RSI, MACD)
+- Implement React portfolio management UI
+- Create Streamlit advanced analysis dashboard with Plotly charts
+- Add risk analysis tools (VaR, Sharpe ratio, drawdown)
+- Include comprehensive error handling for financial data
 
 🤖 Generated with Claude Code"
 ```
@@ -440,29 +463,34 @@ git commit -m "feat: implement TODO app with CRUD operations
 **あなた:**
 
 ```text
-この TODO 機能のプルリクエストを作成して
+この株式市場分析プラットフォームのプルリクエストを作成して
 ```
 
 **Claude Code:**
 
 ```bash
 # ブランチ作成・プッシュ
-git checkout -b feature/todo-app
-git push -u origin feature/todo-app
+git checkout -b feature/stock-analysis-platform
+git push -u origin feature/stock-analysis-platform
 
 # プルリクエスト作成
-gh pr create --title "Add TODO app functionality" \
+gh pr create --title "Add stock market analysis platform" \
   --body "## Summary
-- Complete CRUD operations
-- Type-safe API communication
-- Responsive UI design
-- Comprehensive error handling
+- Complete stock data API with yfinance integration
+- Real-time price streaming via WebSocket
+- Advanced Streamlit dashboard with Plotly charts
+- Technical analysis tools (SMA, EMA, RSI, MACD)
+- Portfolio management and risk analysis
+- Type-safe financial data communication
+- Responsive multi-frontend architecture
 
 ## Test plan
-- All TypeScript types validated
-- Backend API tested
-- Frontend components tested
-- Integration tests passed
+- All financial data TypeScript types validated
+- Stock API endpoints tested with real market data
+- WebSocket real-time streaming tested
+- Streamlit dashboard charts validated
+- Technical indicator calculations verified
+- Integration tests across all three frontends passed
 
 🤖 Generated with Claude Code"
 ```
@@ -474,7 +502,7 @@ gh pr create --title "Add TODO app functionality" \
 **あなた:**
 
 ```text
-TDD でテストから開始して TODO API を実装して
+TDD でテストから開始して株価取得 API を実装して
 ```
 
 **Claude Code:**
@@ -482,14 +510,25 @@ TDD でテストから開始して TODO API を実装して
 1. 🧪 テストケースを先に作成
 
 ```python
-def test_create_todo():
-    response = client.post("/api/todos/", json={"title": "Test"})
+def test_get_stock_price():
+    response = client.get("/api/stocks/AAPL/price")
     assert response.status_code == 200
-    assert response.json()["todo"]["title"] == "Test"
+    data = response.json()
+    assert "symbol" in data
+    assert "current_price" in data
+    assert data["symbol"] == "AAPL"
+    assert isinstance(data["current_price"], float)
+
+def test_technical_indicators():
+    response = client.get("/api/stocks/AAPL/indicators?period=20")
+    assert response.status_code == 200
+    indicators = response.json()
+    assert "sma" in indicators
+    assert "rsi" in indicators
 ```
 
 1. テストが失敗することを確認
-2. テストを通すための最小限の実装
+2. yfinance統合で テストを通すための最小限の実装
 3. リファクタリングで品質向上
 
 ### 自動テスト実行
@@ -514,70 +553,78 @@ def test_create_todo():
 **あなた:**
 
 ```text
-TODO にカテゴリ機能を追加して
+株式にセクター分析機能を追加して
 ```
 
 **Claude Code の実行フロー:**
 
 1. TodoWrite でタスクを分解
-2. データベーススキーマ更新
-3. バックエンド API 拡張
-4. フロントエンド UI 更新
-5. テストケース追加
-6. ドキュメント更新
-7. Git コミット作成
+2. **株式セクターデータスキーマ更新**
+3. **yfinanceセクター情報取得API拡張**
+4. **Streamlitセクター別パフォーマンス分析チャート追加**
+5. **React UIにセクターフィルター機能**
+6. **セクター相関マトリックス実装**
+7. テストケース追加
+8. ドキュメント更新
+9. Git コミット作成
 
 ### バグ修正
 
 **あなた:**
 
 ```text
-完了したTODOが削除できないバグを修正して
+株価データが正しく更新されないバグを修正して
 ```
 
 **Claude Code:**
 
-1. 🔍 Grep で関連コードを検索
-2. 🐛 バグの原因を特定
-3. 🧪 バグを再現するテストを作成
-4. 🔧 修正を実装
+1. 🔍 Grep で株価更新関連コードを検索
+2. 🐛 **yfinanceキャッシュ・WebSocket更新のバグの原因を特定**
+3. 🧪 **株価データ更新バグを再現するテストを作成**
+4. 🔧 **リアルタイム価格配信とキャッシング修正を実装**
 5. テストが通ることを確認
 6. 📦 修正をコミット
 
 ## 発展的な機能
 
-### Streamlit 専用機能
+### Streamlit 金融分析専用機能
 
 **あなた:**
 
 ```text
-Streamlit ダッシュボードに高度な分析機能を追加して：
-- TODO 完了率の時系列分析
-- カテゴリ別パフォーマンス比較
-- ユーザー行動の可視化
+Streamlit ダッシュボードに高度な金融分析機能を追加して：
+- ポートフォリオ効率的フロンティア計算・表示
+- モンテカルロシミュレーションによるリスク分析
+- 異なる期間でのバックテスト比較
+- オプション価格計算（ブラック・ショールズ）
+- 銘柄間相関のネットワーク図表示
 ```
 
 **Claude Code:**
 
-- 📊 高度なPlotlyチャート作成
-- 📈 時系列データ分析
-- 🎛️ インタラクティブフィルタ
-- 📋 データエクスポート機能
+- 📊 **高度な金融Plotlyチャート作成（効率的フロンティア、3Dリスク面）**
+- 📈 **複雑な時系列金融データ分析（GARCH、VaR計算）**
+- 🎛️ **インタラクティブなポートフォリオ最適化ツール**
+- 🧮 **モンテカルロシミュレーション可視化**
+- 📋 **金融レポート・データエクスポート機能**
+- 🌐 **ネットワーク図での銘柄相関可視化**
 
 ### データベース統合
 
 **あなた:**
 
 ```text
-インメモリストレージを SQLite に変更して
+株価データストレージをSQLiteに変更して時系列データベースとして最適化して
 ```
 
 **Claude Code:**
 
-- 📁 SQLAlchemy モデル作成
+- 📁 **株価・ポートフォリオ用 SQLAlchemy モデル作成**
+- **時系列データに最適化されたテーブル設計**
+- **株価データの効率的なクエリ（インデックス最適化）**
 - マイグレーション設定
 - 🔌 データベース接続設定
-- 🧪 データベーステスト追加
+- **🧪 金融時系列データのデータベーステスト追加**
 - 🎈 Streamlit での データベース統合
 
 ### 認証システム
@@ -585,14 +632,15 @@ Streamlit ダッシュボードに高度な分析機能を追加して：
 **あなた:**
 
 ```text
-ユーザー認証を JWT で実装して
+ポートフォリオごとの個人認証をJWTで実装して
 ```
 
 **Claude Code:**
 
 - 🔐 JWT トークン生成・検証
-- 👤 ユーザーモデル作成
+- 👤 **投資家ユーザーモデル作成**
 - 🚪 ログイン・サインアップ機能
+- **🏦 ポートフォリオベースのアクセス制御**
 - 認証ミドルウェア実装
 - 🎈 Streamlit セッション管理
 
@@ -601,16 +649,16 @@ Streamlit ダッシュボードに高度な分析機能を追加して：
 **あなた:**
 
 ```text
-WebSocket で TODO の変更をリアルタイム同期して
+WebSocket で株価変更をリアルタイム同期して
 ```
 
 **Claude Code:**
 
-- 🔌 WebSocket エンドポイント
-- 📡 リアルタイム通信
-- 状態同期ロジック
-- 最適化とエラーハンドリング
-- 🎈 Streamlit auto-refresh 統合
+- 🔌 **株価専用 WebSocket エンドポイント**
+- 📡 **リアルタイム株価・ポートフォリオ価値通信**
+- **価格データ高頻度更新の状態同期ロジック**
+- **大量データストリーミングの最適化とエラーハンドリング**
+- 🎈 **Streamlit チャートのauto-refresh 統合**
 
 ## 学習リソース
 
@@ -624,6 +672,8 @@ WebSocket で TODO の変更をリアルタイム同期して
 - [FastAPI Documentation](https://fastapi.tiangolo.com/)
 - [React Documentation](https://reactjs.org/docs/)
 - [TypeScript Handbook](https://www.typescriptlang.org/docs/)
+- [yfinance Documentation](https://pypi.org/project/yfinance/)
+- [Plotly Python Documentation](https://plotly.com/python/)
 
 ### 開発ツール
 
@@ -657,22 +707,27 @@ WebSocket で TODO の変更をリアルタイム同期して
 - 並列開発: 複数タスクの同時進行
 - 自動化: テスト・リント・Git を含む開発フロー自動化
 - フルスタック: 型安全なエンドツーエンド開発
-- **ハイブリッドUI開発**: React（プロダクション）+ Streamlit（データアプリ）の組み合わせ
-- **データ可視化**: Streamlit + Plotly による統計ダッシュボード作成
+- **金融データ分析**: yfinance統合、テクニカル指標計算、リスク分析
+- **ハイブリッドUI開発**: React（ポートフォリオ管理）+ Streamlit（分析ダッシュボード）の組み合わせ
+- **高度なデータ可視化**: Streamlit + Plotly による金融チャート・分析ツール作成
+- **リアルタイムデータ処理**: WebSocketによる株価ストリーミング
+- **金融工学実装**: ポートフォリオ最適化、VaR計算、バックテスト
 
 ### 次のステップ
 
-1. 本格運用: 実際のプロジェクトで Claude Code を活用
-2. チーム開発: チームでの Claude Code 活用方法を学習
-3. CI/CD: GitHub Actions と Claude Code の統合
-4. デプロイ: クラウド環境への自動デプロイ
-5. 監視: 本番環境でのモニタリング設定
+1. **本格運用**: 実際の金融プロジェクトで Claude Code を活用
+2. **アルゴリズム取引**: 自動取引ボット開発
+3. **機械学習統合**: 株価予測モデルのStreamlit統合
+4. チーム開発: 金融チームでの Claude Code 活用方法を学習
+5. CI/CD: GitHub Actions と Claude Code の統合
+6. デプロイ: 本番金融データ処理環境への自動デプロイ
+7. 監視: リアルタイム金融データ処理の本番モニタリング設定
 
 ## おめでとうございます
 
-Claude Code を使ったフルスタック開発をマスターしました。
+Claude Code を使った**金融データ分析に特化したフルスタック開発**をマスターしました。
 
-この新しい開発スタイルで、**10倍の生産性向上**を体験してください。
+この新しい開発スタイルで、**複雑な金融計算とデータ可視化を10倍の生産性向上**で体験してください。
 
 **Next Steps**: [README.md](./README.md) で他の機能も探索してみましょう。
 
