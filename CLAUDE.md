@@ -212,7 +212,7 @@ bun run lint:text:fix
 
 - 設定ファイル: `.pre-commit-config.yaml`
 - **Python**: Ruff (linter/formatter)
-- **TypeScript/JavaScript**: Prettier (formatter) ※ESLint設定は開発中
+- **TypeScript/JavaScript**: Prettier (formatter) ※ESLint 設定は開発中
 - **実行**: `uv run pre-commit install`
 
 ## Git運用

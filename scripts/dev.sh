@@ -48,12 +48,12 @@ if [ ! -d "frontend/node_modules" ]; then
     ./scripts/setup.sh
 fi
 
-# Check if Streamlit dependencies are installed
-log_info "Checking Streamlit dependencies..."
+# Check if Streamlit is available (now included in base dependencies)
+log_info "Checking Streamlit availability..."
 cd backend
-if ! VIRTUAL_ENV= uv run --group streamlit python -c "import streamlit" 2>/dev/null; then
-    log_warning "Streamlit dependencies not found. Installing..."
-    VIRTUAL_ENV= uv sync --group streamlit
+if ! VIRTUAL_ENV= uv run python -c "import streamlit" 2>/dev/null; then
+    log_warning "Streamlit not found. Syncing dependencies..."
+    VIRTUAL_ENV= uv sync
 fi
 cd ..
 
@@ -71,7 +71,7 @@ cd ..
 
 log_info "Starting Streamlit server (Data Application)..."
 cd backend
-VIRTUAL_ENV= uv run --group streamlit streamlit run ../streamlit/app.py --server.port 8501 --server.address 0.0.0.0 &
+VIRTUAL_ENV= uv run streamlit run ../streamlit/app.py --server.port 8501 --server.address 0.0.0.0 &
 STREAMLIT_PID=$!
 cd ..
 

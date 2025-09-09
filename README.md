@@ -4,15 +4,22 @@
 
 ## 🚀 概要
 
-本プロジェクトは、Python（FastAPI）と TypeScript（React）を組み合わせたモダンな
-フルスタック開発環境です。モノリポ構成により、バックエンドとフロントエンドを統合
-的に開発できます。
+本プロジェクトは、Python（FastAPI）、TypeScript（React）、Streamlit を組み合わせ
+たモダンなフルスタック開発環境です。モノリポ構成により、3 つのフロントエンドを統
+合的に開発できます。
+
+### 🎯 3つのフロントエンド構成
+
+- **React**: プロダクション向けのモダン UI
+- **Streamlit**: データ分析・管理者ダッシュボード
+- **FastAPI Docs**: 自動生成される API 仕様書
 
 ## 📝 チートシート（最短）
 
 ```bash
 # DevContainer（VS Code 推奨）
 code .     # → Reopen in Container → bun run dev
+# 3つのサーバー同時起動: React(3000), FastAPI(8000), Streamlit(8501)
 
 # Docker（フロント:ホスト / API:コンテナ）
 cd backend && uv sync && cd - && docker compose up &
@@ -147,6 +154,13 @@ docker compose up  # app と frontend の両方を起動
 - **ESLint + Prettier** - コード品質管理
 - **bun** - 超高速パッケージマネージャー・ランタイム
 
+#### データアプリケーション（Streamlit）
+
+- **Streamlit** - Python でのデータアプリ構築
+- **Pandas** - データ分析・処理
+- **Plotly** - インタラクティブな可視化
+- **HTTPX** - FastAPI 統合の HTTP クライアント
+
 #### 開発ツール
 
 - **VS Code DevContainers** - 統一された開発環境
@@ -166,6 +180,8 @@ docker compose up  # app と frontend の両方を起動
 │   ├── package.json      # Node.js 依存関係
 │   ├── tsconfig.json     # TypeScript設定
 │   └── vite.config.ts    # Vite設定
+├── streamlit/            # Streamlit データアプリケーション
+│   └── app.py            # Streamlit メインアプリ
 ├── shared/               # 共有型定義・ユーティリティ
 │   └── types/            # TypeScript 型定義
 ├── scripts/              # 開発用スクリプト
@@ -196,12 +212,13 @@ bun run setup
 ### 2. 開発サーバーの起動
 
 ```bash
-# フロントエンド・バックエンドを同時に起動
+# 3つのフロントエンド・バックエンドを同時に起動
 bun run dev
 
 # 個別起動
 bun run dev:backend   # Python FastAPI (http://localhost:8000)
 bun run dev:frontend  # TypeScript React (http://localhost:3000)
+bun run dev:streamlit # Streamlit データアプリ (http://localhost:8501)
 ```
 
 ### 3. コード品質管理
@@ -229,6 +246,7 @@ bun run build
 # 個別ビルド
 bun run build:backend   # Python依存関係の同期
 bun run build:frontend  # React アプリのビルド
+bun run build:streamlit # Streamlit依存関係の同期
 ```
 
 ## 🐳 Docker開発
@@ -488,8 +506,11 @@ code .devcontainer/devcontainer.local.json
 
 ### フルスタック統合開発
 
-- 統一されたツールチェーン: Python・TypeScript・Claude Code が完全統合
-- モノリポ管理: 1 つのリポジトリでフロントエンド・バックエンドを管理
+- 統一されたツールチェーン: Python・TypeScript・Streamlit・Claude Code が完全統
+  合
+- モノリポ管理: 1 つのリポジトリで 3 つのフロントエンド・バックエンドを管理
+- 多様な UI 構成: React（プロダクション）・Streamlit（データ分析）・FastAPI
+  Docs（API 仕様）
 - 共有型定義: フロントエンド・バックエンド間で型を共有
 - 統合テスト: 全スタックを通じた自動テスト
 
