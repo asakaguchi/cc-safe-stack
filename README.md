@@ -74,8 +74,8 @@ cp .devcontainer/devcontainer.local.json.sample .devcontainer/devcontainer.local
     // 無効化したい場合のみ false
     // "SECURE_MODE": "false",
 
-    // セキュアのまま追加許可（例: PyPI）
-    "ADDITIONAL_ALLOWED_DOMAINS": "pypi.org, files.pythonhosted.org"
+    // セキュアのまま追加許可（例: 企業プライベートレジストリ）
+    "ADDITIONAL_ALLOWED_DOMAINS": "npm.company.com, pypi.company.com"
   }
 }
 ```
@@ -365,9 +365,9 @@ code .devcontainer/secure
 - 許可ドメイン（初期値）: GitHub（web/api/git 範囲）、
   `registry.npmjs.org`、`api.anthropic.com`、`sentry.io`、
   `statsig.anthropic.com`、`statsig.com`
-- 代表的な症状: `uv sync` で PyPI への接続失敗、 `bun install` の外部取得失敗、
-  `curl` が `icmp-admin-prohibited` で拒否
-- 追加で許可が必要になりがちなドメイン例: `pypi.org`、`files.pythonhosted.org`
+- 代表的な症状: `uv sync` で企業レジストリへの接続失敗、 `bun install` の外部取
+  得失敗、 `curl` が `icmp-admin-prohibited` で拒否
+- 追加で許可が必要になりがちなドメイン例: CDN、企業プライベートレジストリなど
 
 手順は以下のとおりです。
 
@@ -387,9 +387,9 @@ curl -s https://api.github.com/zen
 # ファイアウォール設定スクリプトを編集
 code .devcontainer/secure/init-firewall.sh
 
-# for domain in ... のリストに必要なドメインを追記（例: pypi）
-#   "pypi.org" \
-#   "files.pythonhosted.org" \
+# for domain in ... のリストに必要なドメインを追記（例: 企業レジストリ）
+#   "npm.company.com" \
+#   "pypi.company.com" \
 ```
 
 1. ルールの再適用
@@ -423,7 +423,7 @@ sudo iptables -S OUTPUT | head
 // .devcontainer/devcontainer.local.json
 {
   "containerEnv": {
-    "ADDITIONAL_ALLOWED_DOMAINS": "pypi.org,files.pythonhosted.org"
+    "ADDITIONAL_ALLOWED_DOMAINS": "npm.company.com,pypi.company.com"
   }
 }
 
@@ -431,7 +431,7 @@ sudo iptables -S OUTPUT | head
 // .devcontainer/secure/devcontainer.json
 {
   "containerEnv": {
-    "ADDITIONAL_ALLOWED_DOMAINS": "pypi.org,files.pythonhosted.org"
+    "ADDITIONAL_ALLOWED_DOMAINS": "cdn.jsdelivr.net,unpkg.com"
   }
 }
 ```
@@ -449,7 +449,7 @@ sudo .devcontainer/secure/init-firewall.sh
 書式は以下のとおりです。
 
 - 区切り: カンマ`,`/セミコロン`;`/スペースいずれも可
-- スキーム/パス付き OK（`https://pypi.org/simple` など）
+- スキーム/パス付き OK（`https://cdn.company.com/packages` など）
 - CIDR 記法も追加可（例: `192.0.2.0/24`）
 
 ### 使い分けガイド
@@ -494,7 +494,7 @@ code .devcontainer/devcontainer.local.json
 ```jsonc
 {
   "containerEnv": {
-    "ADDITIONAL_ALLOWED_DOMAINS": "pypi.org, files.pythonhosted.org"
+    "ADDITIONAL_ALLOWED_DOMAINS": "dl.google.com, update.code.visualstudio.com"
   }
 }
 ```

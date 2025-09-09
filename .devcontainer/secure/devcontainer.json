@@ -14,7 +14,7 @@
     "CLAUDE_CONFIG_DIR": "/home/vscode/.claude",
     "POWERLEVEL9K_DISABLE_GITSTATUS": "true",
     // Comma or space-separated additional domains to allow (IPv4 A records or CIDR)
-    // Example: "pypi.org,files.pythonhosted.org"
+    // Example: "npm.company.com,pypi.company.com"
     "ADDITIONAL_ALLOWED_DOMAINS": ""
   },
   "features": {
