@@ -56,6 +56,33 @@ specs/examples/から参考例を選択：
 - ✅ 型安全性（TypeScript ↔ Pydantic）
 - ✅ テスト（80%カバレッジ）
 
+#### ⚠️ yfinance を使用する際の事前設定
+
+株式分析プラットフォームでは Yahoo Finance API を使用するため、セキュアモードで
+追加設定が必要です：
+
+1. **設定ファイルの作成**
+
+   ```bash
+   cp .devcontainer/devcontainer.local.json.sample .devcontainer/devcontainer.local.json
+   ```
+
+2. **Yahoo Finance ドメインの許可追加**
+
+   ```json
+   {
+     "containerEnv": {
+       // Yahoo Finance へのアクセスを許可
+       "ADDITIONAL_ALLOWED_DOMAINS": "query1.finance.yahoo.com, query2.finance.yahoo.com, finance.yahoo.com, fc.yahoo.com"
+     }
+   }
+   ```
+
+3. **DevContainer の再ビルド** VS Code で「Rebuild and Reopen in Container」を実
+   行
+
+**注意**: セキュアモードは維持したまま、必要なドメインのみを許可しています。
+
 ### 本格例（30分で完了）
 
 ```text

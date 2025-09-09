@@ -1,0 +1,17 @@
+{
+  // yfinance (Yahoo Finance) を使用する際の設定例
+  // 使用時: このファイルを .devcontainer/devcontainer.local.json にコピー
+  "containerEnv": {
+    // セキュアモードは維持（true）
+    "SECURE_MODE": "true",
+    
+    // Yahoo Finance API に必要なドメインを許可
+    // yfinance が使用する主要ドメイン：
+    // - query1.finance.yahoo.com: リアルタイム株価データ
+    // - query2.finance.yahoo.com: バックアップクエリサーバー
+    // - finance.yahoo.com: 一般的な金融データ
+    // - fc.yahoo.com: 履歴データ
+    // - yfapi.net: yfinance 代替エンドポイント
+    "ADDITIONAL_ALLOWED_DOMAINS": "query1.finance.yahoo.com, query2.finance.yahoo.com, finance.yahoo.com, fc.yahoo.com, yfapi.net"
+  }
+}
