@@ -6,7 +6,7 @@
     // "SECURE_MODE": "false",
 
     // Additional allowlist (comma/space-separated or CIDR)
-    // Example for PyPI access (keeps secure mode enabled):
-    "ADDITIONAL_ALLOWED_DOMAINS": "pypi.org, files.pythonhosted.org"
+    // Example for private registries or mirrors:
+    "ADDITIONAL_ALLOWED_DOMAINS": "nexus.company.com, artifactory.internal.net"
   }
 }
