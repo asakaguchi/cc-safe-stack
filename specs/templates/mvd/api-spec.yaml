@@ -1,0 +1,403 @@
+openapi: 3.0.3
+info:
+  title: "[プロジェクト名] API"
+  description: |
+    [プロジェクトの説明]
+    
+    ## 認証
+    - Bearer Token認証を使用
+    - JWTトークンをAuthorizationヘッダーに含める
+    
+    ## レート制限
+    - 1分間に100リクエストまで
+    
+    ## エラーレスポンス
+    すべてのエラーは以下の形式で返される：
+    ```json
+    {
+      "error": {
+        "code": "ERROR_CODE",
+        "message": "エラーメッセージ",
+        "details": {}
+      }
+    }
+    ```
+  version: "1.0.0"
+  contact:
+    name: "[開発チーム名]"
+    email: "[連絡先メール]"
+  license:
+    name: "MIT"
+    url: "https://opensource.org/licenses/MIT"
+
+servers:
+  - url: "http://localhost:8000"
+    description: "ローカル開発環境"
+  - url: "https://api-dev.example.com"
+    description: "開発環境"
+  - url: "https://api.example.com"
+    description: "本番環境"
+
+# 共通コンポーネント
+components:
+  # セキュリティ定義
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  # 再利用可能なスキーマ
+  schemas:
+    # エラーレスポンス
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+              description: "エラーコード"
+              example: "VALIDATION_ERROR"
+            message:
+              type: string
+              description: "エラーメッセージ"
+              example: "バリデーションに失敗しました"
+            details:
+              type: object
+              description: "エラーの詳細情報"
+
+    # ページネーション
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          minimum: 1
+          description: "現在のページ番号"
+          example: 1
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+          description: "1ページあたりの件数"
+          example: 20
+        total:
+          type: integer
+          minimum: 0
+          description: "総件数"
+          example: 100
+        has_next:
+          type: boolean
+          description: "次のページが存在するか"
+          example: true
+
+    # サンプルリソース（実際のプロジェクトに合わせて変更）
+    Item:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          description: "アイテムID"
+          example: "item_123"
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: "アイテム名"
+          example: "サンプルアイテム"
+        description:
+          type: string
+          maxLength: 500
+          description: "説明"
+          example: "これはサンプルのアイテムです"
+        created_at:
+          type: string
+          format: date-time
+          description: "作成日時"
+          example: "2024-01-01T12:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          description: "更新日時"
+          example: "2024-01-01T12:00:00Z"
+
+    ItemList:
+      type: object
+      required:
+        - items
+        - pagination
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Item"
+        pagination:
+          $ref: "#/components/schemas/Pagination"
+
+  # 共通パラメータ
+  parameters:
+    PageParam:
+      in: query
+      name: page
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+      description: "ページ番号"
+    
+    LimitParam:
+      in: query
+      name: limit
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+      description: "1ページあたりの件数"
+
+# API エンドポイント
+paths:
+  # ヘルスチェック
+  /health:
+    get:
+      tags:
+        - "System"
+      summary: "ヘルスチェック"
+      description: "APIサーバーの稼働状態を確認"
+      responses:
+        '200':
+          description: "正常"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "healthy"
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: "2024-01-01T12:00:00Z"
+
+  # アイテム一覧取得（サンプル）
+  /items:
+    get:
+      tags:
+        - "Items"
+      summary: "アイテム一覧取得"
+      description: "アイテムの一覧を取得する"
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/LimitParam"
+        - in: query
+          name: search
+          schema:
+            type: string
+            maxLength: 100
+          description: "検索キーワード"
+      responses:
+        '200':
+          description: "取得成功"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ItemList"
+        '400':
+          description: "リクエストエラー"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '401':
+          description: "認証エラー"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    post:
+      tags:
+        - "Items"
+      summary: "アイテム作成"
+      description: "新しいアイテムを作成する"
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 100
+                  description: "アイテム名"
+                description:
+                  type: string
+                  maxLength: 500
+                  description: "説明"
+      responses:
+        '201':
+          description: "作成成功"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+        '400':
+          description: "バリデーションエラー"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '401':
+          description: "認証エラー"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  # 個別アイテム操作
+  /items/{item_id}:
+    get:
+      tags:
+        - "Items"
+      summary: "アイテム詳細取得"
+      description: "指定されたIDのアイテム詳細を取得"
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: item_id
+          required: true
+          schema:
+            type: string
+          description: "アイテムID"
+      responses:
+        '200':
+          description: "取得成功"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+        '404':
+          description: "アイテムが見つからない"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '401':
+          description: "認証エラー"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    put:
+      tags:
+        - "Items"
+      summary: "アイテム更新"
+      description: "指定されたIDのアイテムを更新"
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: item_id
+          required: true
+          schema:
+            type: string
+          description: "アイテムID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 100
+                  description: "アイテム名"
+                description:
+                  type: string
+                  maxLength: 500
+                  description: "説明"
+      responses:
+        '200':
+          description: "更新成功"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+        '404':
+          description: "アイテムが見つからない"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '400':
+          description: "バリデーションエラー"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '401':
+          description: "認証エラー"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    delete:
+      tags:
+        - "Items"
+      summary: "アイテム削除"
+      description: "指定されたIDのアイテムを削除"
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: item_id
+          required: true
+          schema:
+            type: string
+          description: "アイテムID"
+      responses:
+        '204':
+          description: "削除成功"
+        '404':
+          description: "アイテムが見つからない"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '401':
+          description: "認証エラー"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+# タグの説明
+tags:
+  - name: "System"
+    description: "システム関連のAPI"
+  - name: "Items"
+    description: "アイテム管理関連のAPI"
