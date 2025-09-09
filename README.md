@@ -14,6 +14,12 @@
 - **Streamlit**: データ分析・管理者ダッシュボード
 - **FastAPI Docs**: 自動生成される API 仕様書
 
+## 📖 チュートリアル
+
+Claude Code を使った効率的な開発方法について学びたい方
+は、[TUTORIAL.md](TUTORIAL.md) をご覧ください。実践的な例を通じて、仕様書駆動開
+発や並列実行の威力を体験できます。
+
 ## 📝 チートシート（最短）
 
 ```bash
@@ -529,6 +535,9 @@ code .devcontainer/devcontainer.local.json
 - セキュリティ強化: ネットワーク制限・コンテナ分離
 
 ## 📚 開発ガイド
+
+> 💡 **Claude Code を使った開発方法については [TUTORIAL.md](TUTORIAL.md) を参照
+> してください。**
 
 ### API開発（Python）
 
