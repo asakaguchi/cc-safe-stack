@@ -206,21 +206,20 @@ docker compose up  # app と frontend の両方を起動
 ### 🤖 MCPサーバー統合
 
 本プロジェクトでは、Claude Code の MCP（Model Context Protocol）サーバーを活用し
-て、開発効率を大幅に向上させています。
+て、開発効率を向上させています。
 
 #### Context7 - 最新ドキュメント統合
 
-Context7 MCPサーバーにより、常に最新のライブラリドキュメントとコード例を AI の文
-脈に直接取り込むことができます。
+Context7 MCP サーバーにより、常に最新のライブラリドキュメントとコード例を AI の
+文脈に直接取り込むことができます。
 
-**主な利点:**
+##### 主な利点
 
-- ✅ **正確性**: トレーニングデータではなく、リアルタイムの公式ドキュメントを参
-  照
-- ✅ **バージョン固有**: 使用中のライブラリバージョンに対応した正確なコード例
-- ✅ **効率性**: 手動でのドキュメント検索が不要
+- トレーニングデータではなく、リアルタイムの公式ドキュメントを参照
+- 使用中のライブラリバージョンに対応した正確なコード例を提供
+- 手動でのドキュメント検索が不要
 
-**使用方法:**
+##### 使用方法
 
 プロンプトに「**use context7**」を追加するだけで、最新情報を取得できます。
 
@@ -235,17 +234,16 @@ Context7 MCPサーバーにより、常に最新のライブラリドキュメ�
 「Next.js 15のApp Routerでミドルウェアを設定する方法は？ use context7」
 ```
 
-**設定済みサーバー:**
+##### 設定
 
-- プロジェクトルートの `.mcp.json` に Context7 の設定を記載済み
-- 初回使用時に自動でインストールされます
-- チーム全体で同じ設定を共有可能
+プロジェクトルートの `.mcp.json` に Context7 の設定を記載済みです。初回使用時に
+自動でインストールされ、チーム全体で同じ設定を共有できます。
 
-**対応ライブラリ:**
+##### 対応ライブラリ
 
-- **Python**: FastAPI, Pydantic, SQLAlchemy, Pandas 等
-- **TypeScript/JavaScript**: React, Next.js, Vite, Express 等
-- **その他多数のライブラリに対応**
+Python（FastAPI, Pydantic, SQLAlchemy, Pandas 等）、
+TypeScript/JavaScript（React, Next.js, Vite, Express 等）をはじめ、多数のライブ
+ラリに対応しています。
 
 詳細は [Context7 公式サイト](https://context7.com) を参照してください。
 
@@ -393,23 +391,23 @@ code .devcontainer/secure
 
 ### プロファイル比較（簡易）
 
-| 項目         | 環境名                                             | 詳細                         |
-| ------------ | -------------------------------------------------- | ---------------------------- |
-| ルート環境   | Python & TypeScript Development Environment        | 標準開発環境                 |
-| セキュア環境 | Secure Python & TypeScript Development Environment | ネットワーク制限付き         |
-| ---          | ---                                                | ---                          |
-| 定義ファイル | `.devcontainer/devcontainer.json`                  | ルート設定                   |
-|              | `.devcontainer/secure/devcontainer.json`           | セキュア専用                 |
-| セキュア既定 | `SECURE_MODE=true`                                 | デフォルト有効               |
-|              | 常にセキュア                                       | 強制適用                     |
-| 追加ツール   | iptables/ipset/aggregate/dig                       | セキュリティツール           |
-|              | 同等（セキュア向けに最適化）                       | 最適化済み                   |
-| 主要起動手順 | Reopen → Python & TypeScript                       | 標準環境                     |
-|              | Reopen → Secure Python & TypeScript                | セキュア環境                 |
-| 追加許可設定 | `devcontainer.local.json`                          | `ADDITIONAL_ALLOWED_DOMAINS` |
-|              | `secure/devcontainer.json`                         | セキュア専用設定             |
-| 主な用途     | 一般開発・OSS・学習                                | 柔軟な開発                   |
-|              | 機密/監査/ネットワーク制限                         | 厳格なセキュリティ           |
+| 項目         | 環境名                                   | 詳細                 |
+| ------------ | ---------------------------------------- | -------------------- |
+| ルート環境   | Python & TypeScript Development          | 標準開発環境         |
+| セキュア環境 | Secure Python & TypeScript Development   | ネットワーク制限付き |
+| ---          | ---                                      | ---                  |
+| 定義ファイル | `.devcontainer/devcontainer.json`        | ルート設定           |
+|              | `.devcontainer/secure/devcontainer.json` | セキュア専用         |
+| セキュア既定 | `SECURE_MODE=true`                       | デフォルト有効       |
+|              | 常にセキュア                             | 強制適用             |
+| 追加ツール   | iptables/ipset/aggregate/dig             | セキュリティツール   |
+|              | 同等（セキュア向けに最適化）             | 最適化済み           |
+| 主要起動手順 | Reopen → Python & TypeScript             | 標準環境             |
+|              | Reopen → Secure Python & TypeScript      | セキュア環境         |
+| 追加許可設定 | `devcontainer.local.json`                | 追加ドメイン許可設定 |
+|              | `secure/devcontainer.json`               | セキュア専用設定     |
+| 主な用途     | 一般開発・OSS・学習                      | 柔軟な開発           |
+|              | 機密/監査/ネットワーク制限               | 厳格なセキュリティ   |
 
 ### トラブルシュート（セキュア環境）
 
