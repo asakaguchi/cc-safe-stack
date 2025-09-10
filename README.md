@@ -247,6 +247,47 @@ TypeScript/JavaScript（React, Next.js, Vite, Express 等）をはじめ、多�
 
 詳細は [Context7 公式サイト](https://context7.com) を参照してください。
 
+#### Playwright - ブラウザ自動化
+
+Playwright MCPサーバーにより、ブラウザの自動操作やWebスクレイピング、E2Eテストの
+実行が可能になります。
+
+##### 主な機能
+
+- Webページの自動操作（クリック、入力、ナビゲーション）
+- スクリーンショット撮影とPDF生成
+- 複数ブラウザ対応（Chromium、Firefox、WebKit）
+- フォーム自動入力とファイルアップロード
+- JavaScriptの実行とページ要素の操作
+
+##### 使用方法（Playwright）
+
+プロンプトに「**playwright mcp**」を含めて指示します。
+
+```text
+# Webスクレイピングの例
+「playwright mcpを使って https://example.com から情報を取得して」
+
+# E2Eテストの例
+「playwright mcpでログインフォームのテストを実行して」
+
+# スクリーンショットの例
+「playwright mcpでページのスクリーンショットを撮って」
+```
+
+##### 設定（Playwright）
+
+プロジェクトルートの `.mcp.json` に Playwright の設定を記載済みです。初回使用時
+に自動でインストールされます。
+
+**ヒント**:
+
+- 認証が必要なサイトでは、最初にブラウザを表示して手動でログインすることも可能
+- セッション中はクッキーが保持されるため、継続的な操作が可能
+
+詳細は [Playwright MCP 公式サイト](https://github.com/microsoft/playwright-mcp)
+を参照してください。
+
 ## 🔧 セットアップ
 
 ### 1. 初期セットアップ

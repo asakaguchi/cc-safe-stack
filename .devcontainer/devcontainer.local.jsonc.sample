@@ -11,5 +11,8 @@
 
     // Example for Context7 MCP server:
     "ADDITIONAL_ALLOWED_DOMAINS": "mcp.context7.com, context7.com"
+
+    // Note: Playwright MCP works locally and doesn't require additional domains
+    // It accesses only the URLs you explicitly specify in your commands
   }
 }
