@@ -8,10 +8,10 @@
 
 ### 基本コンセプト
 
-- **仕様書駆動**: 明確な仕様から品質の高い実装を生成
-- **TDD/BDD**: テストファーストで品質を担保
-- **並列実行**: バックエンド・フロントエンド・テストを同時並行で実装
-- **自動品質管理**: リント・テスト・フォーマットを自動実行
+- 仕様書駆動により明確な仕様から品質の高い実装を生成
+- TDD/BDD でテストファーストによる品質担保
+- バックエンド・フロントエンド・テストの同時並行実装
+- リント・テスト・フォーマットの自動実行
 
 ## 🚀 使い方
 
@@ -50,30 +50,39 @@ specs/examples/から参考例を選択：
 
 **結果**:
 
-- ✅ FastAPI バックエンド（CRUD API）
-- ✅ React フロントエンド（タスク管理 UI）
-- ✅ Streamlit ダッシュボード（進捗可視化）
-- ✅ 型安全性（TypeScript ↔ Pydantic）
-- ✅ テスト（80%カバレッジ）
+- FastAPI バックエンド（CRUD API）
+- React フロントエンド（タスク管理 UI）
+- Streamlit ダッシュボード（進捗可視化）
+- 型安全性（TypeScript ↔ Pydantic）
+- テスト（80%カバレッジ）
 
 #### ⚠️ yfinance を使用する際の事前設定
 
 株式分析プラットフォームでは Yahoo Finance API を使用するため、セキュアモードで
-追加設定が必要です：
+追加設定が必要です。
 
 1. **設定ファイルの作成**
 
+   yfinance 用の設定ファイルをコピーします：
+
    ```bash
-   cp .devcontainer/devcontainer.local.json.sample .devcontainer/devcontainer.local.json
+   # クリーンなJSON版（推奨）
+   cp .devcontainer/devcontainer.local.json.clean-yfinance .devcontainer/devcontainer.local.json
+
+   # または、コメント付きJSONC版
+   cp .devcontainer/devcontainer.local.jsonc.yfinance-example .devcontainer/devcontainer.local.json
    ```
 
 2. **Yahoo Finance ドメインの許可追加**
 
+   Yahoo Finance へのアクセスを許可するため、以下の設定を追加します：
+
    ```json
    {
      "containerEnv": {
-       // Yahoo Finance へのアクセスを許可
-       "ADDITIONAL_ALLOWED_DOMAINS": "query1.finance.yahoo.com, query2.finance.yahoo.com, finance.yahoo.com, fc.yahoo.com"
+       "ADDITIONAL_ALLOWED_DOMAINS":
+         "query1.finance.yahoo.com, query2.finance.yahoo.com,
+          finance.yahoo.com, fc.yahoo.com"
      }
    }
    ```
@@ -81,7 +90,12 @@ specs/examples/から参考例を選択：
 3. **DevContainer の再ビルド** VS Code で「Rebuild and Reopen in Container」を実
    行
 
-**注意**: セキュアモードは維持したまま、必要なドメインのみを許可しています。
+セキュアモードは維持したまま、必要なドメインのみを許可しています。
+
+#### 📁 設定ファイルについて
+
+- `.jsonc.sample` ファイル: コメント付き JSONC 形式（VS Code 専用）
+- `.json.clean-*` ファイル: 標準 JSON 形式（推奨、どの環境でも動作）
 
 ### 本格例（30分で完了）
 
@@ -102,7 +116,7 @@ specs/examples/から参考例を選択：
 - 🌐 React ポートフォリオ管理 (localhost:3000)
 - 🎈 Streamlit 高度分析 (localhost:8501)
 - 📚 FastAPI 仕様書 (localhost:8000/docs)
-- ⚡ WebSocket リアルタイム配信
+- WebSocket によるリアルタイム配信
 
 ## 🔧 開発環境
 
@@ -176,5 +190,5 @@ Claude Code:
 
 ---
 
-**実際の開発では、このような仕様書をもとに Claude Code と効率的に協創できます。
-従来の10倍のスピードで、より高品質なアプリケーションを構築しましょう。**
+実際の開発では、このような仕様書をもとに Claude Code と協働することで、従来と比
+較して大幅に短縮された時間で高品質なアプリケーションを構築できます。

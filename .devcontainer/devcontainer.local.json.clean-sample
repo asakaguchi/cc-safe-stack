@@ -1,0 +1,5 @@
+{
+  "containerEnv": {
+    "ADDITIONAL_ALLOWED_DOMAINS": "nexus.company.com, artifactory.internal.net"
+  }
+}
