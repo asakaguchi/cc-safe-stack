@@ -279,9 +279,9 @@ docker compose up
 
 両環境は次のような共通のベース環境を使用しています。
 
-- ユーザー名: `developer`
+- ユーザー名: `vscode`
 - ベース OS: Ubuntu 24.04
-- Python 環境: `/home/developer/.venv`
+- Python 環境: `/home/vscode/.venv`
 - 開発ツール: uv、git、GitHub CLI、ZSH、ripgrep 等
 - フルスタック対応: Python + Node.js + TypeScript 完全対応
 - Claude Code CLI: プリインストール済み
