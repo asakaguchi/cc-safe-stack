@@ -207,9 +207,10 @@ docker compose up  # app と frontend の両方を起動
 ### 1. 初期セットアップ
 
 ```bash
-# プロジェクトのクローン
-git clone <repository-url>
-cd claude-code-polyglot-starter
+# 1. GitHubで「Use this template」ボタンをクリックして新しいリポジトリを作成
+# 2. 作成したリポジトリをクローン
+git clone https://github.com/<your-username>/<your-repository-name>.git
+cd <your-repository-name>
 
 # 依存関係のインストールと環境構築
 bun run setup
