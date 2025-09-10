@@ -8,6 +8,7 @@
     "UV_CACHE_DIR": "${containerWorkspaceFolder}/.cache/uv",
     "UV_LINK_MODE": "copy",
     "UV_COMPILE_BYTECODE": "1",
+    "UV_PROJECT_ENVIRONMENT": "${containerWorkspaceFolder}/.venv",
     "NODE_ENV": "development",
     "PRE_COMMIT_HOME": "${containerWorkspaceFolder}/.cache/pre-commit",
     // Secure firewall policies on start (default: true)
@@ -119,5 +120,5 @@
   ],
   "remoteUser": "vscode",
   "postCreateCommand": ".devcontainer/scripts/postCreateCommand.sh",
-  "postStartCommand": "bash -lc 'if [ \"${SECURE_MODE}\" = \"true\" ]; then sudo .devcontainer/secure/init-firewall.sh; else echo Secure mode disabled; fi'"
+  "postStartCommand": ".devcontainer/scripts/postStartCommand.sh"
 }
