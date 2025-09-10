@@ -3,6 +3,10 @@ set -euo pipefail
 
 echo "🚀 Setting up Full-Stack Development Environment..."
 
+# Get script directory for absolute paths
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -27,8 +31,8 @@ log_error() {
 }
 
 # Check if we're in the right directory
-if [ ! -f "package.json" ] || [ ! -f "backend/pyproject.toml" ]; then
-    log_error "Please run this script from the project root directory"
+if [ ! -f "$PROJECT_ROOT/package.json" ] || [ ! -f "$PROJECT_ROOT/backend/pyproject.toml" ]; then
+    log_error "Could not find project files in $PROJECT_ROOT"
     exit 1
 fi
 
@@ -61,40 +65,39 @@ log_success "All required tools are available"
 
 # Setup Backend (Python)
 log_info "Setting up Python backend..."
-cd backend
+cd "$PROJECT_ROOT/backend"
 
 # Install Python dependencies
 log_info "Installing Python dependencies with uv..."
-VIRTUAL_ENV= uv sync
+uv sync
 
 # Install pre-commit hooks if available
-if [ -f "../.pre-commit-config.yaml" ]; then
+if [ -f "$PROJECT_ROOT/.pre-commit-config.yaml" ]; then
     log_info "Installing pre-commit hooks..."
-    VIRTUAL_ENV= uv run pre-commit install
+    uv run pre-commit install
 fi
 
-cd ..
 log_success "Backend setup completed"
 
 # Setup Frontend (TypeScript/React)
 log_info "Setting up TypeScript frontend..."
-cd frontend
+cd "$PROJECT_ROOT/frontend"
 
 # Install Node.js dependencies
 log_info "Installing Node.js dependencies with bun..."
 bun install
 
-cd ..
 log_success "Frontend setup completed"
 
 # Install root dependencies
 log_info "Installing root workspace dependencies..."
+cd "$PROJECT_ROOT"
 bun install
 
 # Create .env files if they don't exist
-if [ ! -f "backend/.env" ]; then
+if [ ! -f "$PROJECT_ROOT/backend/.env" ]; then
     log_info "Creating backend .env file..."
-    cat > backend/.env << EOF
+    cat > "$PROJECT_ROOT/backend/.env" << EOF
 # Backend Environment Variables
 DEBUG=true
 HOST=0.0.0.0
@@ -103,9 +106,9 @@ CORS_ORIGINS=["http://localhost:3000"]
 EOF
 fi
 
-if [ ! -f "frontend/.env" ]; then
+if [ ! -f "$PROJECT_ROOT/frontend/.env" ]; then
     log_info "Creating frontend .env file..."
-    cat > frontend/.env << EOF
+    cat > "$PROJECT_ROOT/frontend/.env" << EOF
 # Frontend Environment Variables
 VITE_API_URL=http://localhost:8000
 VITE_DEV_PORT=3000
@@ -113,11 +116,11 @@ EOF
 fi
 
 # Setup VS Code settings
-if [ ! -d ".vscode" ]; then
+if [ ! -d "$PROJECT_ROOT/.vscode" ]; then
     log_info "Creating VS Code workspace settings..."
-    mkdir -p .vscode
+    mkdir -p "$PROJECT_ROOT/.vscode"
     
-    cat > .vscode/settings.json << EOF
+    cat > "$PROJECT_ROOT/.vscode/settings.json" << EOF
 {
   "python.defaultInterpreterPath": "./backend/.venv/bin/python",
   "eslint.workingDirectories": ["frontend"],

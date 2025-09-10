@@ -3,6 +3,10 @@ set -euo pipefail
 
 echo "🧹 Cleaning project artifacts..."
 
+# Get script directory for absolute paths
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+
 # Colors for output
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
@@ -34,14 +38,14 @@ safe_remove() {
 }
 
 # Check if we're in the right directory
-if [ ! -f "package.json" ] || [ ! -f "backend/pyproject.toml" ]; then
-    echo "❌ Please run this script from the project root directory"
+if [ ! -f "$PROJECT_ROOT/package.json" ] || [ ! -f "$PROJECT_ROOT/backend/pyproject.toml" ]; then
+    echo "❌ Could not find project files in $PROJECT_ROOT"
     exit 1
 fi
 
 # Clean Backend (Python)
 log_info "Cleaning Python backend artifacts..."
-cd backend
+cd "$PROJECT_ROOT/backend"
 
 # Remove Python cache and build artifacts
 safe_remove "__pycache__" "Python cache"
@@ -57,11 +61,9 @@ find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
 find . -name "*.pyc" -delete 2>/dev/null || true
 find . -name "*.pyo" -delete 2>/dev/null || true
 
-cd ..
-
 # Clean Frontend (TypeScript/React)
 log_info "Cleaning TypeScript frontend artifacts..."
-cd frontend
+cd "$PROJECT_ROOT/frontend"
 
 safe_remove "node_modules" "Node.js modules"
 safe_remove "dist" "Frontend build artifacts"
@@ -69,10 +71,9 @@ safe_remove ".vite" "Vite cache"
 safe_remove "coverage" "test coverage reports"
 safe_remove ".eslintcache" "ESLint cache"
 
-cd ..
-
 # Clean root level artifacts
 log_info "Cleaning root level artifacts..."
+cd "$PROJECT_ROOT"
 safe_remove "node_modules" "root Node.js modules"
 safe_remove ".bun" "Bun cache"
 safe_remove "build-info.json" "build information file"

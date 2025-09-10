@@ -3,6 +3,10 @@ set -euo pipefail
 
 echo "🔍 Running Code Quality Checks..."
 
+# Get script directory for absolute paths
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -29,18 +33,18 @@ log_error() {
 ERRORS=0
 
 # Check if we're in the right directory
-if [ ! -f "package.json" ] || [ ! -f "backend/pyproject.toml" ]; then
-    log_error "Please run this script from the project root directory"
+if [ ! -f "$PROJECT_ROOT/package.json" ] || [ ! -f "$PROJECT_ROOT/backend/pyproject.toml" ]; then
+    log_error "Could not find project files in $PROJECT_ROOT"
     exit 1
 fi
 
 # Lint Backend (Python)
 log_info "Linting Python backend..."
-cd backend
+cd "$PROJECT_ROOT/backend"
 
 # Run Ruff linting
 log_info "Running Ruff checks..."
-if VIRTUAL_ENV= uv run ruff check .; then
+if uv run ruff check .; then
     log_success "Ruff checks passed"
 else
     log_error "Ruff checks failed"
@@ -49,7 +53,7 @@ fi
 
 # Run Ruff formatting check
 log_info "Checking Python code formatting..."
-if VIRTUAL_ENV= uv run ruff format --check .; then
+if uv run ruff format --check .; then
     log_success "Python formatting is correct"
 else
     log_warning "Python code needs formatting (run: bun run format:backend)"
@@ -57,9 +61,9 @@ else
 fi
 
 # Run mypy if available
-if VIRTUAL_ENV= uv run python -c "import mypy" 2>/dev/null; then
+if uv run python -c "import mypy" 2>/dev/null; then
     log_info "Running type checks with mypy..."
-    if VIRTUAL_ENV= uv run mypy .; then
+    if uv run mypy .; then
         log_success "Type checks passed"
     else
         log_error "Type checks failed"
@@ -69,11 +73,9 @@ else
     log_warning "mypy not installed, skipping type checks"
 fi
 
-cd ..
-
 # Lint Frontend (TypeScript/React)
 log_info "Linting TypeScript frontend..."
-cd frontend
+cd "$PROJECT_ROOT/frontend"
 
 # Run ESLint
 log_info "Running ESLint..."
@@ -102,10 +104,9 @@ else
     ERRORS=$((ERRORS + 1))
 fi
 
-cd ..
-
 # Lint Documentation (Textlint)
 log_info "Linting documentation and text files..."
+cd "$PROJECT_ROOT"
 
 # Run textlint
 log_info "Running textlint checks..."

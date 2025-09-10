@@ -3,6 +3,10 @@ set -euo pipefail
 
 echo "🔧 Auto-fixing lint issues..."
 
+# Get script directory for absolute paths
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+
 # Colors for output
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
@@ -17,35 +21,32 @@ log_success() {
 }
 
 # Check if we're in the right directory
-if [ ! -f "package.json" ] || [ ! -f "backend/pyproject.toml" ]; then
-    echo "❌ Please run this script from the project root directory"
+if [ ! -f "$PROJECT_ROOT/package.json" ] || [ ! -f "$PROJECT_ROOT/backend/pyproject.toml" ]; then
+    echo "❌ Could not find project files in $PROJECT_ROOT"
     exit 1
 fi
 
 # Fix Backend (Python)
 log_info "Auto-fixing Python backend issues..."
-cd backend
+cd "$PROJECT_ROOT/backend"
 
 # Run Ruff auto-fix
 log_info "Running Ruff auto-fix..."
 uv run ruff check . --fix
 log_success "Python linting issues fixed"
 
-cd ..
-
 # Fix Frontend (TypeScript/React)
 log_info "Auto-fixing TypeScript frontend issues..."
-cd frontend
+cd "$PROJECT_ROOT/frontend"
 
 # Run ESLint auto-fix
 log_info "Running ESLint auto-fix..."
 bun run lint:fix
 log_success "TypeScript linting issues fixed"
 
-cd ..
-
 # Fix Documentation (Textlint)
 log_info "Auto-fixing documentation issues..."
+cd "$PROJECT_ROOT"
 
 # Run textlint auto-fix
 log_info "Running textlint auto-fix..."

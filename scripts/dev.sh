@@ -3,6 +3,10 @@ set -euo pipefail
 
 echo "🚀 Starting Full-Stack Development Servers (React + FastAPI + Streamlit)..."
 
+# Get script directory for absolute paths
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+
 # Colors for output
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
@@ -32,48 +36,44 @@ cleanup() {
 trap cleanup SIGINT SIGTERM
 
 # Check if we're in the right directory
-if [ ! -f "package.json" ] || [ ! -f "backend/pyproject.toml" ]; then
-    echo "❌ Please run this script from the project root directory"
+if [ ! -f "$PROJECT_ROOT/package.json" ] || [ ! -f "$PROJECT_ROOT/backend/pyproject.toml" ]; then
+    echo "❌ Could not find project files in $PROJECT_ROOT"
     exit 1
 fi
 
 # Check if dependencies are installed
-if [ ! -d "backend/.venv" ]; then
+if [ ! -d "$PROJECT_ROOT/backend/.venv" ]; then
     log_warning "Backend dependencies not found. Running setup..."
-    ./scripts/setup.sh
+    "$PROJECT_ROOT/scripts/setup.sh"
 fi
 
-if [ ! -d "frontend/node_modules" ]; then
+if [ ! -d "$PROJECT_ROOT/frontend/node_modules" ]; then
     log_warning "Frontend dependencies not found. Running setup..."
-    ./scripts/setup.sh
+    "$PROJECT_ROOT/scripts/setup.sh"
 fi
 
 # Check if Streamlit is available (now included in base dependencies)
 log_info "Checking Streamlit availability..."
-cd backend
-if ! VIRTUAL_ENV= uv run python -c "import streamlit" 2>/dev/null; then
+cd "$PROJECT_ROOT/backend"
+if ! uv run python -c "import streamlit" 2>/dev/null; then
     log_warning "Streamlit not found. Syncing dependencies..."
-    VIRTUAL_ENV= uv sync
+    uv sync
 fi
-cd ..
 
 log_info "Starting backend server (Python/FastAPI)..."
-cd backend
-VIRTUAL_ENV= uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000 &
+cd "$PROJECT_ROOT/backend"
+uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000 &
 BACKEND_PID=$!
-cd ..
 
 log_info "Starting frontend server (TypeScript/React)..."
-cd frontend
+cd "$PROJECT_ROOT/frontend"
 bun dev --host 0.0.0.0 &
 FRONTEND_PID=$!
-cd ..
 
 log_info "Starting Streamlit server (Data Application)..."
-cd backend
-VIRTUAL_ENV= uv run streamlit run ../streamlit/app.py --server.port 8501 --server.address 0.0.0.0 &
+cd "$PROJECT_ROOT/backend"
+uv run streamlit run "$PROJECT_ROOT/streamlit/app.py" --server.port 8501 --server.address 0.0.0.0 &
 STREAMLIT_PID=$!
-cd ..
 
 log_success "All development servers started!"
 echo ""

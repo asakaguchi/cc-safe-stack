@@ -3,6 +3,10 @@ set -euo pipefail
 
 echo "🏗️  Building Full-Stack Application..."
 
+# Get script directory for absolute paths
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -27,29 +31,29 @@ log_error() {
 }
 
 # Check if we're in the right directory
-if [ ! -f "package.json" ] || [ ! -f "backend/pyproject.toml" ]; then
-    log_error "Please run this script from the project root directory"
+if [ ! -f "$PROJECT_ROOT/package.json" ] || [ ! -f "$PROJECT_ROOT/backend/pyproject.toml" ]; then
+    log_error "Could not find project files in $PROJECT_ROOT"
     exit 1
 fi
 
 # Build Backend (Python)
 log_info "Building Python backend..."
-cd backend
+cd "$PROJECT_ROOT/backend"
 
 # Ensure dependencies are up to date
 log_info "Syncing Python dependencies..."
-VIRTUAL_ENV= uv sync --frozen
+uv sync --frozen
 
 # Run type checking with mypy if available
-if VIRTUAL_ENV= uv run python -c "import mypy" 2>/dev/null; then
+if uv run python -c "import mypy" 2>/dev/null; then
     log_info "Running type checks..."
-    VIRTUAL_ENV= uv run mypy . || log_warning "Type checking failed"
+    uv run mypy . || log_warning "Type checking failed"
 fi
 
 # Run tests if they exist
 if [ -d "tests" ] && [ "$(ls -A tests)" ]; then
     log_info "Running backend tests..."
-    VIRTUAL_ENV= uv run pytest || {
+    uv run pytest || {
         log_error "Backend tests failed"
         exit 1
     }
@@ -57,12 +61,11 @@ else
     log_warning "No backend tests found"
 fi
 
-cd ..
 log_success "Backend build completed"
 
 # Build Frontend (TypeScript/React)
 log_info "Building TypeScript frontend..."
-cd frontend
+cd "$PROJECT_ROOT/frontend"
 
 # Install/update dependencies
 log_info "Installing frontend dependencies..."
@@ -89,11 +92,11 @@ bun run build || {
     exit 1
 }
 
-cd ..
 log_success "Frontend build completed"
 
 # Create build info
 log_info "Generating build information..."
+cd "$PROJECT_ROOT"
 BUILD_TIME=$(date -Iseconds)
 GIT_COMMIT=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
 cat > build-info.json << EOF

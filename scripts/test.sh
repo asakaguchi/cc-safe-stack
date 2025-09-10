@@ -3,6 +3,10 @@ set -euo pipefail
 
 echo "🧪 Running Full-Stack Tests..."
 
+# Get script directory for absolute paths
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -29,18 +33,18 @@ log_error() {
 ERRORS=0
 
 # Check if we're in the right directory
-if [ ! -f "package.json" ] || [ ! -f "backend/pyproject.toml" ]; then
-    log_error "Please run this script from the project root directory"
+if [ ! -f "$PROJECT_ROOT/package.json" ] || [ ! -f "$PROJECT_ROOT/backend/pyproject.toml" ]; then
+    log_error "Could not find project files in $PROJECT_ROOT"
     exit 1
 fi
 
 # Test Backend (Python)
 log_info "Testing Python backend..."
-cd backend
+cd "$PROJECT_ROOT/backend"
 
 if [ -d "tests" ] && [ "$(ls -A tests)" ]; then
     log_info "Running pytest..."
-    if VIRTUAL_ENV= uv run pytest -v; then
+    if uv run pytest -v; then
         log_success "Backend tests passed"
     else
         log_error "Backend tests failed"
@@ -93,7 +97,7 @@ EOF
     fi
 
     log_info "Running newly created tests..."
-    if VIRTUAL_ENV= uv run pytest -v; then
+    if uv run pytest -v; then
         log_success "Sample backend tests created and passed"
     else
         log_warning "Sample tests created but some failed"
@@ -101,11 +105,9 @@ EOF
     fi
 fi
 
-cd ..
-
 # Test Frontend (TypeScript/React)
 log_info "Testing TypeScript frontend..."
-cd frontend
+cd "$PROJECT_ROOT/frontend"
 
 # Check if test scripts exist
 if grep -q '"test"' package.json && [ -d "src" ]; then
@@ -139,11 +141,9 @@ EOF
     log_info "Test configuration suggestions created in package.json.tmp"
 fi
 
-cd ..
-
 # Run linting as part of test suite
 log_info "Running linting checks as part of test suite..."
-if ./scripts/lint.sh > /dev/null 2>&1; then
+if "$PROJECT_ROOT/scripts/lint.sh" > /dev/null 2>&1; then
     log_success "Linting checks passed"
 else
     log_warning "Linting checks failed (run: bun run lint for details)"
