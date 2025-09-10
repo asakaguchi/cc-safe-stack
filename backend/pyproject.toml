@@ -34,7 +34,6 @@ dev = [
 ]
 streamlit-extensions = [
     # 追加の分析・可視化ライブラリ（開発内容に応じて追加）
-    "streamlit-autorefresh>=0.0.1",
     "streamlit-aggrid>=0.3.4",
 ]
 

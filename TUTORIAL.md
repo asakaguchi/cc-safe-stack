@@ -56,46 +56,65 @@ specs/examples/から参考例を選択：
 - 型安全性（TypeScript ↔ Pydantic）
 - テスト（80%カバレッジ）
 
-#### ⚠️ yfinance を使用する際の事前設定
+#### ⚠️ 外部APIを使用する際の事前設定
 
-株式分析プラットフォームでは Yahoo Finance API を使用するため、セキュアモードで
-追加設定が必要です。
+株式分析プラットフォーム等で外部API（Yahoo Finance など）を使用する場合、セキュ
+アモードで追加設定が必要です。
+
+##### 方法1: 事前設定（推奨）
 
 1. **設定ファイルの作成**
 
-   yfinance 用の設定ファイルをコピーします：
+   必要なドメイン用の設定ファイルをコピー：
 
    ```bash
-   # クリーンなJSON版（推奨）
+   # Yahoo Finance用（株式分析の場合）
    cp .devcontainer/devcontainer.local.json.clean-yfinance .devcontainer/devcontainer.local.json
 
-   # または、コメント付きJSONC版
-   cp .devcontainer/devcontainer.local.jsonc.yfinance-example .devcontainer/devcontainer.local.json
+   # カスタム設定の場合
+   cp .devcontainer/devcontainer.local.json.clean-sample .devcontainer/devcontainer.local.json
    ```
 
-2. **Yahoo Finance ドメインの許可追加**
-
-   Yahoo Finance へのアクセスを許可するため、以下の設定を追加します：
+2. **必要に応じて設定を編集**
 
    ```json
    {
      "containerEnv": {
-       "ADDITIONAL_ALLOWED_DOMAINS":
-         "query1.finance.yahoo.com, query2.finance.yahoo.com,
-          finance.yahoo.com, fc.yahoo.com"
+       "SECURE_MODE": "true",
+       "ADDITIONAL_ALLOWED_DOMAINS": "example.com, api.example.com"
      }
    }
    ```
 
-3. **DevContainer の再ビルド** VS Code で「Rebuild and Reopen in Container」を実
-   行
+3. **DevContainer の再ビルド**
 
-セキュアモードは維持したまま、必要なドメインのみを許可しています。
+   VS Code で「Rebuild and Reopen in Container」を実行
+
+##### 方法2: 実行時追加（簡易）
+
+DevContainer 起動後に追加のドメインを許可：
+
+```bash
+# Yahoo Finance の場合
+./scripts/allow-additional-domain.sh fc.yahoo.com query1.finance.yahoo.com query2.finance.yahoo.com
+
+# 任意のドメインの場合
+./scripts/allow-additional-domain.sh your-api-domain.com
+```
+
+**注意**: 方法2は一時的な解決策です。恒久的な設定には方法1を推奨します。
 
 #### 📁 設定ファイルについて
 
-- `.jsonc.sample` ファイル: コメント付き JSONC 形式（VS Code 専用）
-- `.json.clean-*` ファイル: 標準 JSON 形式（推奨、どの環境でも動作）
+`.devcontainer/` フォルダ内の設定ファイル：
+
+- `devcontainer.json`: メインの設定（リポジトリにコミット済み）
+- `devcontainer.local.json`: **ユーザー固有の設定（.gitignore に含まれる）**
+- `.json.clean-*` ファイル: 標準 JSON 形式のテンプレート（推奨）
+- `.jsonc.*` ファイル: コメント付き JSONC 形式のテンプレート（参考用）
+
+**重要**: `devcontainer.local.json` は個人用設定のため、リポジトリにはコミットさ
+れません。
 
 ### 本格例（30分で完了）
 
@@ -187,6 +206,67 @@ Claude Code:
 3. **本格プロジェクト**: 自分の要件で仕様書を作成
 4. **チーム活用**: [specs/templates/agent/](specs/templates/agent/) で効率的な指
    示方法を学習
+
+---
+
+## 🔧 トラブルシューティング
+
+### 外部API接続エラー
+
+**症状**: Yahoo Finance 等の外部APIに接続できない
+
+**原因**: セキュアモードでドメインが許可されていない
+
+**解決策**:
+
+1. **設定確認**
+
+   ```bash
+   # 現在の環境変数を確認
+   echo $ADDITIONAL_ALLOWED_DOMAINS
+
+   # 許可されているIPを確認
+   sudo ipset list allowed-domains | grep -E "(yahoo|finance)"
+   ```
+
+2. **即座に修正**
+
+   ```bash
+   # 必要なドメインを追加
+   ./scripts/allow-additional-domain.sh fc.yahoo.com query1.finance.yahoo.com
+   ```
+
+3. **恒久的な修正**
+   ```bash
+   # 設定ファイルを作成
+   cp .devcontainer/devcontainer.local.json.clean-yfinance .devcontainer/devcontainer.local.json
+   # VS Code で DevContainer を再ビルド
+   ```
+
+### DevContainer 設定が反映されない
+
+**症状**: `devcontainer.local.json` を作成したが環境変数が設定されない
+
+**原因**: DevContainer の再ビルドまたは再起動が必要
+
+**解決策**:
+
+- VS Code: `Ctrl+Shift+P` → `Dev Containers: Rebuild Container`
+- または、設定後に `./scripts/allow-additional-domain.sh` を使用
+
+### 権限エラー
+
+**症状**: `ipset` コマンドで権限エラー
+
+**解決策**:
+
+```bash
+# スクリプト経由で実行（推奨）
+./scripts/allow-additional-domain.sh your-domain.com
+
+# 手動実行の場合は sudo を使用
+sudo ipset add allowed-domains 1.2.3.4
+```
 
 ---
 
