@@ -171,6 +171,7 @@ docker compose up  # app と frontend の両方を起動
 
 - **VS Code DevContainers** - 統一された開発環境
 - **Claude Code CLI** - AI 支援開発ツール
+- **Context7 MCP** - 最新ライブラリドキュメント統合
 - **Git + GitHub CLI** - バージョン管理
 - **Docker Compose** - コンテナ オーケストレーション
 
@@ -201,6 +202,52 @@ docker compose up  # app と frontend の両方を起動
 │   └── secure/           # セキュア開発環境
 └── docker/               # Docker関連ファイル
 ```
+
+### 🤖 MCPサーバー統合
+
+本プロジェクトでは、Claude Code の MCP（Model Context Protocol）サーバーを活用し
+て、開発効率を大幅に向上させています。
+
+#### Context7 - 最新ドキュメント統合
+
+Context7 MCPサーバーにより、常に最新のライブラリドキュメントとコード例を AI の文
+脈に直接取り込むことができます。
+
+**主な利点:**
+
+- ✅ **正確性**: トレーニングデータではなく、リアルタイムの公式ドキュメントを参
+  照
+- ✅ **バージョン固有**: 使用中のライブラリバージョンに対応した正確なコード例
+- ✅ **効率性**: 手動でのドキュメント検索が不要
+
+**使用方法:**
+
+プロンプトに「**use context7**」を追加するだけで、最新情報を取得できます。
+
+```text
+# FastAPI の例
+「FastAPIでWebSocketを実装する方法を教えて use context7」
+
+# React の例
+「React 19のServer Componentsの使い方を説明して use context7」
+
+# Next.js の例
+「Next.js 15のApp Routerでミドルウェアを設定する方法は？ use context7」
+```
+
+**設定済みサーバー:**
+
+- プロジェクトルートの `.mcp.json` に Context7 の設定を記載済み
+- 初回使用時に自動でインストールされます
+- チーム全体で同じ設定を共有可能
+
+**対応ライブラリ:**
+
+- **Python**: FastAPI, Pydantic, SQLAlchemy, Pandas 等
+- **TypeScript/JavaScript**: React, Next.js, Vite, Express 等
+- **その他多数のライブラリに対応**
+
+詳細は [Context7 公式サイト](https://context7.com) を参照してください。
 
 ## 🔧 セットアップ
 
