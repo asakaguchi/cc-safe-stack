@@ -8,17 +8,16 @@
 たモダンなフルスタック開発環境です。モノリポ構成により、3 つのフロントエンドを統
 合的に開発できます。
 
-### 🎯 3つのフロントエンド構成
+### 3つのフロントエンド構成
 
-- **React**: プロダクション向けのモダン UI
-- **Streamlit**: データ分析・管理者ダッシュボード
-- **FastAPI Docs**: 自動生成される API 仕様書
+- React：プロダクション向けのモダン UI
+- Streamlit：データ分析・管理者ダッシュボード
+- FastAPI Docs：自動生成される API 仕様書
 
 ## 📖 チュートリアル
 
-Claude Code を使った効率的な開発方法について学びたい方
-は、[TUTORIAL.md](TUTORIAL.md) をご覧ください。実践的な例を通じて、仕様書駆動開
-発や並列実行の威力を体験できます。
+Claude Code を使った開発方法について学びたい方は、 [TUTORIAL.md](TUTORIAL.md) を
+ご覧ください。実践的な例を通じて、仕様書による開発手法や並列実行を体験できます。
 
 ## 📝 チートシート（最短）
 
@@ -44,8 +43,8 @@ docker compose up
 
 ### 1. VS Code DevContainer（推奨）
 
-- 必要条件: VS Code + Dev Containers 拡張機能 + Docker
-- 使い方:
+- 必要条件：VS Code + Dev Containers 拡張機能 + Docker
+- 使い方：
   1. リポジトリを VS Code で開く
   2. コマンドパレットで「Reopen in Container」を実行（次のどちらかを選択）
      - "Python & TypeScript Development Environment"（ルート定義・推奨。既定で
@@ -136,11 +135,11 @@ docker compose up  # app と frontend の両方を起動
 
 ### 3. Docker開発環境（セキュア・Claude Code統合）
 
-**⚠️ 安全性重視**: Claude Codeによる誤った破壊的操作（`rm -rf *`等）からホストマ
-シンを保護
+安全性重視：Claude Code による誤った破壊的操作（`rm -rf *`等）からホストマシンを
+保護します。
 
-- 必要条件: Docker + Claude Code API キー
-- 特徴: DevContainerと同等のセキュリティ機能を提供
+- 必要条件：Docker + Claude Code API キー
+- 特徴：DevContainer と同等のセキュリティ機能を提供
 
 ```bash
 # 1. 環境変数の設定
@@ -162,7 +161,7 @@ bun run dev  # React(3000), FastAPI(8000), Streamlit(8501)
 
 #### エディタの選択肢
 
-**Option A: コンテナ内エディタ（軽量）**
+##### Option A: コンテナ内エディタ（軽量）
 
 ```bash
 # コンテナ内で直接編集
@@ -170,14 +169,14 @@ vim src/main.py
 nano README.md
 ```
 
-**Option B: VS Code Remote Containers（推奨）**
+##### Option B: VS Code Remote Containers（推奨）
 
 ```bash
 # VS Codeでコンテナに接続
 code --remote-containers /workspace
 ```
 
-**Option C: ホストエディタ（ファイル共有）**
+##### Option C: ホストエディタ（ファイル共有）
 
 ```bash
 # ホストマシンで任意のエディタを使用
@@ -186,10 +185,10 @@ code --remote-containers /workspace
 
 #### セキュリティ機能
 
-- **ネットワーク制限**: 許可されたドメインのみアクセス可能
-- **ファイアウォール**: DevContainerと同等のiptables設定
-- **隔離環境**: ホストファイルシステムへの破壊的操作を防止
-- **追加ドメイン許可**: 環境変数で柔軟に設定可能
+- ネットワーク制限：許可されたドメインのみアクセス可能
+- ファイアウォール：DevContainer と同等の iptables 設定
+- 隔離環境：ホストファイルシステムへの破壊的操作を防止
+- 追加ドメイン許可：環境変数で柔軟に設定可能
 
 ```bash
 # 追加ドメインの許可例（.envファイル）
@@ -304,24 +303,24 @@ Context7 MCP サーバーにより、常に最新のライブラリドキュメ�
 
 ##### 対応ライブラリ
 
-Python（FastAPI, Pydantic, SQLAlchemy, Pandas 等）、
-TypeScript/JavaScript（React, Next.js, Vite, Express 等）をはじめ、多数のライブ
-ラリに対応しています。
+対応ライブラリは多岐にわたります。Python では FastAPI、Pydantic、SQLAlchemy、
+Pandas など多数のライブラリに対応しています。TypeScript/JavaScript では React、
+Next.js、Vite、Express などをサポートしています。
 
 詳細は [Context7 公式サイト](https://context7.com) を参照してください。
 
 #### Playwright - ブラウザ自動化
 
-Playwright MCPサーバーにより、ブラウザの自動操作やWebスクレイピング、E2Eテストの
-実行が可能になります。
+Playwright MCP サーバーにより、ブラウザの自動操作や Web スクレイピング、E2E テス
+トの実行が可能になります。
 
 ##### 主な機能
 
-- Webページの自動操作（クリック、入力、ナビゲーション）
-- スクリーンショット撮影とPDF生成
+- Web ページの自動操作（クリック、入力、ナビゲーション）
+- スクリーンショット撮影と PDF 生成
 - 複数ブラウザ対応（Chromium、Firefox、WebKit）
 - フォーム自動入力とファイルアップロード
-- JavaScriptの実行とページ要素の操作
+- JavaScript の実行とページ要素の操作
 
 ##### 使用方法（Playwright）
 
@@ -658,7 +657,7 @@ code .devcontainer/devcontainer.local.json
 注意: `.devcontainer/devcontainer.local.json` は Git にコミットされません
 （`.gitignore` 済み）。
 
-## 🌟 特徴
+## 特徴
 
 ### フルスタック統合開発
 
@@ -686,8 +685,8 @@ code .devcontainer/devcontainer.local.json
 
 ## 📚 開発ガイド
 
-> 💡 **Claude Code を使った開発方法については [TUTORIAL.md](TUTORIAL.md) を参照
-> してください。**
+> Claude Code を使った開発方法については [TUTORIAL.md](TUTORIAL.md) を参照してく
+> ださい。
 
 ### API開発（Python）
 
