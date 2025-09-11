@@ -1,20 +1,118 @@
-# Docker 開発環境ガイド
+# Docker セキュア開発環境ガイド
 
-このガイドでは、Docker を使用した開発環境の構築と運用について説明します。
+このガイドでは、**Claude Codeを安全に実行するためのDocker開発環境**について説明
+します。
 
-## 概要
+## 目的
 
-プロジェクトでは 3 つの Docker 環境を提供しています。
+Claude Code が誤って `rm -rf *` などの破壊的コマンドを実行してもホスト環境を保護
+するため、完全に隔離されたセキュアな開発環境を提供します。
 
-1. **標準Docker**：バックエンドのみ（フロントエンドはホスト実行）
-2. **フルスタックDocker**：全てのサービスをコンテナで実行
-3. **セキュアDocker**：ネットワーク制限付きセキュア開発環境
+## 環境構成
+
+プロジェクトでは 3 つの Docker 環境を提供しています：
+
+1. **セキュアDocker開発環境**（**推奨**）：Claude Code 専用の隔離環境
+2. **標準Docker**：バックエンドのみ（フロントエンドはホスト実行）
+3. **フルスタックDocker**：全てのサービスをコンテナで実行
+
+## セキュアDocker開発環境（推奨）
+
+**Claude Codeを安全に実行するための専用環境**です。ネットワーク制限により外部へ
+の不正アクセスを防止し、破壊的操作をコンテナ内に隔離します。
+
+### 必要条件
+
+- Docker
+- 環境変数設定（`.env`）
+
+### セットアップ手順
+
+#### 1. 環境変数の設定
+
+```bash
+cp .env.example .env
+```
+
+#### 2. セキュア開発環境の起動
+
+```bash
+# 推奨：package.jsonコマンド使用
+bun run docker:dev
+
+# 直接コマンド
+docker compose --profile dev up -d dev
+```
+
+#### 3. コンテナに接続
+
+```bash
+# 推奨：package.jsonコマンド使用
+bun run docker:dev:connect
+
+# 直接コマンド
+docker exec -it claude-code-polyglot-starter-dev-1 zsh
+```
+
+#### 4. Claude Codeで開発開始
+
+**重要**: Claude Code はコンテナ内でのみ実行してください（ホスト環境での実行は非
+推奨）
+
+```bash
+# コンテナ内でClaude Codeを安全に実行
+claude-code
+```
+
+#### 5. 開発サーバーの起動（コンテナ内で実行）
+
+```bash
+bun run dev  # React(3000), FastAPI(8000), Streamlit(8501)
+```
+
+### エディタの選択肢
+
+#### Option A: コンテナ内エディタ（軽量）
+
+```bash
+# コンテナ内で直接編集
+vim src/main.py
+nano README.md
+```
+
+#### Option B: VS Code Remote Containers（推奨）
+
+```bash
+# VS Codeでコンテナに接続
+code --remote-containers /workspace
+```
+
+#### Option C: ホストエディタ（ファイル共有）
+
+```bash
+# ホストマシンで任意のエディタを使用
+# ファイルは自動で同期される
+```
+
+### セキュリティ機能
+
+- **破壊的操作の隔離**: `rm -rf *` 等の誤操作をコンテナ内に限定
+- **ネットワーク制限**: 許可されたドメインのみアクセス可能
+- **ファイアウォール**: DevContainer と同等の iptables 設定
+- **追加ドメイン許可**: 環境変数で柔軟に設定可能
+
+### 追加ドメインの許可
+
+```bash
+# 追加ドメインの許可例（.envファイル）
+ADDITIONAL_ALLOWED_DOMAINS=npm.company.com,pypi.company.com
+```
 
 ## 標準Docker環境
 
 エディタ不問（Vim/Emacs/IntelliJ 等）で開発できる汎用的な環境です。
 
-### 必要条件
+### 標準Docker環境の必要条件
 
 - Docker
 - bun（フロントエンド用）
@@ -60,97 +158,6 @@ docker compose up
 - 本番環境に近い構成
 - 環境の完全な統一性
 
-## セキュアDocker環境
-
-ネットワーク制限付きセキュア開発環境です。
-
-### セキュア環境の概要
-
-ネットワーク制限により外部への不正アクセスを防止し、セキュアな開発環境を提供しま
-す。任意のエディタで開発可能です。
-
-### セキュア環境の必要条件
-
-- Docker
-- 環境変数設定（`.env`）
-
-### セットアップ手順
-
-#### 1. 環境変数の設定
-
-```bash
-cp .env.example .env
-```
-
-#### 2. セキュア開発環境の起動
-
-```bash
-docker compose --profile dev up -d dev
-```
-
-#### 3. コンテナに接続
-
-```bash
-docker exec -it claude-code-polyglot-starter-dev-1 zsh
-```
-
-#### 4. 開発ツールの使用
-
-Claude Code CLI やその他の開発ツールは、ホスト環境またはコンテナ内のどちらからで
-も使用できます。
-
-```bash
-# ホスト環境から使用
-claude-code
-
-# またはコンテナ内から使用
-docker exec -it claude-code-polyglot-starter-dev-1 claude-code
-```
-
-#### 5. 開発サーバーの起動（コンテナ内で実行）
-
-```bash
-bun run dev  # React(3000), FastAPI(8000), Streamlit(8501)
-```
-
-### エディタの選択肢
-
-#### Option A: コンテナ内エディタ（軽量）
-
-```bash
-# コンテナ内で直接編集
-vim src/main.py
-nano README.md
-```
-
-#### Option B: VS Code Remote Containers（推奨）
-
-```bash
-# VS Codeでコンテナに接続
-code --remote-containers /workspace
-```
-
-#### Option C: ホストエディタ（ファイル共有）
-
-```bash
-# ホストマシンで任意のエディタを使用
-# ファイルは自動で同期される
-```
-
-### セキュリティ機能
-
-- **ネットワーク制限** - 許可されたドメインのみアクセス可能
-- **ファイアウォール** - DevContainer と同等の iptables 設定
-- **隔離環境** - ホストファイルシステムへの破壊的操作を防止
-- **追加ドメイン許可** - 環境変数で柔軟に設定可能
-
-### 追加ドメインの許可
-
-```bash
-# 追加ドメインの許可例（.envファイル）
-ADDITIONAL_ALLOWED_DOMAINS=npm.company.com,pypi.company.com
-```
-
 ## Docker Compose 構成
 
 ### サービス一覧
@@ -170,8 +177,8 @@ docker compose up app
 # フロントエンド + バックエンド
 docker compose up
 
-# セキュア開発環境
-docker compose --profile dev up -d dev
+# セキュア開発環境（推奨）
+bun run docker:dev
 
 # 特定サービスの再ビルド
 docker compose build app
@@ -213,17 +220,17 @@ docker compose up
 # - ファイル変更はボリュームマウントで反映
 ```
 
-### セキュア開発
+### セキュア開発（Claude Code開発環境）
 
 ```bash
-# 1. セキュア環境起動
-docker compose --profile dev up -d dev
+# 1. セキュア環境起動（推奨コマンド）
+bun run docker:dev
 
-# 2. コンテナに接続
-docker exec -it claude-code-polyglot-starter-dev-1 zsh
+# 2. コンテナに接続（推奨コマンド）
+bun run docker:dev:connect
 
-# 3. Claude Code で開発
-claude-code
+# 3. Claude Code で安全に開発
+claude-code  # コンテナ内で隔離実行
 
 # 4. 開発サーバー起動
 bun run dev

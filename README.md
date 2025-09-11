@@ -76,27 +76,53 @@ Claude Code（Anthropic の AI 開発パートナー）を使って、仕様書�
 | **Docker**       | エディタ不問・コンテナ統一 | **Vim/Emacs/IntelliJ等** |
 | **ローカル**     | 高速・カスタマイズ自由     | パフォーマンス重視       |
 
-#### オプション A: VS Code DevContainer
+#### オプション A: VS Code DevContainer（セキュア隔離環境・デフォルト）
+
+**Claude Codeを安全に実行するための推奨環境**です。破壊的操作からホストシステム
+を保護します。
 
 ```bash
 code .
 # コマンドパレット: "Reopen in Container"
-# 自動で Python + TypeScript + 全ツールがセットアップ完了
+# 自動で Python + TypeScript + 全ツール + セキュリティ設定が完了
 ```
 
-#### オプション B: Docker Compose（任意のエディタ）
+主な特徴は次のとおりです。
+
+- デフォルトでセキュアモード有効（SECURE_MODE=true）
+- Claude Code の誤操作（`rm -rf *`等）をコンテナ内に隔離
+- ネットワーク制限により外部への不正アクセスを防止
+- 完全な開発環境がゼロ設定で利用可能
+
+#### オプション B: Docker Compose（セキュア隔離環境）
+
+Claude Code を隔離環境で安全に実行し、破壊的コマンドの実行リスクを最小化します。
 
 ```bash
-# 全サービス（React + FastAPI + Streamlit）を一括起動
-bun run docker:up
+# セキュア開発環境を起動（Claude Code CLI内蔵）
+bun run docker:dev
 
-# お使いのエディタでプロジェクトを開いて開発開始
+# コンテナに接続してClaude Codeを実行
+bun run docker:dev:connect
+claude-code  # コンテナ内で安全に実行
+
+# 開発サーバーはコンテナ内で起動
+bun run dev
 # - React: http://localhost:3000
 # - FastAPI: http://localhost:8000
 # - Streamlit: http://localhost:8501
 ```
 
-#### オプション C: ローカル開発
+主な利点は次のとおりです。
+
+- セキュリティ重視設計により Claude Code の誤操作からホスト環境を保護
+- 開発環境がコンテナ内に完全分離され安全
+- VS Code Remote Containers や IntelliJ 等からの接続に対応
+
+#### オプション C: ローカル開発（高速・カスタマイズ自由・セキュリティなし）
+
+**パフォーマンス重視・手動開発向け**の環境です。Claude Code の使用は非推奨（ホス
+ト環境リスクがあります）。
 
 ```bash
 # 依存関係セットアップ
@@ -106,9 +132,15 @@ bun run setup
 bun run dev
 ```
 
+重要な注意事項は次のとおりです。
+
+- Claude Code を使用する場合は上記セキュア環境を使用してください
+- ホスト環境での破壊的操作リスクが存在します
+- 手動開発・学習目的・パフォーマンス重視の場合に最適
+
 ### ステップ 3: Claude Code で実装開始
 
-**どの環境でも Claude Code を使用可能：**
+セキュア環境で Claude Code を使用する手順は次のとおりです。
 
 ```text
 「specs/examples/todo-app.spec.md の仕様で実装してください」

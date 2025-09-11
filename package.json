@@ -37,7 +37,11 @@
     "clean": "./scripts/clean.sh",
     "docker:build": "docker compose build",
     "docker:up": "docker compose up",
-    "docker:down": "docker compose down"
+    "docker:down": "docker compose down",
+    "docker:dev": "docker compose --profile dev up -d dev",
+    "docker:dev:connect": "docker exec -it claude-code-polyglot-starter-dev-1 zsh",
+    "docker:dev:logs": "docker compose --profile dev logs -f dev",
+    "docker:dev:down": "docker compose --profile dev down"
   },
   "devDependencies": {
     "@eslint/js": "^9.14.0",

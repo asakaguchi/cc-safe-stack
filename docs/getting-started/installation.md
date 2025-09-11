@@ -13,23 +13,32 @@
 
 ### 開発環境別の追加要件
 
-#### VS Code DevContainer（推奨）
+#### VS Code DevContainer（セキュア隔離・推奨）
+
+**Claude Codeを安全に実行するためのセキュア環境**：
 
 - **VS Code**: 最新版
 - **Dev Containers 拡張機能**: Microsoft 公式拡張
 - **Docker**: Docker Desktop
+- **特徴**: デフォルトで SECURE_MODE=true、破壊的操作をコンテナ内に隔離
 
-#### Docker単体
+#### Docker開発環境（セキュア隔離・任意エディタ）
+
+**Claude Codeを隔離環境で安全実行**：
 
 - **Docker**: Docker Compose v2 対応版
 - **bun**: JavaScript/TypeScript パッケージマネージャー
+- **特徴**: VS Code 以外のエディタでもセキュア実行可能
 
-#### ローカル開発
+#### ローカル開発（高速・非セキュア）
+
+**手動開発・パフォーマンス重視向け**（Claude Code 使用時は非推奨）：
 
 - **Python**: 3.12 以上
 - **Node.js**: 18 以上
 - **uv**: Python パッケージマネージャー
 - **bun**: JavaScript/TypeScript パッケージマネージャー
+- **注意**: Claude Code 実行時は上記セキュア環境を使用してください
 
 ## 初期セットアップ
 
