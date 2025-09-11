@@ -112,10 +112,6 @@ bun run dev
 - **[MCPサーバー統合](docs/environment/mcp-servers.md)** - Context7・Playwright
   活用
 
-### 貢献・運用
-
-- **[貢献ガイド](docs/guides/contributing.md)** - プロジェクトへの貢献方法
-
 ## 参考・クレジット
 
 - [Python プロジェクトのためのテンプレート](https://zenn.dev/mjun0812/articles/0ae2325d40ed20)
