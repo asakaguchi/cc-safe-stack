@@ -68,35 +68,64 @@
    cd your-project-name
    ```
 
-### ステップ 2: Claude Code で開発開始
+### ステップ 2: 開発環境を選択
 
-1. **VS Code DevContainerで開く（推奨）**
+以下の 3 つから最適な環境を選択してください。
 
-   ```bash
-   code .
-   # コマンドパレット: "Reopen in Container"
-   ```
+| 環境                | 特徴                      | 推奨ケース                 |
+| ------------------- | ------------------------- | -------------------------- |
+| **🧿 DevContainer** | Claude Code統合・ゼロ設定 | **初回利用・AI開発重視**   |
+| **🐳 Docker**       | コンテナ環境・チーム統一  | チーム開発・本番環境準拠   |
+| **💻 ローカル**     | 高速・カスタマイズ自由    | 経験者・パフォーマンス重視 |
 
-2. **Claude Code で一括実装**
+#### オプション A: VS Code DevContainer（推奨）
 
-   ```text
-   「specs/examples/todo-app.spec.md の仕様で実装してください」
-   ```
+```bash
+code .
+# コマンドパレット: "Reopen in Container"
+# 自動で Claude Code + 全ツールがセットアップ完了
+```
 
-3. **30分後に完成したアプリを確認**
+#### オプション B: Docker Compose
 
-   - **React** <http://localhost:3000>
-   - **FastAPI** <http://localhost:8000>
-   - **Streamlit** <http://localhost:8501>
+```bash
+# 全サービス（React + FastAPI + Streamlit）を一括起動
+bun run docker:up
 
-### ステップ 3: カスタマイズ
+# 起動確認
+# - React: http://localhost:3000
+# - FastAPI: http://localhost:8000
+# - Streamlit: http://localhost:8501
+```
 
-1. **あなたのプロジェクト用の仕様書作成**
+#### オプション C: ローカル開発
 
-   ```text
-   "specs/templates/" を参考に、あなたのプロジェクトの仕様書を作成
-   そして Claude Code に実装を依頼！
-   ```
+```bash
+# 依存関係セットアップ
+bun run setup
+
+# 全サービス並列起動
+bun run dev
+```
+
+### ステップ 3: Claude Code で一括実装
+
+```text
+「specs/examples/todo-app.spec.md の仕様で実装してください」
+```
+
+**30分後に完成したアプリを確認：**
+
+- **React** <http://localhost:3000>
+- **FastAPI** <http://localhost:8000>
+- **Streamlit** <http://localhost:8501>
+
+### ステップ 4: カスタマイズ
+
+```text
+"specs/templates/" を参考に、あなたのプロジェクトの仕様書を作成
+そして Claude Code に実装を依頼！
+```
 
 ## 📖 ドキュメント
 
