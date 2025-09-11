@@ -138,13 +138,12 @@ docker compose up  # app と frontend の両方を起動
 安全性重視：Claude Code による誤った破壊的操作（`rm -rf *`等）からホストマシンを
 保護します。
 
-- 必要条件：Docker + Claude Code API キー
+- 必要条件：Docker
 - 特徴：DevContainer と同等のセキュリティ機能を提供
 
 ```bash
 # 1. 環境変数の設定
 cp .env.example .env
-# .env ファイルを編集して CLAUDE_API_KEY を設定
 
 # 2. セキュア開発環境の起動
 docker compose --profile dev up -d dev
