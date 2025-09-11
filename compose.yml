@@ -54,3 +54,63 @@ services:
       bash -c "uv sync --group streamlit && uv run --group streamlit streamlit run ../streamlit/app.py --server.port 8501 --server.address 0.0.0.0"
     depends_on:
       - app
+
+  # セキュア開発環境（Claude Code + ファイアウォール）
+  dev:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    restart: "no"  # 開発用なので自動再起動しない
+    working_dir: /workspace
+    environment:
+      # セキュリティ設定
+      SECURE_MODE: ${SECURE_MODE:-true}
+      ADDITIONAL_ALLOWED_DOMAINS: ${ADDITIONAL_ALLOWED_DOMAINS:-}
+      
+      # Claude Code設定
+      CLAUDE_API_KEY: ${CLAUDE_API_KEY}
+      
+      # 開発環境設定
+      PYTHONUNBUFFERED: "1"
+      PYTHONDONTWRITEBYTECODE: "1"
+      NODE_ENV: development
+      
+      # ユーザー設定（ホストとの同期）
+      USER_ID: ${USER_ID:-1000}
+      GROUP_ID: ${GROUP_ID:-1000}
+      USER_NAME: ${USER_NAME:-developer}
+      GROUP_NAME: ${GROUP_NAME:-developer}
+    
+    # セキュリティ設定のためのcapabilities
+    cap_add:
+      - NET_ADMIN  # iptables操作に必要
+    
+    volumes:
+      - .:/workspace
+      # Claude Code設定の永続化
+      - claude-config:/home/developer/.claude
+      # キャッシュディレクトリの永続化
+      - dev-cache:/workspace/.cache
+      # 仮想環境の分離
+      - /workspace/.venv
+      - /workspace/frontend/node_modules
+    
+    ports:
+      - "3000:3000"  # React開発サーバー
+      - "8000:8000"  # FastAPI
+      - "8501:8501"  # Streamlit
+    
+    # インタラクティブモードを有効化
+    stdin_open: true
+    tty: true
+    
+    # プロファイル設定（通常は起動しない）
+    profiles:
+      - dev
+
+# 名前付きボリューム
+volumes:
+  claude-config:
+    driver: local
+  dev-cache:
+    driver: local

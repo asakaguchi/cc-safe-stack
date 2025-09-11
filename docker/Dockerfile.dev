@@ -1,0 +1,102 @@
+# syntax=docker/dockerfile:1
+
+# DevContainerと同等の環境を構築するセキュア開発用Dockerfile
+ARG BASE_IMAGE="mcr.microsoft.com/devcontainers/base:ubuntu-24.04"
+
+FROM $BASE_IMAGE
+
+# 環境変数の設定
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    UV_CACHE_DIR="/workspace/.cache/uv" \
+    UV_LINK_MODE=copy \
+    UV_COMPILE_BYTECODE=1 \
+    UV_PROJECT_ENVIRONMENT="/workspace/.venv" \
+    NODE_ENV=development \
+    PRE_COMMIT_HOME="/workspace/.cache/pre-commit"
+
+# 基本的なパッケージの更新とキャッシュの設定
+RUN rm -f /etc/apt/apt.conf.d/docker-clean \
+    && echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
+
+# セキュリティツールと開発ツールのインストール
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && apt-get install -y --no-install-recommends \
+    # セキュリティツール（DevContainerと同等）
+    iptables \
+    ipset \
+    aggregate \
+    dnsutils \
+    # 基本開発ツール
+    curl \
+    wget \
+    jq \
+    ca-certificates \
+    build-essential \
+    ripgrep \
+    git \
+    # エディタ
+    vim \
+    nano \
+    # 追加ツール
+    sudo \
+    gosu \
+    zsh
+
+# GitHub CLIのインストール
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends gh
+
+# uvのインストール（Python パッケージマネージャー）
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
+
+# Node.js 20とbunのインストール
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && npm install -g npm@latest
+
+# bunのインストール
+RUN curl -fsSL https://bun.sh/install | bash \
+    && mv /root/.bun/bin/bun /usr/local/bin/
+
+# Claude Code CLIのインストール
+RUN npm install -g @anthropic/claude-code
+
+# textlintの日本語文書用設定
+RUN npm install -g \
+    textlint@latest \
+    textlint-plugin-html@latest \
+    textlint-rule-preset-ja-technical-writing@latest \
+    @textlint-ja/preset-ai-writing@latest \
+    textlint-rule-preset-ja-spacing@latest \
+    textlint-filter-rule-comments@latest
+
+# sudoをパスワードなしで使用可能にする
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+# ユーザー権限の設定（DevContainerのvsコードユーザーに合わせる）
+RUN usermod -aG sudo vscode
+
+# ファイアウォール設定スクリプトをコピー
+COPY --chmod=755 .devcontainer/secure/init-firewall.sh /usr/local/bin/init-firewall.sh
+
+# エントリポイントスクリプトをコピー
+COPY --chmod=755 docker/entrypoint-dev.sh /usr/local/bin/entrypoint-dev.sh
+
+# 作業ディレクトリの設定
+WORKDIR /workspace
+
+# デフォルトのシェルをzshに設定
+RUN chsh -s /usr/bin/zsh vscode || true
+
+# ポート設定（開発サーバー用）
+EXPOSE 3000 8000 8501
+
+# エントリポイントの設定
+ENTRYPOINT ["/usr/local/bin/entrypoint-dev.sh"]
+CMD ["/bin/zsh"]

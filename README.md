@@ -134,14 +134,77 @@ bun run dev:frontend
 docker compose up  # app と frontend の両方を起動
 ```
 
+### 3. Docker開発環境（セキュア・Claude Code統合）
+
+**⚠️ 安全性重視**: Claude Codeによる誤った破壊的操作（`rm -rf *`等）からホストマ
+シンを保護
+
+- 必要条件: Docker + Claude Code API キー
+- 特徴: DevContainerと同等のセキュリティ機能を提供
+
+```bash
+# 1. 環境変数の設定
+cp .env.example .env
+# .env ファイルを編集して CLAUDE_API_KEY を設定
+
+# 2. セキュア開発環境の起動
+docker compose --profile dev up -d dev
+
+# 3. コンテナに接続
+docker exec -it claude-code-polyglot-starter-dev-1 zsh
+
+# 4. Claude Code CLIを起動（コンテナ内で実行）
+claude-code
+
+# 5. 開発サーバーの起動（コンテナ内で実行）
+bun run dev  # React(3000), FastAPI(8000), Streamlit(8501)
+```
+
+#### エディタの選択肢
+
+**Option A: コンテナ内エディタ（軽量）**
+
+```bash
+# コンテナ内で直接編集
+vim src/main.py
+nano README.md
+```
+
+**Option B: VS Code Remote Containers（推奨）**
+
+```bash
+# VS Codeでコンテナに接続
+code --remote-containers /workspace
+```
+
+**Option C: ホストエディタ（ファイル共有）**
+
+```bash
+# ホストマシンで任意のエディタを使用
+# ファイルは自動で同期される
+```
+
+#### セキュリティ機能
+
+- **ネットワーク制限**: 許可されたドメインのみアクセス可能
+- **ファイアウォール**: DevContainerと同等のiptables設定
+- **隔離環境**: ホストファイルシステムへの破壊的操作を防止
+- **追加ドメイン許可**: 環境変数で柔軟に設定可能
+
+```bash
+# 追加ドメインの許可例（.envファイル）
+ADDITIONAL_ALLOWED_DOMAINS=npm.company.com,pypi.company.com
+```
+
 補足事項は以下のとおりです。
 
 - Compose は標準でバックエンド用コンテナのみ起動します。フロントエンドはホストで
   並行起動するか、フルスタック開発をコンテナで統一したい場合は
   `docker compose up` で拡張してください。
-- `SECURE_MODE` は DevContainer のみの設定で、Docker Compose には影響しません。
+- セキュア開発環境は `--profile dev` で起動し、通常のサービスとは分離されていま
+  す。
 
-### 3. 技術スタック
+### 4. 技術スタック
 
 #### バックエンド（Python）
 
