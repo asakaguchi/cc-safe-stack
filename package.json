@@ -1,7 +1,7 @@
 {
   "name": "claude-code-polyglot-starter",
   "version": "0.0.1",
-  "description": "Modern full-stack development environment with Python + TypeScript",
+  "description": "Claude Code AI-powered full-stack development template with Python + TypeScript",
   "private": true,
   "type": "module",
   "workspaces": [
@@ -63,6 +63,9 @@
     "url": "https://github.com/your-username/claude-code-polyglot-starter"
   },
   "keywords": [
+    "claude-code",
+    "ai-development",
+    "template",
     "typescript",
     "python",
     "fastapi",
@@ -70,9 +73,10 @@
     "vite",
     "streamlit",
     "devcontainer",
-    "claude-code",
     "full-stack",
-    "monorepo"
+    "monorepo",
+    "tdd",
+    "bdd"
   ],
   "author": "Developer <developer@example.com>",
   "license": "MIT"

@@ -1,123 +1,160 @@
-# Claude-Code-Polyglot-Starter
+# Claude Code テンプレート - AI駆動フルスタック開発スターター
 
-モダンなフルスタック開発環境（Python + TypeScript）
+**Claude Code**を活用した高速フルスタック開発のためのテンプレートリポジトリ。
 
-## 概要
+## 🎯 このテンプレートについて
 
-本プロジェクトは、Python（FastAPI）、TypeScript（React）、Streamlit を組み合わせ
-たモダンなフルスタック開発環境です。モノリポ構成により、3 つのフロントエンドを統
-合的に開発できます。
+**Claude Code**（Anthropic の AI 開発パートナー）を使って、仕様書から**30分で高
+品質なフルスタックアプリケーション**を構築するためのテンプレートです。従来の段階
+的開発ではなく、**一括実装による劇的な開発効率向上**を実現します。
 
-### 3つのフロントエンド構成
+### ✨ このテンプレート + Claude Code で実現すること
 
-- **React** - プロダクション向けのモダン UI
+- **30分で本格アプリ完成** - 仕様書提示から動作確認まで
+- **🎨 3つのフロントエンド同時実装** - React + Streamlit + API Docs
+- **🧪 自動品質担保** - TDD/BDD、型安全性、80%テストカバレッジ
+- **🔄 並列実装** - バックエンド・フロントエンドを同時開発
+
+## 🛠️ Claude Code 最適化技術スタック
+
+### 🤖 AI 駆動開発基盤
+
+- **🧿 Claude Code** - 仕様書からアプリを自動実装する AI エンジニア
+- **📑 Context7 MCP** - 最新ライブラリドキュメントのリアルタイム統合
+- **🤖 Playwright MCP** - 自動ブラウザテストで品質担保
+- **📦 VS Code DevContainers** - ゼロ設定の統一開発環境
+
+### 🔄 並列実装対応スタック
+
+#### バックエンド（Python - AIが得意）
+
+- **Python 3.12+** + **FastAPI** - Claude Code が最も効率的に実装可能
+- **Pydantic** - TypeScript と型安全性を共有
+- **uv** - 依存関係の高速解決
+
+#### フロントエンド（TypeScript - AIが得意）
+
+- **TypeScript** + **React 18** - Claude Code の強力な型推論能力を活用
+- **Vite** - 高速ビルドで繰り返し測定を加速
+- **bun** - npm より 10 倍高速なパッケージ管理
+
+#### データ分析（Streamlit - 管理者ダッシュボード）
+
+- **Streamlit** - Python で高機能ダッシュボードを瞬時構築
+- **Pandas** + **Plotly** - インタラクティブなデータ可視化
+
+### 🧪 自動品質担保
+
+- **TDD/BDD** - Gherkin 仕様からテストを自動生成
+- **型安全性** - TypeScript ↔ Pydantic 間の型一致を保証
+- **Ruff** + **ESLint** - コード品質を自動維持
+- **80%テストカバレッジ** - Claude Code が自動達成
+
+## 🚀 クイックスタート
+
+### ステップ 1: テンプレートから新しいリポジトリ作成
+
+1. **GitHubでテンプレート使用**
+
+   ```bash
+   # このページの「Use this template」ボタンをクリック
+   # 新しいリポジトリ名を入力して作成
+   ```
+
+2. **ローカルにクローン**
+
+   ```bash
+   git clone https://github.com/your-username/your-project-name.git
+   cd your-project-name
+   ```
+
+### ステップ 2: Claude Code で開発開始
+
+1. **VS Code DevContainerで開く（推奨）**
+
+   ```bash
+   code .
+   # コマンドパレット: "Reopen in Container"
+   ```
+
+2. **Claude Code で一括実装**
+
+   ```text
+   「specs/examples/todo-app.spec.md の仕様で実装してください」
+   ```
+
+3. **30分後に完成したアプリを確認**
+
+   - **React** <http://localhost:3000>
+   - **FastAPI** <http://localhost:8000>
+   - **Streamlit** <http://localhost:8501>
+
+### ステップ 3: カスタマイズ
+
+1. **あなたのプロジェクト用の仕様書作成**
+
+   ```text
+   "specs/templates/" を参考に、あなたのプロジェクトの仕様書を作成
+   そして Claude Code に実装を依頼！
+   ```
+
+## 📖 ドキュメント
+
+### 🎯 Claude Code を今すぐ始める
+
+- **[Claude Code 実践ガイド](TUTORIAL.md)** - **30分でアプリ完成。具体的な手順**
+- **[仕様書の書き方](specs/README.md)** - Claude Code が理解しやすい仕様書作成法
+
+### 🛠️ 環境構築（必要時のみ）
+
+- **[セットアップガイド](docs/getting-started/installation.md)** - 手動セット
+  アップの詳細
+- **[DevContainer完全ガイド](docs/environment/devcontainer.md)** - VS Code 環境
+  の詳細設定
+- **[セキュリティ設定](docs/environment/security.md)** - 外部 API 利用時の設定
+
+### 🏗️ プロジェクト理解（参考）
+
+- **[アーキテクチャガイド](docs/development/architecture.md)** - 技術構成と設計
+  思想
+- **[API開発ガイド](docs/development/api-development.md)** - 従来的な開発手法
+
+## 🎯 このテンプレートの特徴
+
+### 📊 従来開発 vs Claude Code + このテンプレート
+
+| 項目         | 従来の開発   | Claude Code + テンプレート |
+| ------------ | ------------ | -------------------------- |
+| **開発時間** | 2-3週間      | **30分-2時間**             |
+| **実装方式** | 段階的・手動 | **一括・自動**             |
+| **品質担保** | 手動テスト   | **TDD/BDD自動**            |
+| **型安全性** | 後付け対応   | **最初から完全対応**       |
+| **並列開発** | 困難         | **フロント・バック同時**   |
+
+### 🎨 3つのフロントエンドが同時に手に入る
+
+- **React** - エンドユーザー向けのモダン UI
 - **Streamlit** - データ分析・管理者ダッシュボード
-- **FastAPI Docs** - 自動生成される API 仕様書
+- **FastAPI Docs** - 開発者向け API 仕様書（自動生成）
 
-## 🛠️ 技術スタック
+### 🛡️ 品質・セキュリティ標準装備
 
-### バックエンド（Python）
+- **型安全性** TypeScript ↔ Pydantic 完全連携
+- **テストカバレッジ** 80%以上の自動達成
+- **セキュリティ** DevContainer セキュアモード対応
+- **コード品質** ESLint + Ruff 自動適用
 
-- **Python 3.12+** - モダンな Python 環境
-- **FastAPI** - 高性能な Web API フレームワーク
-- **Pydantic** - データバリデーション
-- **uv** - 高速パッケージマネージャー
+## 🔗 参考・クレジット
 
-### フロントエンド（TypeScript）
-
-- **TypeScript** - 型安全な JavaScript
-- **React 18** - モダンな UI ライブラリ
-- **Vite** - 高速ビルドツール
-- **bun** - 高速パッケージマネージャー
-
-### データアプリケーション（Streamlit）
-
-- **Streamlit** - Python でのデータアプリ構築
-- **Pandas** - データ分析・処理
-- **Plotly** - インタラクティブな可視化
-
-### 開発ツール
-
-- **VS Code DevContainers** - 統一された開発環境
-- **Claude Code CLI** - AI 支援開発ツール
-- **Context7 MCP** - 最新ライブラリドキュメント統合
-- **Docker Compose** - コンテナ オーケストレーション
-
-## クイックスタート
-
-### VS Code DevContainer（推奨）
-
-```bash
-# 1. VS Code でプロジェクトを開く
-code .
-
-# 2. コマンドパレットで「Reopen in Container」を実行
-# → "Python & TypeScript Development Environment" を選択
-
-# 3. コンテナ内で開発サーバーを起動
-bun run dev
-```
-
-### Docker（エディタ不問）
-
-```bash
-# バックエンド依存関係の同期（初回のみ）
-cd backend && uv sync && cd -
-
-# バックエンド（FastAPI）をコンテナで起動
-docker compose up app &
-
-# フロントエンドはホストで起動
-bun install && bun run dev:frontend
-```
-
-### ローカル開発
-
-```bash
-# 依存関係のインストールと環境構築
-bun run setup
-
-# 3つのサーバーを同時起動
-bun run dev
-```
-
-## アクセス先
-
-- **React** - <http://localhost:3000>
-- **FastAPI** - <http://localhost:8000>
-- **Streamlit** - <http://localhost:8501>
-
-## ドキュメント
-
-### はじめに
-
-- **[Claude Code 実践ガイド](TUTORIAL.md)** - AI 支援開発の活用法
-- **[セットアップガイド](docs/getting-started/installation.md)** - 詳細な環境構
-  築手順
-
-### 開発
-
-- **[アーキテクチャガイド](docs/development/architecture.md)** - プロジェクト構
-  造と設計思想
-- **[API開発ガイド](docs/development/api-development.md)** - FastAPI + React 開
-  発手法
-
-### 環境設定
-
-- **[DevContainer完全ガイド](docs/environment/devcontainer.md)** - VS Code
-  DevContainer 詳細設定
-- **[Docker環境ガイド](docs/environment/docker.md)** - Docker 開発環境の構築
-- **[セキュリティ設定](docs/environment/security.md)** - セキュアモードと外部
-  API 設定
-- **[MCPサーバー統合](docs/environment/mcp-servers.md)** - Context7・Playwright
-  活用
-
-## 参考・クレジット
-
-- [Python プロジェクトのためのテンプレート](https://zenn.dev/mjun0812/articles/0ae2325d40ed20)
-- [Claude Code DevContainer](https://docs.anthropic.com/en/docs/claude-code/devcontainer)
+- [Claude Code 公式ドキュメント](https://docs.anthropic.com/en/docs/claude-code/devcontainer)
 - [Python Project Template](https://github.com/mjun0812/python-project-template)
+- [モダンフルスタック開発のベストプラクティス](https://zenn.dev/mjun0812/articles/0ae2325d40ed20)
 
-## ライセンス
+## 📄 ライセンス
 
 MIT License - 詳細は [LICENSE](LICENSE) ファイルを参照。
+
+---
+
+**今すぐ始めよう** 右上の「Use this template」ボタンから、あなたの AI 駆動開発を
+開始してください。
