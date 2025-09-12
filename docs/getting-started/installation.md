@@ -7,38 +7,38 @@
 
 ### システム要件
 
-- **OS**: Windows 10/11, macOS 10.15+, Ubuntu 18.04+
-- **Docker**: Docker Desktop または Docker Engine
-- **Git**: バージョン管理
+- OS: Windows 10/11, macOS 10.15+, Ubuntu 18.04+
+- Docker: Docker Desktop または Docker Engine
+- Git: バージョン管理
 
 ### 開発環境別の追加要件
 
 #### VS Code DevContainer（セキュア隔離・推奨）
 
-**Claude Codeを安全に実行するためのセキュア環境**：
+Claude Code を安全に実行するためのセキュア環境:
 
-- **VS Code**: 最新版
-- **Dev Containers 拡張機能**: Microsoft 公式拡張
-- **Docker**: Docker Desktop
-- **特徴**: デフォルトで SECURE_MODE=true、破壊的操作をコンテナ内に隔離
+- VS Code: 最新版
+- Dev Containers 拡張機能: Microsoft 公式拡張
+- Docker: Docker Desktop
+- 特徴: デフォルトで SECURE_MODE=true、破壊的操作をコンテナ内に隔離
 
 #### Docker開発環境（セキュア隔離・任意エディタ）
 
-**Claude Codeを隔離環境で安全実行**：
+Claude Code を隔離環境で安全実行:
 
-- **Docker**: Docker Compose v2 対応版
-- **bun**: JavaScript/TypeScript パッケージマネージャー
-- **特徴**: VS Code 以外のエディタでもセキュア実行可能
+- Docker: Docker Compose v2 対応版
+- bun: JavaScript/TypeScript パッケージマネージャー
+- 特徴: VS Code 以外のエディタでもセキュア実行可能
 
 #### ローカル開発（高速・非セキュア）
 
-**手動開発・パフォーマンス重視向け**（Claude Code 使用時は非推奨）：
+手動開発・パフォーマンス重視向け（Claude Code 使用時は非推奨）。
 
-- **Python**: 3.12 以上
-- **Node.js**: 18 以上
-- **uv**: Python パッケージマネージャー
-- **bun**: JavaScript/TypeScript パッケージマネージャー
-- **注意**: Claude Code 実行時は上記セキュア環境を使用してください
+- Python: 3.12 以上
+- Node.js: 18 以上
+- uv: Python パッケージマネージャー
+- bun: JavaScript/TypeScript パッケージマネージャー
+- 注意: Claude Code 実行時は上記セキュア環境を使用してください。
 
 ## 初期セットアップ
 
@@ -58,7 +58,7 @@ cd <your-repository-name>
 bun run setup
 ```
 
-このコマンドは以下を自動実行します：
+このコマンドは以下を自動実行します。
 
 - フロントエンド依存関係のインストール（`bun install`）
 - バックエンド依存関係の同期（`uv sync`）
@@ -71,7 +71,7 @@ bun run setup
 cp .env.example .env
 ```
 
-基本的な環境変数：
+基本的な環境変数。
 
 ```env
 # バックエンド設定
@@ -98,11 +98,11 @@ ADDITIONAL_ALLOWED_DOMAINS=example.com,api.example.com
 bun run dev
 ```
 
-このコマンドで以下が起動します：
+このコマンドで以下が起動します。
 
-- **React**: <http://localhost:3000>
-- **FastAPI**: <http://localhost:8000>
-- **Streamlit**: <http://localhost:8501>
+- React: <http://localhost:3000>
+- FastAPI: <http://localhost:8000>
+- Streamlit: <http://localhost:8501>
 
 ### 個別起動
 
@@ -119,7 +119,7 @@ bun run dev:streamlit
 
 ### サービス確認
 
-各サービスが正常に起動していることを確認：
+各サービスが正常に起動していることを確認。
 
 ```bash
 # API の動作確認
@@ -156,9 +156,9 @@ bun run setup
 
 #### 注意事項
 
-- Docker Desktop で WSL2 バックエンドを有効化
-- VS Code で WSL 拡張機能をインストール
-- ファイルパスの区切り文字に注意
+- Docker Desktop で WSL2 バックエンドを有効化。
+- VS Code で WSL 拡張機能をインストール。
+- ファイルパスの区切り文字に注意。
 
 ### macOS
 
@@ -177,9 +177,9 @@ bun run setup
 
 #### macOS での注意事項
 
-- Docker Desktop for Mac をインストール
-- Apple Silicon（M1/M2）では互換性に注意
-- Rosetta 2 が必要な場合がある
+- Docker Desktop for Mac をインストール。
+- Apple Silicon（M1/M2）では互換性に注意。
+- Rosetta 2 が必要な場合がある。
 
 ### Linux
 
@@ -324,9 +324,9 @@ bun run build:streamlit
 
 #### ポート競合
 
-**症状**: `EADDRINUSE: address already in use :::3000`
+症状: `EADDRINUSE: address already in use :::3000`
 
-**解決策**:
+解決策:
 
 ```bash
 # 使用中のポートを確認
@@ -339,9 +339,9 @@ kill -9 <PID>
 
 #### 依存関係のインストールエラー
 
-**症状**: `uv sync` や `bun install` が失敗
+症状: `uv sync` や `bun install` が失敗。
 
-**解決策**:
+解決策:
 
 ```bash
 # キャッシュをクリア
@@ -356,9 +356,9 @@ bun run setup
 
 #### Docker 関連エラー
 
-**症状**: Docker コンテナが起動しない
+症状: Docker コンテナが起動しない。
 
-**解決策**:
+解決策:
 
 ```bash
 # Docker の状態確認
@@ -411,15 +411,13 @@ bun run dev
 
 ## 次のステップ
 
-セットアップが完了したら、以下のドキュメントを参照して開発を始めてください：
+セットアップが完了したら、以下のドキュメントを参照して開発を始めてください。
 
-1. **[Claude Code 実践ガイド](../../TUTORIAL.md)** - Claude Code を使った開発方
-   法
-2. **[API開発ガイド](../development/api-development.md)** - FastAPI による API
-   開発
-3. **[アーキテクチャガイド](../development/architecture.md)** - プロジェクト構造
-   の理解
-4. **[環境設定ガイド](../environment/)** - DevContainer や Docker の詳細設定
+1. [Claude Code 実践ガイド](../../TUTORIAL.md) - Claude Code を使った開発方法
+2. [API開発ガイド](../development/api-development.md) - FastAPI による API 開発
+3. [アーキテクチャガイド](../development/architecture.md) - プロジェクト構造の理
+   解
+4. [環境設定ガイド](../environment/) - DevContainer や Docker の詳細設定
 
 ## サポート情報
 

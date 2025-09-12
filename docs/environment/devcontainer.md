@@ -1,7 +1,7 @@
 # VS Code DevContainer セキュア開発環境ガイド
 
-このガイドでは、**Claude Codeを安全に実行するためのVS Code DevContainer環境**に
-ついて説明します。
+このガイドでは、Claude Code を安全に実行するための VS Code DevContainer 環境につ
+いて説明します。
 
 ## 目的
 
@@ -10,10 +10,10 @@ Claude Code の破壊的操作（`rm -rf *`等）からホスト環境を保護�
 
 ## 概要
 
-プロジェクトでは統一された設計の 2 つの devcontainer 設定を提供しています：
+プロジェクトでは統一された設計の 2 つの devcontainer 設定を提供しています。
 
-- **セキュア開発環境**（**デフォルト**・推奨）：SECURE_MODE=true
-- **標準開発環境**（オプション）：SECURE_MODE=false
+- セキュア開発環境（デフォルト・推奨）: SECURE_MODE=true
+- 標準開発環境（オプション）: SECURE_MODE=false
 
 ### 共通基盤
 
@@ -28,7 +28,7 @@ Claude Code の破壊的操作（`rm -rf *`等）からホスト環境を保護�
 
 ## 環境の選択
 
-VS Code でプロジェクトを開いた際に表示される選択ダイアログ：
+VS Code でプロジェクトを開いた際に表示される選択ダイアログ。
 
 ```text
 Reopen in Container →
@@ -38,8 +38,8 @@ Reopen in Container →
 
 ## セキュア開発環境（デフォルト・推奨）
 
-**Claude Codeを安全に実行するための推奨環境**です。デフォルトで SECURE_MODE=true
-が有効になっています。
+Claude Code を安全に実行するための推奨環境です。デフォルトで SECURE_MODE=true が
+有効になっています。
 
 ### 利用方法
 
@@ -75,12 +75,12 @@ code .devcontainer/secure
 
 ### セキュリティ機能
 
-- **破壊的操作の隔離**: `rm -rf *` 等の誤操作をコンテナ内に限定
+- 破壊的操作の隔離: `rm -rf *` 等の誤操作をコンテナ内に限定
 - ネットワーク制限（ファイアウォール設定）
 - 承認されたドメインのみアクセス許可
 - Claude Code・機密プロジェクト・セキュリティ監査に最適
 
-**具体的なセキュリティ機能：**
+具体的なセキュリティ機能は次の通りです。
 
 - デフォルト拒否ネットワークポリシー（デフォルトで有効）
 - 許可ドメイン: GitHub、NPM レジストリ、Anthropic サービス
@@ -90,14 +90,14 @@ code .devcontainer/secure
 
 ## 標準開発環境（オプション・SECURE_MODE=false時）
 
-**セキュアモードを無効化した場合の環境**です。Claude Code 使用時は非推奨。
+セキュアモードを無効化した場合の環境です。Claude Code 使用時は非推奨。
 
 ### 特徴
 
 - フルネットワークアクセス（制限なし；`SECURE_MODE=false` 時）
 - 自由なパッケージインストールと API 接続
 - 学習・プロトタイピング・手動開発に最適
-- **注意**: Claude Code はセキュア環境での使用を推奨
+- 注意: Claude Code はセキュア環境での使用を推奨
 
 ### 使用方法
 
@@ -144,7 +144,7 @@ code .devcontainer/devcontainer.local.json
 
 #### 例1: セキュアモードを無効化
 
-ネットワーク制限なしで利用したい場合：
+ネットワーク制限なしで利用したい場合。
 
 ```jsonc
 {
@@ -156,7 +156,7 @@ code .devcontainer/devcontainer.local.json
 
 #### 例2: 追加許可ドメインのみ指定
 
-セキュアモードのまま特定ドメインを許可：
+セキュアモードのまま特定ドメインを許可。
 
 ```jsonc
 {
@@ -166,7 +166,7 @@ code .devcontainer/devcontainer.local.json
 }
 ```
 
-**注意**: `.devcontainer/devcontainer.local.json` は Git にコミットされません
+注意: `.devcontainer/devcontainer.local.json` は Git にコミットされません
 （`.gitignore` 済み）。
 
 ## 追加許可ドメイン設定
@@ -218,7 +218,7 @@ sudo .devcontainer/secure/init-firewall.sh
 ネットワーク制限により、外部アクセスが既定で遮断されます。問題発生時は以下を確認
 してください。
 
-**許可ドメイン（初期値）:**
+許可ドメインの初期設定は以下の通りです。
 
 - GitHub（web/api/git 範囲）
 - `registry.npmjs.org`
@@ -227,7 +227,7 @@ sudo .devcontainer/secure/init-firewall.sh
 - `statsig.anthropic.com`
 - `statsig.com`
 
-**代表的な症状:**
+代表的な症状として、以下があります。
 
 - `uv sync` で企業レジストリへの接続失敗
 - `bun install` の外部取得失敗
@@ -272,9 +272,9 @@ sudo iptables -S OUTPUT | head
 
 ### その他の注意事項
 
-- DNS は UDP/53 を許可済み。名前解決は `dig example.com +short` で確認
-- 失敗する場合はコンテナを「Rebuild」しスクリプトの初期化を再実行
-- 社内プロキシ経由が必要な場合は `curl`/`uv`/`bun` にプロキシ設定を適用
+- DNS は UDP/53 を許可済み。名前解決は `dig example.com +short` で確認。
+- 失敗する場合はコンテナを「Rebuild」しスクリプトの初期化を再実行。
+- 社内プロキシ経由が必要な場合は `curl`/`uv`/`bun` にプロキシ設定を適用。
 
 ## VS Code なしでの DevContainer 利用
 
@@ -305,18 +305,13 @@ devcontainer down --workspace-folder . --remove-volumes
 
 ### 標準環境を選択する場合
 
-✅ 新機能の開発・検証  
-✅ 外部 API との統合開発  
-✅ ライブラリの調査・学習  
-✅ オープンソースプロジェクト  
-✅ フルスタック開発全般
+✅ 新機能の開発・検証 ✅ 外部 API との統合開発 ✅ ライブラリの調査・学習 ✅ オー
+プンソースプロジェクト ✅ フルスタック開発全般。
 
 ### セキュア環境を選択する場合
 
-🔒 顧客の機密コード  
-🔒 セキュリティ監査対象  
-🔒 コンプライアンス要件  
-🔒 --dangerously-skip-permissions 使用時
+🔒 顧客の機密コード 🔒 セキュリティ監査対象 🔒 コンプライアンス要件 🔒
+--dangerously-skip-permissions 使用時。
 
 ## 関連ドキュメント
 

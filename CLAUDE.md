@@ -30,9 +30,9 @@ claude-code-polyglot-starter/
 
 ### 責任分離
 
-- **backend/**: API、データ処理、業務ロジック
-- **frontend/**: UI、ユーザー体験、クライアント状態管理
-- **shared/**: 型定義、API 契約、共通ユーティリティ
+- backend/ - API、データ処理、業務ロジック
+- frontend/ - UI、ユーザー体験、クライアント状態管理
+- shared/ - 型定義、API 契約、共通ユーティリティ
 
 ## 統合ルール
 
@@ -40,17 +40,17 @@ claude-code-polyglot-starter/
 
 #### Python (Backend)
 
-- **必須**: uv パッケージマネージャーのみ使用
+- 必須ツール: uv パッケージマネージャーのみ使用
 - インストール: `uv add package`
 - 開発依存関係: `uv add --dev package`
-- **禁止**: `pip`、`uv pip install`、`@latest`構文
+- 禁止事項: `pip`、`uv pip install`、`@latest`構文
 
 #### TypeScript/JavaScript (Frontend)
 
-- **必須**: bun パッケージマネージャーのみ使用
+- 必須ツール: bun パッケージマネージャーのみ使用
 - インストール: `bun add package`
 - 開発依存関係: `bun add -D package`
-- **禁止**: `npm install`、`yarn`、`pnpm`
+- 禁止事項: `npm install`、`yarn`、`pnpm`
 
 ### 2. コード品質基準
 
@@ -159,18 +159,18 @@ bun run type-check
 
 ### Python
 
-- **フレームワーク**: `uv run --frozen pytest`
-- **カバレッジ**: エッジケースとエラー処理必須
-- **新機能**: テストコード必須
-- **バグ修正**: リグレッションテスト必須
-- **非同期**: pytest-asyncio 使用
+- フレームワーク: `uv run --frozen pytest`
+- カバレッジ: エッジケースとエラー処理必須
+- 新機能: テストコード必須
+- バグ修正: リグレッションテスト必須
+- 非同期: pytest-asyncio 使用
 
 ### TypeScript
 
-- **フレームワーク**: 設定予定（Vitest 推奨）
-- **コンポーネント**: React Testing Library
-- **統合テスト**: E2E 対応
-- **型テスト**: TypeScript コンパイル確認
+- フレームワーク: 設定予定（Vitest 推奨）
+- コンポーネント: React Testing Library
+- 統合テスト: E2E 対応
+- 型テスト: TypeScript コンパイル確認
 
 ## コード品質管理
 
@@ -215,18 +215,18 @@ bun run lint:text:fix
 ### Pre-commit フック
 
 - 設定ファイル: `.pre-commit-config.yaml`
-- **Python**: Ruff (linter/formatter)
-- **TypeScript/JavaScript**: Prettier (formatter) ※ESLint 設定は開発中
-- **実行**: `uv run pre-commit install`
+- Python: Ruff (linter/formatter)
+- TypeScript/JavaScript: Prettier (formatter) ※ESLint 設定は開発中
+- 実行: `uv run pre-commit install`
 
 ## Git運用
 
 ### ブランチ戦略
 
-- **main**: 本番デプロイ可能状態
-- **develop**: 開発統合ブランチ
-- **feature/\***: 機能開発ブランチ
-- **fix/\***: バグ修正ブランチ
+- main: 本番デプロイ可能状態
+- develop: 開発統合ブランチ
+- feature/\*: 機能開発ブランチ
+- fix/\*: バグ修正ブランチ
 
 ### コミットメッセージ
 
@@ -241,19 +241,18 @@ style(shared): format type definitions
 
 ### プルリクエスト
 
-- **必須**: 両言語の影響範囲を明記
-- **テスト**: 全テストパス確認
-- **リント**: 品質チェック完全クリア
-- **型チェック**: TypeScript/mypy 両方クリア
+- 必須事項: 両言語の影響範囲を明記
+- テスト: 全テストパス確認
+- リント: 品質チェック完全クリア
+- 型チェック: TypeScript/mypy 両方クリア
 
 ## 開発環境
 
 ### DevContainer対応
 
-- **標準環境**: `.devcontainer/devcontainer.json`（`SECURE_MODE=true` がデフォル
-  ト）
-- **セキュア環境**: `.devcontainer/secure/`
-- **共通基盤**: Python 3.12+ + Node.js 18+ + Claude Code CLI
+- 標準環境: `.devcontainer/devcontainer.json`（`SECURE_MODE=true` がデフォルト）
+- セキュア環境: `.devcontainer/secure/`
+- 共通基盤: Python 3.12+ + Node.js 18+ + Claude Code CLI
 
 ### VS Code設定
 
@@ -273,11 +272,11 @@ bun run docker:up
 
 ### 型定義 (shared/types/)
 
-- **API契約**: shared/types/api.ts
-- **データモデル**: Python Pydantic ⟷ TypeScript interface 対応
-- **更新ルール**: 破壊的変更は両言語同時対応
+- API契約: shared/types/api.ts
+- データモデル: Python Pydantic ⟷ TypeScript interface 対応
+- 更新ルール: 破壊的変更は両言語同時対応
 
 ### ユーティリティ
 
-- **共通ロジック**: 言語別実装、インターフェース統一
-- **バリデーション**: 同一仕様で両言語実装
+- 共通ロジック: 言語別実装、インターフェース統一
+- バリデーション: 同一仕様で両言語実装

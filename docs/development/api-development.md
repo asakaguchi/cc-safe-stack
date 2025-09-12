@@ -508,11 +508,11 @@ describe('userApi', () => {
 
 ### 1. 機能開発の流れ
 
-1. **API仕様の定義**: OpenAPI スキーマで API を設計
-2. **型定義の作成**: shared/types/ で共有型を定義
-3. **バックエンド実装**: FastAPI でエンドポイントを実装
-4. **フロントエンド実装**: React で UI を実装
-5. **テスト作成**: 単体テストと統合テストを作成
+1. API 仕様の定義: OpenAPI スキーマで API を設計。
+2. 型定義の作成: shared/types/ で共有型を定義。
+3. バックエンド実装: FastAPI でエンドポイントを実装。
+4. フロントエンド実装: React で UI を実装。
+5. テスト作成: 単体テストと統合テストを作成。
 
 ### 2. 品質保証
 
@@ -535,27 +535,28 @@ bun run build
 
 ### 3. APIドキュメント
 
-FastAPI は自動的に OpenAPI ドキュメントを生成します：
+FastAPI は自動的に OpenAPI ドキュメントを生成します。
 
-- **Swagger UI**: `http://localhost:8000/docs`
-- **ReDoc**: `http://localhost:8000/redoc`
-- **OpenAPI JSON**: `http://localhost:8000/openapi.json`
+- Swagger UI: `http://localhost:8000/docs`
+- ReDoc: `http://localhost:8000/redoc`
+- OpenAPI JSON: `http://localhost:8000/openapi.json`
 
 ## パフォーマンス最適化
 
 ### バックエンド最適化
 
-- **非同期処理**: async/await を活用
-- **データベース最適化**: 適切なインデックスとクエリ
-- **キャッシュ**: Redis などのキャッシュシステム
-- **バッチ処理**: 重い処理はバックグラウンドで実行
+- 非同期処理: async/await を活用。
+- データベース最適化: パフォーマンス向上のためのインデックス設定と効率的なクエリ
+  設計。
+- キャッシュ: Redis などのキャッシュシステム。
+- バッチ処理: 重い処理はバックグラウンドで実行。
 
 ### フロントエンド最適化
 
-- **Code Splitting**: React.lazy() によるコード分割
-- **メモ化**: React.memo(), useMemo() の活用
-- **仮想化**: 大量データの効率的表示
-- **キャッシュ**: React Query などのキャッシュライブラリ
+- Code Splitting: React.lazy() によるコード分割。
+- メモ化: React.memo(), useMemo() の活用。
+- 仮想化: 大量データの効率的表示。
+- キャッシュ: React Query などのキャッシュライブラリ。
 
 ## 関連ドキュメント
 
