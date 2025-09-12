@@ -7,10 +7,10 @@ services:
     working_dir: /app/backend
     environment:
       # ホストとの権限同期用環境変数
-      USER_ID: ${UID:-1000}
-      GROUP_ID: ${GID:-1000}
-      USER_NAME: ${USER:-developer}
-      GROUP_NAME: ${USER:-developer}
+      USER_ID: ${USER_ID:-1000}
+      GROUP_ID: ${GROUP_ID:-1000}
+      USER_NAME: ${USER_NAME:-developer}
+      GROUP_NAME: ${USER_NAME:-developer}
     volumes:
       - .:/app
       # Use anonymous volumes to avoid sharing host's .venv
@@ -26,14 +26,14 @@ services:
     image: oven/bun:1
     working_dir: /app/frontend
     restart: unless-stopped
-    user: "${UID:-1000}:${GID:-1000}"
+    user: "${USER_ID:-1000}:${GROUP_ID:-1000}"
     environment:
       # When running both services in containers, proxy to backend service name
       VITE_BACKEND_ORIGIN: http://app:8000
       NODE_ENV: development
       # ホストとの権限同期用環境変数（参考用）
-      USER_ID: ${UID:-1000}
-      GROUP_ID: ${GID:-1000}
+      USER_ID: ${USER_ID:-1000}
+      GROUP_ID: ${GROUP_ID:-1000}
     volumes:
       - .:/app
       # Use anonymous volume for node_modules inside container
@@ -55,10 +55,10 @@ services:
       # Point to backend service for API calls
       API_BASE_URL: http://app:8000
       # ホストとの権限同期用環境変数
-      USER_ID: ${UID:-1000}
-      GROUP_ID: ${GID:-1000}
-      USER_NAME: ${USER:-developer}
-      GROUP_NAME: ${USER:-developer}
+      USER_ID: ${USER_ID:-1000}
+      GROUP_ID: ${GROUP_ID:-1000}
+      USER_NAME: ${USER_NAME:-developer}
+      GROUP_NAME: ${USER_NAME:-developer}
     volumes:
       - .:/app
       # Use anonymous volumes to avoid sharing host's .venv
