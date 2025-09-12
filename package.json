@@ -36,13 +36,13 @@
     "test:frontend": "cd \"${PWD}/frontend\" && bun run test --run",
     "test:backend": "cd \"${PWD}/backend\" && uv run pytest",
     "clean": "./scripts/clean.sh",
-    "docker:build": "docker compose build",
-    "docker:up": "docker compose up",
-    "docker:down": "docker compose down",
-    "docker:dev": "docker compose --profile dev up -d dev",
-    "docker:dev:connect": "./scripts/docker-dev-connect.sh",
-    "docker:dev:logs": "docker compose --profile dev logs -f dev",
-    "docker:dev:down": "docker compose --profile dev down"
+    "docker:build": "export UID=$(id -u) GID=$(id -g) USER=$(id -un) && docker compose build",
+    "docker:up": "export UID=$(id -u) GID=$(id -g) USER=$(id -un) && docker compose up",
+    "docker:down": "export UID=$(id -u) GID=$(id -g) USER=$(id -un) && docker compose down",
+    "docker:dev": "export UID=$(id -u) GID=$(id -g) USER=$(id -un) && docker compose --profile dev up -d dev",
+    "docker:dev:connect": "export UID=$(id -u) GID=$(id -g) USER=$(id -un) && ./scripts/docker-dev-connect.sh",
+    "docker:dev:logs": "export UID=$(id -u) GID=$(id -g) USER=$(id -un) && docker compose --profile dev logs -f dev",
+    "docker:dev:down": "export UID=$(id -u) GID=$(id -g) USER=$(id -un) && docker compose --profile dev down"
   },
   "devDependencies": {
     "@eslint/js": "^9.14.0",
