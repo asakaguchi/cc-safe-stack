@@ -24,6 +24,17 @@ if [ ! -t 0 ] || [ ! -t 1 ]; then
     exit 0
 fi
 
-# コンテナに接続
-echo "コンテナ '${CONTAINER_NAME}' に接続中..."
-docker exec -it "${CONTAINER_NAME}" zsh
+# ホストのユーザー名を取得（環境変数から、なければ現在のユーザー名を使用）
+USER_NAME=${USER_NAME:-$(id -un)}
+
+echo "コンテナ '${CONTAINER_NAME}' にユーザー '${USER_NAME}' として接続中..."
+
+# ユーザーが存在するかチェック
+if docker exec "${CONTAINER_NAME}" id "${USER_NAME}" >/dev/null 2>&1; then
+    # ユーザーが存在する場合、そのユーザーとして接続
+    docker exec -it --user "${USER_NAME}" "${CONTAINER_NAME}" zsh
+else
+    echo "警告: ユーザー '${USER_NAME}' がコンテナ内に存在しません"
+    echo "rootユーザーとして接続します"
+    docker exec -it "${CONTAINER_NAME}" zsh
+fi

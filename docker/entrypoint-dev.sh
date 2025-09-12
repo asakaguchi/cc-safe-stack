@@ -9,7 +9,7 @@ echo "🚀 Docker開発環境を初期化中..."
 USER_ID=${USER_ID:-$(stat -c '%u' /workspace 2>/dev/null || echo 1000)}
 GROUP_ID=${GROUP_ID:-$(stat -c '%g' /workspace 2>/dev/null || echo 1000)}
 USER_NAME=${USER_NAME:-developer}
-GROUP_NAME=${GROUP_NAME:-developer}
+GROUP_NAME=${GROUP_NAME:-${USER_NAME:-developer}}
 
 echo "ℹ️  ユーザー設定: $USER_NAME($USER_ID), グループ: $GROUP_NAME($GROUP_ID)"
 
