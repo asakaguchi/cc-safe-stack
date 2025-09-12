@@ -1,6 +1,12 @@
 #!/bin/bash
 set -euo pipefail
 
+# Docker環境の検出
+if [ -f "/.dockerenv" ]; then
+    echo "🐳 Docker environment detected. Using Docker-optimized development script..."
+    exec "$(dirname "$0")/dev-docker.sh"
+fi
+
 echo "🚀 Starting Full-Stack Development Servers (React + FastAPI + Streamlit)..."
 
 # Get script directory for absolute paths
