@@ -124,8 +124,6 @@ bun run dev
 # - Streamlit: http://localhost:8501
 ```
 
-**ファイル権限の自動同期**: ホストと同じUID/GIDでファイルを作成する`docker-compose.sh`も利用可能。詳細は[Dockerガイド](docs/environment/docker.md)を参照。
-
 主な利点は次のとおりです。
 
 - セキュリティ重視設計により Claude Code の誤操作からホスト環境を保護
