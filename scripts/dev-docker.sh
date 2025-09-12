@@ -3,8 +3,19 @@ set -euo pipefail
 
 echo "🐳 Starting Full-Stack Development Servers in Docker (React + FastAPI + Streamlit)..."
 
-# Docker環境用の絶対パス設定
-WORKSPACE_ROOT="/workspace"
+# Docker環境用の動的パス設定
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+WORKSPACE_ROOT="$(dirname "$SCRIPT_DIR")"
+
+# DevContainer環境とDocker Compose環境の自動判定
+if [ -d "/workspace" ] && [ -f "/workspace/package.json" ]; then
+    # DevContainer環境 (/workspace)
+    WORKSPACE_ROOT="/workspace"
+elif [ -d "/app" ] && [ -f "/app/package.json" ]; then
+    # Docker Compose環境 (/app)
+    WORKSPACE_ROOT="/app"
+fi
+
 BACKEND_DIR="$WORKSPACE_ROOT/backend"
 FRONTEND_DIR="$WORKSPACE_ROOT/frontend" 
 STREAMLIT_DIR="$WORKSPACE_ROOT/streamlit"
