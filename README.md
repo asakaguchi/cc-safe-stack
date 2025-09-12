@@ -99,12 +99,23 @@ code .
 Claude Code を隔離環境で安全に実行し、破壊的コマンドの実行リスクを最小化します。
 
 ```bash
-# セキュア開発環境を起動（Claude Code CLI内蔵）
+# 1. 環境変数ファイルを作成（初回のみ）
+cp .env.example .env
+
+# 2. 必要に応じて環境変数を編集
+#    主な設定項目：
+#    - SECURE_MODE: セキュアモード有効/無効（デフォルト: true）
+#    - ADDITIONAL_ALLOWED_DOMAINS: 追加で許可するドメイン（企業プロキシ等）
+#    - USER_ID/GROUP_ID: ホストとの権限同期（通常は自動設定）
+#    詳細は .env.example のコメントを参照
+# nano .env  # または好みのエディタで編集
+
+# 3. セキュア開発環境を起動（Claude Code CLI内蔵）
 bun run docker:dev
 
-# コンテナに接続してClaude Codeを実行
+# 4. コンテナに接続してClaude Codeを実行
 bun run docker:dev:connect
-claude-code  # コンテナ内で安全に実行
+claude  # コンテナ内で安全に実行
 
 # 開発サーバーはコンテナ内で起動
 bun run dev

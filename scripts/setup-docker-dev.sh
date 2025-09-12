@@ -64,16 +64,6 @@ else
     info ".envファイルが既に存在します"
 fi
 
-# Claude API Keyの確認
-if ! grep -q "CLAUDE_API_KEY=your-claude-api-key-here" .env; then
-    success "CLAUDE_API_KEYが設定済みです"
-else
-    warning "CLAUDE_API_KEYが未設定です"
-    echo "以下の手順でAPIキーを設定してください:"
-    echo "1. https://console.anthropic.com/ でAPIキーを取得"
-    echo "2. .envファイルのCLAUDE_API_KEYを更新"
-    echo ""
-fi
 
 # ユーザーID/グループIDの設定
 echo "👤 ユーザー権限の設定..."
@@ -117,7 +107,7 @@ echo "2. コンテナに接続:"
 echo "   ${GREEN}docker exec -it claude-code-polyglot-starter-dev-1 zsh${NC}"
 echo ""
 echo "3. Claude Code CLIの起動（コンテナ内）:"
-echo "   ${GREEN}claude-code${NC}"
+echo "   ${GREEN}claude${NC}"
 echo ""
 echo "4. 開発サーバーの起動（コンテナ内）:"
 echo "   ${GREEN}bun run dev${NC}"
@@ -125,12 +115,5 @@ echo ""
 echo "📖 詳細な使用方法は README.md の「Docker開発環境（セキュア・Claude Code統合）」セクションを参照してください。"
 echo ""
 
-# Claude API Keyの設定が必要な場合の追加メッセージ
-if grep -q "CLAUDE_API_KEY=your-claude-api-key-here" .env; then
-    warning "CLAUDE_API_KEYの設定を忘れずに行ってください！"
-    echo "設定後、コンテナを再起動してください："
-    echo "${GREEN}docker compose --profile dev restart dev${NC}"
-    echo ""
-fi
 
 echo "🚀 Happy coding with Claude Code!"

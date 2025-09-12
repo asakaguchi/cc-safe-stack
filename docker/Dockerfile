@@ -76,7 +76,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && npm install -g textlint@latest \
     && npm install -g textlint-plugin-html@latest \
     && npm install -g textlint-rule-preset-ja-technical-writing@latest \
-    && npm install -g @textlint-ja/preset-ai-writing@latest \
+    && npm install -g @textlint-ja/textlint-rule-preset-ai-writing@latest \
     && npm install -g textlint-rule-preset-ja-spacing@latest \
     && npm install -g textlint-filter-rule-comments@latest
 

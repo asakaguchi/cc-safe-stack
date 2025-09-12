@@ -67,8 +67,6 @@ services:
       SECURE_MODE: ${SECURE_MODE:-true}
       ADDITIONAL_ALLOWED_DOMAINS: ${ADDITIONAL_ALLOWED_DOMAINS:-}
       
-      # Claude Code設定
-      CLAUDE_API_KEY: ${CLAUDE_API_KEY}
       
       # 開発環境設定
       PYTHONUNBUFFERED: "1"

@@ -64,15 +64,15 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
 RUN curl -fsSL https://bun.sh/install | bash \
     && mv /root/.bun/bin/bun /usr/local/bin/
 
-# Claude Code CLIのインストール
-RUN npm install -g @anthropic/claude-code
+# Claude Code CLIのインストール（正しいパッケージ名）
+RUN npm install -g @anthropic-ai/claude-code@latest
 
 # textlintの日本語文書用設定
 RUN npm install -g \
     textlint@latest \
     textlint-plugin-html@latest \
     textlint-rule-preset-ja-technical-writing@latest \
-    @textlint-ja/preset-ai-writing@latest \
+    @textlint-ja/textlint-rule-preset-ai-writing@latest \
     textlint-rule-preset-ja-spacing@latest \
     textlint-filter-rule-comments@latest
 

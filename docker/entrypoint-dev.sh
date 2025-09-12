@@ -37,19 +37,13 @@ else
     echo "ℹ️  セキュアモード無効（SECURE_MODE=${SECURE_MODE:-}）"
 fi
 
-# Claude Code CLIの設定確認
-echo "🤖 Claude Code CLI設定確認中..."
-if [ -n "${CLAUDE_API_KEY:-}" ]; then
-    echo "✅ CLAUDE_API_KEYが設定されています"
-    # ユーザーのホームディレクトリにClaude設定を配置
-    gosu ${USER_NAME} bash -c "
-        mkdir -p /home/${USER_NAME}/.claude
-        echo 'Claude Code CLIが利用可能です'
-    "
-else
-    echo "⚠️  CLAUDE_API_KEYが設定されていません"
-    echo "   環境変数またはDocker Composeで設定してください"
-fi
+# Claude Code CLIディレクトリの設定
+echo "🤖 Claude Code CLI設定中..."
+# ユーザーのホームディレクトリにClaude設定を配置
+gosu ${USER_NAME} bash -c "
+    mkdir -p /home/${USER_NAME}/.claude
+    echo 'Claude Code CLIディレクトリを設定しました'
+"
 
 # Python環境の初期化
 echo "🐍 Python環境を確認中..."
@@ -70,7 +64,7 @@ echo ""
 echo "🎉 Docker開発環境の初期化完了！"
 echo ""
 echo "📋 利用可能なコマンド:"
-echo "   claude-code      # Claude Code CLIを起動"
+echo "   claude           # Claude Code CLIを起動"
 echo "   bun run dev      # 全サーバーを起動"
 echo "   bun run lint     # コード品質チェック"
 echo "   vim/nano         # エディタ"

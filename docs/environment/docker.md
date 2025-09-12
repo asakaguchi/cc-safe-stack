@@ -51,7 +51,7 @@ docker compose --profile dev up -d dev
 bun run docker:dev:connect
 
 # 直接コマンド
-docker exec -it claude-code-polyglot-starter-dev-1 zsh
+docker exec -it claude-polyglot-starter-dev-1 zsh
 ```
 
 #### 4. Claude Codeで開発開始
@@ -61,7 +61,7 @@ docker exec -it claude-code-polyglot-starter-dev-1 zsh
 
 ```bash
 # コンテナ内でClaude Codeを安全に実行
-claude-code
+claude
 ```
 
 #### 5. 開発サーバーの起動（コンテナ内で実行）
@@ -230,7 +230,7 @@ bun run docker:dev
 bun run docker:dev:connect
 
 # 3. Claude Code で安全に開発
-claude-code  # コンテナ内で隔離実行
+claude  # コンテナ内で隔離実行
 
 # 4. 開発サーバー起動
 bun run dev
