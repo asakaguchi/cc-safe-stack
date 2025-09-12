@@ -97,24 +97,8 @@ code .
 #### オプション B: Docker Compose（セキュア隔離環境）
 
 Claude Code を隔離環境で安全に実行し、破壊的コマンドの実行リスクを最小化します。
-**ファイル権限の問題を自動解決する機能付き**です。
 
 ```bash
-# 方法1: docker-compose.sh ラッパースクリプト使用（推奨）
-# UID/GIDを自動検出してファイル権限を同期
-chmod +x docker-compose.sh
-
-# 通常のdocker composeコマンドの代わりに使用
-./docker-compose.sh up          # 全サービス起動
-./docker-compose.sh up -d       # バックグラウンド起動
-./docker-compose.sh down        # 停止
-./docker-compose.sh build       # イメージビルド
-
-# セキュア開発環境起動（Claude Code CLI内蔵）
-./docker-compose.sh --profile dev up -d
-./docker-compose.sh exec dev claude  # 安全にClaude Code実行
-
-# または方法2: 環境変数を手動設定
 # 1. 環境変数ファイルを作成（初回のみ）
 cp .env.example .env
 
@@ -122,32 +106,29 @@ cp .env.example .env
 #    主な設定項目：
 #    - SECURE_MODE: セキュアモード有効/無効（デフォルト: true）
 #    - ADDITIONAL_ALLOWED_DOMAINS: 追加で許可するドメイン（企業プロキシ等）
-#    - UID/GID/USER: ホストとの権限同期（通常は自動設定）
+#    - USER_ID/GROUP_ID: ホストとの権限同期（通常は自動設定）
 #    詳細は .env.example のコメントを参照
 # nano .env  # または好みのエディタで編集
 
-# 3. 通常のdocker compose起動
-export UID=$(id -u) GID=$(id -g) USER=$(id -un)  # 権限同期用
-docker compose up
+# 3. セキュア開発環境を起動（Claude Code CLI内蔵）
+bun run docker:dev
 
-# 開発サーバーアクセス
+# 4. コンテナに接続してClaude Codeを実行
+bun run docker:dev:connect
+claude  # コンテナ内で安全に実行
+
+# 開発サーバーはコンテナ内で起動
+bun run dev
 # - React: http://localhost:3000
 # - FastAPI: http://localhost:8000
 # - Streamlit: http://localhost:8501
 ```
 
-**ファイル権限の自動同期機能:**
-
-- **docker-compose.sh**: ホストのUID/GIDを自動検出し、コンテナ内ファイルと権限を
-  同期
-- **権限問題なし**: ToDoアプリ作成時もホストユーザーと同じ権限でファイルが作成さ
-  れる
-- **DevContainer互換**: DevContainerと同様の権限管理を実現
+**ファイル権限の自動同期**: ホストと同じUID/GIDでファイルを作成する`docker-compose.sh`も利用可能。詳細は[Dockerガイド](docs/environment/docker.md)を参照。
 
 主な利点は次のとおりです。
 
 - セキュリティ重視設計により Claude Code の誤操作からホスト環境を保護
-- ファイル権限の問題を自動解決（DevContainer環境と同等）
 - 開発環境がコンテナ内に完全分離され安全
 - VS Code Remote Containers や IntelliJ 等からの接続に対応
 

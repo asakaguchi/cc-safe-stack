@@ -193,6 +193,74 @@ docker compose down
 docker compose down -v
 ```
 
+## ファイル権限の同期
+
+Docker環境でのファイル権限問題を解決する機能です。ホストと同じUID/GIDでファイル
+が作成されるため、権限エラーを防げます。
+
+### docker-compose.shラッパースクリプト（推奨）
+
+ホストのUID/GIDを自動検出して設定します。
+
+```bash
+# 実行権限を付与（初回のみ）
+chmod +x docker-compose.sh
+
+# 通常のdocker composeの代わりに使用
+./docker-compose.sh up          # 全サービス起動
+./docker-compose.sh up -d       # バックグラウンド起動
+./docker-compose.sh down        # 停止
+./docker-compose.sh build       # イメージビルド
+
+# セキュア開発環境起動
+./docker-compose.sh --profile dev up -d
+./docker-compose.sh exec dev claude
+```
+
+### 手動でのUID/GID設定
+
+```bash
+# 方法1: 環境変数で一時設定
+export UID=$(id -u) GID=$(id -g) USER=$(id -un)
+docker compose up
+
+# 方法2: .envファイルで永続設定
+cp .env.example .env
+# UID=1000, GID=1000, USER=developer を適切に設定
+vim .env
+docker compose up
+
+# 方法3: シェル設定ファイルに追加（~/.bashrc等）
+echo 'export UID=$(id -u)' >> ~/.bashrc
+echo 'export GID=$(id -g)' >> ~/.bashrc
+echo 'export USER=$(id -un)' >> ~/.bashrc
+source ~/.bashrc
+```
+
+### 権限同期の仕組み
+
+- **appサービス・streamlitサービス**: `entrypoint.sh`でgosuを使った動的ユーザー
+  作成
+- **frontendサービス**: `user`ディレクティブでUID/GID指定
+- **devサービス**: `entrypoint-dev.sh`で完全な権限管理
+
+### トラブルシューティング（権限関連）
+
+```bash
+# 権限エラーが発生した場合
+# 1. イメージを再ビルド
+docker compose build --no-cache
+
+# 2. 現在のUID/GIDを確認
+echo "UID=$(id -u) GID=$(id -g) USER=$(id -un)"
+
+# 3. ファイル所有者を確認
+ls -la
+
+# 4. 作成されたファイルの権限を修正（必要に応じて）
+sudo chown -R $(id -u):$(id -g) .
+```
+
 ## 開発ワークフロー
 
 ### 通常の開発
