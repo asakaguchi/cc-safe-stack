@@ -20,7 +20,7 @@
 ## プロジェクト構造
 
 ```text
-claude-code-polyglot-starter/
+cc-safe-stack/
 ├── backend/              # Python FastAPI アプリケーション
 │   ├── main.py           # FastAPI エントリーポイント
 │   ├── pyproject.toml    # Python 依存関係設定

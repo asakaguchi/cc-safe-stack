@@ -13,7 +13,7 @@
 ### モノリポアーキテクチャ
 
 ```text
-claude-code-polyglot-starter/
+cc-safe-stack/
 ├── backend/              # Python (FastAPI) バックエンド
 │   ├── src/              # バックエンドソースコード
 │   ├── pyproject.toml    # Python依存関係・設定
