@@ -3,7 +3,7 @@
 これは開発テンプレートです。Claude Code を使って仕様書から実装を生成するための土
 台となります。
 
-Claude Code を活用した効率的フルスタック開発のためのテンプレートリポジトリ。
+Claude Code を活用した効率的フルスタック開発のためのテンプレートリポジトリです。
 
 ## このテンプレートについて
 
@@ -160,7 +160,7 @@ bun run dev
 セキュア環境で Claude Code を使用する手順は次のとおりです。
 
 ```text
-「specs/examples/todo-app.spec.md の仕様で実装してください」
+specs/examples/todo-app.spec.md の仕様で実装してください
 ```
 
 **30分後に完成したアプリを確認：**

@@ -50,7 +50,7 @@ specs/examples/から参考例を選択：
 ### 2. Claude Code に実装を依頼する
 
 ```text
-「specs/examples/todo-app.spec.md の仕様で実装してください」
+specs/examples/todo-app.spec.md の仕様で実装してください
 ```
 
 ### 3. 品質確認・デプロイ
@@ -68,8 +68,8 @@ specs/examples/から参考例を選択：
 ### 最小例（5分で完了）
 
 ```text
-「TODOアプリを FastAPI + React + SQLite で実装して。
- 基本的なCRUD操作とStreamlit分析ダッシュボード付きで」
+TODOアプリを FastAPI + React + SQLite で実装して。
+ 基本的なCRUD操作とStreamlit分析ダッシュボード付きで
 ```
 
 **結果**:
@@ -100,14 +100,14 @@ cp .devcontainer/devcontainer.local.json.clean-yfinance .devcontainer/devcontain
 ### 本格例（30分で完了）
 
 ```text
-「specs/examples/stock-analysis-platform.spec.md の仕様で
+specs/examples/stock-analysis-platform.spec.md の仕様で
 株式分析プラットフォームを実装してください。
 
 要件:
 - backend/src/に完全なAPI実装を生成
 - React UIとStreamlitダッシュボードの連携
 - 型安全性確保（Pydantic ↔ TypeScript）
-- 高テストカバレッジ」
+- 高テストカバレッジ
 ```
 
 ## 📚 Claude Code 実装パターン集
@@ -115,9 +115,9 @@ cp .devcontainer/devcontainer.local.json.clean-yfinance .devcontainer/devcontain
 ### パターン1: backend/src への実装生成
 
 ```text
-「backend/src/models/task.py にPydanticモデルを作成し、
+backend/src/models/task.py にPydanticモデルを作成し、
 backend/src/routers/tasks.py にCRUD APIエンドポイントを実装してください。
-shared/types/api.tsの型定義と完全に一致するようにお願いします。」
+shared/types/api.tsの型定義と完全に一致するようにお願いします。
 ```
 
 **生成される実装例:**
@@ -130,9 +130,9 @@ shared/types/api.tsの型定義と完全に一致するようにお願いしま�
 ### パターン2: Streamlit と API の連携実装
 
 ```text
-「streamlit/pages/1_📝_Todo_Manager.py のモックデータを
+streamlit/pages/1_📝_Todo_Manager.py のモックデータを
 実際のFastAPI接続に変更してください。リアルタイムでデータが
-反映されるダッシュボードに改修お願いします。」
+反映されるダッシュボードに改修お願いします。
 ```
 
 **実装される機能:**
@@ -145,7 +145,7 @@ shared/types/api.tsの型定義と完全に一致するようにお願いしま�
 ### パターン3: フル機能アプリの一括実装
 
 ```text
-「specs/examples/stock-analysis-platform.spec.md の仕様で
+specs/examples/stock-analysis-platform.spec.md の仕様で
  株式市場分析プラットフォームを実装してください：
 
  - yfinance API統合でリアルタイムデータ取得
@@ -153,7 +153,7 @@ shared/types/api.tsの型定義と完全に一致するようにお願いしま�
  - Plotlyによるインタラクティブチャート
  - テクニカル指標計算（SMA, RSI, MACD等）
  - ポートフォリオ管理とリスク分析
- - TDDでGherkinテストから開始」
+ - TDDでGherkinテストから開始
 ```
 
 **結果**:
@@ -216,7 +216,7 @@ Claude Code（30分）:
 ### 効率的なタスク処理
 
 ```text
-あなた: 「バックエンドとフロントエンドを実装して」
+あなた: バックエンドとフロントエンドを実装して
 
 Claude Code:
 🐍 FastAPI ルーター → 順次実装
