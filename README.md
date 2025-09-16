@@ -1,5 +1,8 @@
 # Claude Code テンプレート - AI駆動フルスタック開発スターター
 
+⚠️ **これは開発テンプレートです** - Claude Code を使って仕様書から実装を生成する
+ための土台となります。
+
 Claude Code を活用した効率的フルスタック開発のためのテンプレートリポジトリ。
 
 ## このテンプレートについて
@@ -139,6 +142,9 @@ bun run dev
 # 依存関係セットアップ
 bun run setup
 
+# 環境の正常性確認
+bun run verify-setup
+
 # 全サービス並列起動
 bun run dev
 ```
@@ -192,6 +198,16 @@ bun run dev
 - **[API開発ガイド](docs/development/api-development.md)** - 従来的な開発手法
 
 ## このテンプレートの特徴
+
+### ⚡ 意図的な最小限設計
+
+このテンプレートは **Claude Code による実装生成** を前提として設計されています：
+
+- **backend/src/** - ディレクトリ構造のみ提供、実装は Claude Code が生成
+- **streamlit/pages/** - UI構造の例示、実際のAPI接続は Claude Code が実装
+- **specs/examples/** - 豊富な仕様書テンプレートから選択して実装依頼
+
+既存の実装例がないことで、Claude Code が仕様書に忠実な実装を生成できます。
 
 ### 従来開発 vs Claude Code + このテンプレート
 

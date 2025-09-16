@@ -9,6 +9,7 @@
   ],
   "scripts": {
     "setup": "./scripts/setup.sh",
+    "verify-setup": "./scripts/verify-setup.sh",
     "dev": "./scripts/dev.sh",
     "dev:docker": "./scripts/dev-docker.sh",
     "dev:frontend": "cd \"${PWD}/frontend\" && bun dev",

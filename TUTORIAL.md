@@ -101,6 +101,51 @@ cp .devcontainer/devcontainer.local.json.clean-yfinance .devcontainer/devcontain
 
 ```text
 「specs/examples/stock-analysis-platform.spec.md の仕様で
+株式分析プラットフォームを実装してください。
+
+要件:
+- backend/src/に完全なAPI実装を生成
+- React UIとStreamlitダッシュボードの連携
+- 型安全性確保（Pydantic ↔ TypeScript）
+- 高テストカバレッジ」
+```
+
+## 📚 Claude Code 実装パターン集
+
+### パターン1: backend/src への実装生成
+
+```text
+「backend/src/models/task.py にPydanticモデルを作成し、
+backend/src/routers/tasks.py にCRUD APIエンドポイントを実装してください。
+shared/types/api.tsの型定義と完全に一致するようにお願いします。」
+```
+
+**生成される実装例:**
+
+- `backend/src/models/task.py` - SQLAlchemy + Pydantic モデル
+- `backend/src/routers/tasks.py` - FastAPI ルーター
+- `backend/src/services/task_service.py` - ビジネスロジック
+- `shared/types/api.ts` - TypeScript 型定義（自動更新）
+
+### パターン2: Streamlit と API の連携実装
+
+```text
+「streamlit/pages/1_📝_Todo_Manager.py のモックデータを
+実際のFastAPI接続に変更してください。リアルタイムでデータが
+反映されるダッシュボードに改修お願いします。」
+```
+
+**実装される機能:**
+
+- モックデータから実際のAPI呼び出しに変更
+- リアルタイムデータ更新機能
+- エラーハンドリングとユーザーフィードバック
+- データ可視化チャートの動的更新
+
+### パターン3: フル機能アプリの一括実装
+
+```text
+「specs/examples/stock-analysis-platform.spec.md の仕様で
  株式市場分析プラットフォームを実装してください：
 
  - yfinance API統合でリアルタイムデータ取得
