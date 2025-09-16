@@ -171,10 +171,8 @@ bun run dev
 
 ### ステップ 4: カスタマイズ
 
-```text
-"specs/templates/" を参考に、あなたのプロジェクトの仕様書を作成
-そして Claude Code に実装を依頼！
-```
+"specs/templates/" を参考に、あなたのプロジェクトの仕様書を作成そして Claude
+Code に実装を依頼！
 
 ## ドキュメント
 
