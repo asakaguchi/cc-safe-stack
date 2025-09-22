@@ -50,15 +50,23 @@ if ! command -v uv &> /dev/null; then
     exit 1
 fi
 
-# Check for Node.js and bun
+# Check for Node.js and pnpm
 if ! command -v node &> /dev/null; then
     log_error "Node.js is not installed"
     exit 1
 fi
 
-if ! command -v bun &> /dev/null; then
-    log_warning "bun is not installed. Installing..."
-    curl -fsSL https://bun.sh/install | bash
+if ! command -v pnpm &> /dev/null; then
+    log_warning "pnpm is not installed. Enabling via corepack..."
+    if command -v corepack &> /dev/null; then
+        corepack enable pnpm || {
+            log_warning "corepack enable failed. Falling back to npm global install..."
+            npm install -g pnpm
+        }
+    else
+        log_warning "corepack is unavailable. Installing pnpm globally via npm..."
+        npm install -g pnpm
+    fi
 fi
 
 log_success "All required tools are available"
@@ -81,18 +89,13 @@ log_success "Backend setup completed"
 
 # Setup Frontend (TypeScript/React)
 log_info "Setting up TypeScript frontend..."
-cd "$PROJECT_ROOT/frontend"
 
-# Install Node.js dependencies
-log_info "Installing Node.js dependencies with bun..."
-bun install
+# Install Node.js dependencies for all workspaces
+cd "$PROJECT_ROOT"
+log_info "Installing Node.js dependencies with pnpm (workspace)..."
+pnpm install --recursive
 
 log_success "Frontend setup completed"
-
-# Install root dependencies
-log_info "Installing root workspace dependencies..."
-cd "$PROJECT_ROOT"
-bun install
 
 # Create .env files if they don't exist
 if [ ! -f "$PROJECT_ROOT/backend/.env" ]; then
@@ -150,11 +153,11 @@ fi
 log_success "🎉 Setup completed successfully!"
 echo ""
 echo "Next steps:"
-echo "  📦 Install dependencies: bun run setup (already done)"
-echo "  🔧 Start development:   bun run dev"
-echo "  🏗️  Build project:       bun run build"
-echo "  🧹 Lint & format:      bun run lint && bun run format"
-echo "  🧪 Run tests:          bun run test"
+echo "  📦 Install dependencies: pnpm run setup (already done)"
+echo "  🔧 Start development:   pnpm run dev"
+echo "  🏗️  Build project:       pnpm run build"
+echo "  🧹 Lint & format:      pnpm run lint && pnpm run format"
+echo "  🧪 Run tests:          pnpm run test"
 echo ""
 echo "Development servers:"
 echo "  🐍 Backend:  http://localhost:8000"

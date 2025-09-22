@@ -32,7 +32,7 @@
     "ghcr.io/devcontainers/features/node:1": {
       "version": "20"
     },
-    "ghcr.io/shyim/devcontainers-features/bun:0": {}
+    "ghcr.io/devcontainers/features/pnpm:1": {}
   },
   "runArgs": ["--init", "--cap-add=NET_ADMIN", "--cap-add=NET_RAW"],
   "hostRequirements": {

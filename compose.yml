@@ -23,8 +23,8 @@ services:
     command: ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 
   frontend:
-    image: oven/bun:1
-    working_dir: /app/frontend
+    image: node:20
+    working_dir: /app
     restart: unless-stopped
     user: "${USER_ID:-1000}:${GROUP_ID:-1000}"
     environment:
@@ -41,7 +41,7 @@ services:
     ports:
       - "3000:3000"
     command: >
-      bash -lc "bun install && bun run dev --host 0.0.0.0"
+      bash -lc "corepack enable pnpm && pnpm install --recursive && pnpm --dir frontend dev -- --host 0.0.0.0"
     depends_on:
       - app
 

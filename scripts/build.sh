@@ -65,29 +65,31 @@ log_success "Backend build completed"
 
 # Build Frontend (TypeScript/React)
 log_info "Building TypeScript frontend..."
-cd "$PROJECT_ROOT/frontend"
+cd "$PROJECT_ROOT"
 
 # Install/update dependencies
 log_info "Installing frontend dependencies..."
-bun install
+pnpm install --recursive
+
+cd "$PROJECT_ROOT/frontend"
 
 # Run type checking
 log_info "Running TypeScript type checks..."
-bun run type-check || {
+pnpm run type-check || {
     log_error "TypeScript compilation failed"
     exit 1
 }
 
 # Run linting
 log_info "Running frontend linting..."
-bun run lint || {
+pnpm run lint || {
     log_error "Frontend linting failed"
     exit 1
 }
 
 # Build the application
 log_info "Building frontend application..."
-bun run build || {
+pnpm run build || {
     log_error "Frontend build failed"
     exit 1
 }

@@ -371,14 +371,14 @@ GET /api/tasks/stats
 
 ```bash
 # 依存関係インストール
-bun install
+pnpm install
 cd backend && uv sync && uv sync --group streamlit && cd -
 
 # データベース初期化
 cd backend && uv run python -c "from database import init_db; init_db()" && cd -
 
 # 開発サーバー起動
-bun run dev
+pnpm run dev
 ```
 
 ### アクセス先

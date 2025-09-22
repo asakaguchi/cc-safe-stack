@@ -38,7 +38,7 @@ cp .env.example .env
 
 ```bash
 # 推奨：package.jsonコマンド使用
-bun run docker:dev
+pnpm run docker:dev
 
 # 直接コマンド
 docker compose --profile dev up -d dev
@@ -48,7 +48,7 @@ docker compose --profile dev up -d dev
 
 ```bash
 # 推奨：package.jsonコマンド使用
-bun run docker:dev:connect
+pnpm run docker:dev:connect
 
 # 直接コマンド
 docker exec -it claude-polyglot-starter-dev-1 zsh
@@ -67,7 +67,7 @@ claude
 #### 5. 開発サーバーの起動（コンテナ内で実行）
 
 ```bash
-bun run dev  # React(3000), FastAPI(8000), Streamlit(8501)
+pnpm run dev  # React(3000), FastAPI(8000), Streamlit(8501)
 ```
 
 ### エディタの選択肢
@@ -115,7 +115,7 @@ ADDITIONAL_ALLOWED_DOMAINS=npm.company.com,pypi.company.com
 ### 標準Docker環境の必要条件
 
 - Docker
-- bun（フロントエンド用）
+- pnpm（フロントエンド用）
 
 ### 使用方法
 
@@ -127,8 +127,8 @@ cd backend && uv sync && cd -
 docker compose up app
 
 # フロントエンドはホストで起動（http://localhost:3000）
-bun install
-bun run dev:frontend
+pnpm install --recursive
+pnpm run dev:frontend
 ```
 
 ### 特徴
@@ -178,7 +178,7 @@ docker compose up app
 docker compose up
 
 # セキュア開発環境（推奨）
-bun run docker:dev
+pnpm run docker:dev
 
 # 特定サービスの再ビルド
 docker compose build app
@@ -270,7 +270,7 @@ sudo chown -R $(id -u):$(id -g) .
 docker compose up app
 
 # 2. フロントエンド起動（別ターミナル）
-bun run dev:frontend
+pnpm run dev:frontend
 
 # 3. 開発作業
 # - フロントエンド: ホストで編集、ライブリロード
@@ -292,16 +292,16 @@ docker compose up
 
 ```bash
 # 1. セキュア環境起動（推奨コマンド）
-bun run docker:dev
+pnpm run docker:dev
 
 # 2. コンテナに接続（推奨コマンド）
-bun run docker:dev:connect
+pnpm run docker:dev:connect
 
 # 3. Claude Code で安全に開発
 claude  # コンテナ内で隔離実行
 
 # 4. 開発サーバー起動
-bun run dev
+pnpm run dev
 ```
 
 ## トラブルシューティング

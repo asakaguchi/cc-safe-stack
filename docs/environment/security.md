@@ -271,7 +271,7 @@ sudo .devcontainer/secure/init-firewall.sh
 | 症状                           | 原因                     | 対処法                            |
 | ------------------------------ | ------------------------ | --------------------------------- |
 | `uv sync` 企業接続失敗         | 企業レジストリ未許可     | `ADDITIONAL_ALLOWED_DOMAINS` 追加 |
-| `bun install` 外部失敗         | NPM以外レジストリ使用    | 使用レジストリを許可リスト追加    |
+| `pnpm install` 外部失敗        | NPM以外レジストリ使用    | 使用レジストリを許可リスト追加    |
 | `curl` `icmp-admin-prohibited` | ファイアウォール通信遮断 | 対象ドメインを許可リスト追加      |
 | API呼出 `Connection timed out` | 外部API ドメイン未許可   | API ドメインを許可リスト追加      |
 

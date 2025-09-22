@@ -518,19 +518,19 @@ describe('userApi', () => {
 
 ```bash
 # 開発サーバー起動
-bun run dev
+pnpm run dev
 
 # コード品質チェック
-bun run lint
+pnpm run lint
 
 # フォーマット
-bun run format
+pnpm run format
 
 # テスト実行
-bun run test
+pnpm run test
 
 # ビルド確認
-bun run build
+pnpm run build
 ```
 
 ### 3. APIドキュメント

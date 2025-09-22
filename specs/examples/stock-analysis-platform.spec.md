@@ -365,14 +365,14 @@ POST /api/portfolios/{portfolio_id}/transactions
 
 ```bash
 # 依存関係インストール
-bun install
+pnpm install
 cd backend && uv sync && uv sync --group streamlit && cd -
 
 # 金融データライブラリ追加
 uv add yfinance plotly pandas numpy scipy
 
 # 開発サーバー起動（3つ同時）
-bun run dev
+pnpm run dev
 ```
 
 ### アクセス先

@@ -27,7 +27,7 @@ Claude Code を安全に実行するためのセキュア環境:
 Claude Code を隔離環境で安全実行:
 
 - Docker: Docker Compose v2 対応版
-- bun: JavaScript/TypeScript パッケージマネージャー
+- pnpm: JavaScript/TypeScript パッケージマネージャー
 - 特徴: VS Code 以外のエディタでもセキュア実行可能
 
 #### ローカル開発（高速・非セキュア）
@@ -37,7 +37,7 @@ Claude Code を隔離環境で安全実行:
 - Python: 3.12 以上
 - Node.js: 18 以上
 - uv: Python パッケージマネージャー
-- bun: JavaScript/TypeScript パッケージマネージャー
+- pnpm: JavaScript/TypeScript パッケージマネージャー
 - 注意: Claude Code 実行時は上記セキュア環境を使用してください。
 
 ## 初期セットアップ
@@ -55,12 +55,12 @@ cd <your-repository-name>
 
 ```bash
 # 統合セットアップスクリプトを実行
-bun run setup
+pnpm run setup
 ```
 
 このコマンドは以下を自動実行します。
 
-- フロントエンド依存関係のインストール（`bun install`）
+- フロントエンド依存関係のインストール（`pnpm install`）
 - バックエンド依存関係の同期（`uv sync`）
 - 開発環境の初期化
 
@@ -95,7 +95,7 @@ ADDITIONAL_ALLOWED_DOMAINS=example.com,api.example.com
 
 ```bash
 # 3つのサーバーを同時に起動
-bun run dev
+pnpm run dev
 ```
 
 このコマンドで以下が起動します。
@@ -108,13 +108,13 @@ bun run dev
 
 ```bash
 # バックエンド（FastAPI）
-bun run dev:backend
+pnpm run dev:backend
 
 # フロントエンド（React）
-bun run dev:frontend
+pnpm run dev:frontend
 
 # データアプリ（Streamlit）
-bun run dev:streamlit
+pnpm run dev:streamlit
 ```
 
 ### サービス確認
@@ -142,7 +142,7 @@ curl http://localhost:8501
 # Git Bash または PowerShell を使用
 git clone https://github.com/<your-username>/<your-repository-name>.git
 cd <your-repository-name>
-bun run setup
+pnpm run setup
 ```
 
 #### WSL2 環境（推奨）
@@ -151,7 +151,7 @@ bun run setup
 # WSL2 内でのセットアップ
 wsl
 cd /mnt/c/path/to/your/project
-bun run setup
+pnpm run setup
 ```
 
 #### 注意事項
@@ -166,13 +166,12 @@ bun run setup
 
 ```bash
 # 必要なツールのインストール
-brew install git docker
-brew install oven-sh/bun/bun
+brew install git docker pnpm
 
 # プロジェクトセットアップ
 git clone https://github.com/<your-username>/<your-repository-name>.git
 cd <your-repository-name>
-bun run setup
+pnpm run setup
 ```
 
 #### macOS での注意事項
@@ -190,13 +189,13 @@ bun run setup
 sudo apt update
 sudo apt install docker.io docker-compose-plugin git
 
-# bun のインストール
-curl -fsSL https://bun.sh/install | bash
+# pnpm のインストール
+curl -fsSL https://get.pnpm.io/install.sh | sh -
 
 # プロジェクトセットアップ
 git clone https://github.com/<your-username>/<your-repository-name>.git
 cd <your-repository-name>
-bun run setup
+pnpm run setup
 ```
 
 #### CentOS/RHEL
@@ -205,13 +204,13 @@ bun run setup
 # Docker のインストール
 sudo yum install docker git
 
-# bun のインストール
-curl -fsSL https://bun.sh/install | bash
+# pnpm のインストール
+curl -fsSL https://get.pnpm.io/install.sh | sh -
 
 # プロジェクトセットアップ
 git clone https://github.com/<your-username>/<your-repository-name>.git
 cd <your-repository-name>
-bun run setup
+pnpm run setup
 ```
 
 ## パッケージマネージャーの詳細
@@ -230,17 +229,17 @@ uv add --dev pytest     # 開発依存関係の追加
 uv remove package-name  # パッケージの削除
 ```
 
-### bun（JavaScript/TypeScript）
+### pnpm（JavaScript/TypeScript）
 
 ```bash
 # インストール（まだインストールしていない場合）
-curl -fsSL https://bun.sh/install | bash
+curl -fsSL https://get.pnpm.io/install.sh | sh -
 
 # プロジェクト依存関係の管理
-bun install                    # 依存関係のインストール
-bun add react                  # パッケージの追加
-bun add -D @types/node         # 開発依存関係の追加
-bun remove package-name        # パッケージの削除
+pnpm install                    # 依存関係のインストール
+pnpm add react                  # パッケージの追加
+pnpm add -D @types/node         # 開発依存関係の追加
+pnpm remove package-name        # パッケージの削除
 ```
 
 ## コード品質管理
@@ -249,16 +248,16 @@ bun remove package-name        # パッケージの削除
 
 ```bash
 # 全体のリンティング
-bun run lint
+pnpm run lint
 
 # 自動修正
-bun run lint:fix
+pnpm run lint:fix
 
 # フォーマッティング
-bun run format
+pnpm run format
 
 # TypeScript 型チェック
-bun run type-check
+pnpm run type-check
 ```
 
 ### Pre-commit フックの設定
@@ -277,7 +276,7 @@ uv run pre-commit run --all-files
 
 ```bash
 # 全プロジェクトのテスト実行
-bun run test
+pnpm run test
 ```
 
 ### 個別テスト
@@ -289,7 +288,7 @@ uv run pytest
 
 # フロントエンドテスト
 cd frontend
-bun test
+pnpm test
 
 # Streamlit アプリのテスト
 cd streamlit
@@ -302,20 +301,20 @@ uv run pytest
 
 ```bash
 # 全プロジェクトのビルド
-bun run build
+pnpm run build
 ```
 
 ### 個別ビルド
 
 ```bash
 # バックエンド依存関係の同期
-bun run build:backend
+pnpm run build:backend
 
 # React アプリのビルド
-bun run build:frontend
+pnpm run build:frontend
 
 # Streamlit 依存関係の同期
-bun run build:streamlit
+pnpm run build:streamlit
 ```
 
 ## トラブルシューティング
@@ -339,19 +338,19 @@ kill -9 <PID>
 
 #### 依存関係のインストールエラー
 
-症状: `uv sync` や `bun install` が失敗。
+症状: `uv sync` や `pnpm install` が失敗。
 
 解決策:
 
 ```bash
 # キャッシュをクリア
 uv cache clean
-bun pm cache rm
+pnpm store prune
 
 # ロックファイルを削除して再インストール
 rm backend/uv.lock
-rm bun.lockb
-bun run setup
+rm pnpm-lock.yaml
+pnpm run setup
 ```
 
 #### Docker 関連エラー
@@ -399,7 +398,7 @@ sudo chown -R $USER:$USER .
 ```bash
 # Node.js のメモリ制限を増加
 export NODE_OPTIONS=\"--max-old-space-size=4096\"
-bun run dev
+pnpm run dev
 ```
 
 #### Docker のパフォーマンス改善
@@ -425,17 +424,17 @@ bun run dev
 
 ```bash
 # 利用可能なスクリプトの確認
-bun run
+pnpm run
 
 # プロジェクト固有のヘルプ
-bun run help
+pnpm run help
 ```
 
 ### デバッグ情報の収集
 
 ```bash
 # システム情報の出力
-bun --version
+pnpm --version
 uv --version
 docker --version
 docker compose version

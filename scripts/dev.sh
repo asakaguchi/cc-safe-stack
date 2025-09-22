@@ -72,8 +72,8 @@ uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000 &
 BACKEND_PID=$!
 
 log_info "Starting frontend server (TypeScript/React)..."
-cd "$PROJECT_ROOT/frontend"
-bun dev --host 0.0.0.0 &
+cd "$PROJECT_ROOT"
+pnpm --dir "$PROJECT_ROOT/frontend" dev -- --host 0.0.0.0 &
 FRONTEND_PID=$!
 
 log_info "Starting Streamlit server (Data Application)..."

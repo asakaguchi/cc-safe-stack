@@ -112,7 +112,7 @@ cd "$PROJECT_ROOT/frontend"
 # Check if test scripts exist
 if grep -q '"test"' package.json && [ -d "src" ]; then
     log_info "Running frontend tests..."
-    if bun run test --run; then
+    if pnpm run test -- --run; then
         log_success "Frontend tests passed"
     else
         log_error "Frontend tests failed"
@@ -146,7 +146,7 @@ log_info "Running linting checks as part of test suite..."
 if "$PROJECT_ROOT/scripts/lint.sh" > /dev/null 2>&1; then
     log_success "Linting checks passed"
 else
-    log_warning "Linting checks failed (run: bun run lint for details)"
+    log_warning "Linting checks failed (run: pnpm run lint for details)"
     ERRORS=$((ERRORS + 1))
 fi
 
@@ -162,9 +162,9 @@ else
     log_error "❌ Found $ERRORS issue(s)"
     echo ""
     echo "💡 To fix issues:"
-    echo "  🔧 Auto-fix: bun run lint:fix"
-    echo "  ✨ Format:   bun run format"
-    echo "  🧪 Re-test:  bun run test"
+    echo "  🔧 Auto-fix: pnpm run lint:fix"
+    echo "  ✨ Format:   pnpm run format"
+    echo "  🧪 Re-test:  pnpm run test"
     exit 1
 fi
 

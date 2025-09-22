@@ -56,7 +56,7 @@ log_info "Checking Python code formatting..."
 if uv run ruff format --check .; then
     log_success "Python formatting is correct"
 else
-    log_warning "Python code needs formatting (run: bun run format:backend)"
+    log_warning "Python code needs formatting (run: pnpm run format:backend)"
     ERRORS=$((ERRORS + 1))
 fi
 
@@ -79,7 +79,7 @@ cd "$PROJECT_ROOT/frontend"
 
 # Run ESLint
 log_info "Running ESLint..."
-if bun run lint; then
+if pnpm run lint; then
     log_success "ESLint checks passed"
 else
     log_error "ESLint checks failed"
@@ -88,7 +88,7 @@ fi
 
 # Run TypeScript compiler checks
 log_info "Running TypeScript checks..."
-if bun run type-check; then
+if pnpm run type-check; then
     log_success "TypeScript checks passed"
 else
     log_error "TypeScript checks failed"
@@ -100,7 +100,7 @@ log_info "Checking code formatting..."
 if prettier --check .; then
     log_success "Code formatting is correct"
 else
-    log_warning "Code needs formatting (run: bun run format:frontend)"
+    log_warning "Code needs formatting (run: pnpm run format:frontend)"
     ERRORS=$((ERRORS + 1))
 fi
 
@@ -113,7 +113,7 @@ log_info "Running textlint checks..."
 if textlint '**/*.{md,html}'; then
     log_success "Textlint checks passed"
 else
-    log_warning "Textlint checks failed (run: bun run lint:text:fix to auto-fix)"
+    log_warning "Textlint checks failed (run: pnpm run lint:text:fix to auto-fix)"
     ERRORS=$((ERRORS + 1))
 fi
 
@@ -130,8 +130,8 @@ else
     log_error "❌ Found $ERRORS issue(s)"
     echo ""
     echo "💡 To fix issues automatically:"
-    echo "  🐍 Backend:  bun run lint:fix:backend && bun run format:backend"
-    echo "  ⚛️  Frontend: bun run lint:fix:frontend && bun run format:frontend"
-    echo "  🔧 All:     bun run lint:fix && bun run format"
+    echo "  🐍 Backend:  pnpm run lint:fix:backend && pnpm run format:backend"
+    echo "  ⚛️  Frontend: pnpm run lint:fix:frontend && pnpm run format:frontend"
+    echo "  🔧 All:     pnpm run lint:fix && pnpm run format"
     exit 1
 fi

@@ -19,7 +19,7 @@ Claude Code は強力な AI ですが、誤って破壊的なコマンド（`rm 
    - デフォルトで SECURE_MODE=true
    - `code .` →「コンテナで再度開く」
 2. **Docker開発環境**（任意エディタ）
-   - `bun run docker:dev` → `bun run docker:dev:connect`
+   - `pnpm run docker:dev` → `pnpm run docker:dev:connect`
 
 ### 重要な注意事項
 
@@ -169,11 +169,11 @@ specs/examples/stock-analysis-platform.spec.md の仕様で
 
 ```bash
 # 依存関係インストール
-bun install
+pnpm install --recursive
 cd backend && uv sync && cd -
 
 # 開発サーバー起動（3つ同時）
-bun run dev
+pnpm run dev
 ```
 
 ### アクセス先

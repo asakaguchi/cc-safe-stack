@@ -56,7 +56,7 @@ fi
 echo "📦 Node.js環境を確認中..."
 if [ -f "/workspace/frontend/package.json" ]; then
     echo "📦 Node.js依存関係をインストール中..."
-    gosu ${USER_NAME} bash -c "cd /workspace/frontend && bun install" || echo "⚠️  bun install failed"
+    gosu ${USER_NAME} bash -c "cd /workspace && pnpm install --recursive" || echo "⚠️  pnpm install failed"
 fi
 
 # 開発ツールの使用方法を表示
@@ -65,8 +65,8 @@ echo "🎉 Docker開発環境の初期化完了！"
 echo ""
 echo "📋 利用可能なコマンド:"
 echo "   claude           # Claude Code CLIを起動"
-echo "   bun run dev      # 全サーバーを起動"
-echo "   bun run lint     # コード品質チェック"
+echo "   pnpm run dev     # 全サーバーを起動"
+echo "   pnpm run lint    # コード品質チェック"
 echo "   vim/nano         # エディタ"
 echo ""
 echo "🔧 開発サーバー:"

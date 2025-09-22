@@ -132,7 +132,7 @@ def main():
             - ⚛️ React 18
             - ⚡ Vite
             - 🎨 ESLint + Prettier
-            - 📦 bun package manager
+            - 📦 pnpm package manager
             """)
         
         with tech_col3:

@@ -84,7 +84,7 @@ cc-safe-stack/
 - React 18: モダンな UI ライブラリ
 - Vite: 高速ビルドツール
 - ESLint + Prettier: コード品質管理
-- bun: 超高速パッケージマネージャー・ランタイム
+- pnpm: 高速・省スペースなパッケージマネージャー
 
 #### streamlit/ - データアプリケーション
 
@@ -134,15 +134,15 @@ uv add --dev pytest ruff mypy
 uv sync
 ```
 
-#### TypeScript/JavaScript（bun）
+#### TypeScript/JavaScript（pnpm）
 
 ```bash
-# 超高速なパッケージ管理
-bun add react @types/react
-bun add -D @types/node typescript
+# 高速で省スペースなパッケージ管理
+pnpm add react @types/react
+pnpm add -D @types/node typescript
 
 # 高速な実行環境
-bun run dev
+pnpm run dev
 ```
 
 ### 型安全性の確保

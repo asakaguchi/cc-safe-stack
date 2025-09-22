@@ -41,7 +41,7 @@ cd "$PROJECT_ROOT/frontend"
 
 # Run ESLint auto-fix
 log_info "Running ESLint auto-fix..."
-bun run lint:fix
+pnpm run lint:fix
 log_success "TypeScript linting issues fixed"
 
 # Fix Documentation (Textlint)
@@ -54,5 +54,5 @@ textlint --fix '**/*.{md,html}' || true
 log_success "Documentation issues fixed"
 
 log_success "🎉 Auto-fix completed!"
-echo "💡 Run 'bun run format' to fix formatting issues"
-echo "💡 Run 'bun run lint' to check for remaining issues"
+echo "💡 Run 'pnpm run format' to fix formatting issues"
+echo "💡 Run 'pnpm run lint' to check for remaining issues"

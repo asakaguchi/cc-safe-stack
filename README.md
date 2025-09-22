@@ -39,7 +39,7 @@ Claude Code（Anthropic の AI 開発パートナー）を使って、仕様書�
 
 - **TypeScript** + **React 18** - Claude Code の強力な型推論能力を活用
 - **Vite** - 高速ビルドで繰り返し測定を加速
-- **bun** - npm より 10 倍高速なパッケージ管理
+- **pnpm** - 高速・省ストレージなワークスペース対応パッケージマネージャー
 
 #### データ分析（Streamlit - 管理者ダッシュボード）
 
@@ -114,14 +114,14 @@ cp .env.example .env
 # nano .env  # または好みのエディタで編集
 
 # 3. セキュア開発環境を起動（Claude Code CLI内蔵）
-bun run docker:dev
+pnpm run docker:dev
 
 # 4. コンテナに接続してClaude Codeを実行
-bun run docker:dev:connect
+pnpm run docker:dev:connect
 claude  # コンテナ内で安全に実行
 
 # 開発サーバーはコンテナ内で起動
-bun run dev
+pnpm run dev
 # - React: http://localhost:3000
 # - FastAPI: http://localhost:8000
 # - Streamlit: http://localhost:8501
@@ -140,13 +140,13 @@ bun run dev
 
 ```bash
 # 依存関係セットアップ
-bun run setup
+pnpm run setup
 
 # 環境の正常性確認
-bun run verify-setup
+pnpm run verify-setup
 
 # 全サービス並列起動
-bun run dev
+pnpm run dev
 ```
 
 重要な注意事項は次のとおりです。

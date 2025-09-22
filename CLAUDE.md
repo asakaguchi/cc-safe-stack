@@ -47,10 +47,10 @@ cc-safe-stack/
 
 #### TypeScript/JavaScript (Frontend)
 
-- 必須ツール: bun パッケージマネージャーのみ使用
-- インストール: `bun add package`
-- 開発依存関係: `bun add -D package`
-- 禁止事項: `npm install`、`yarn`、`pnpm`
+- 必須ツール: pnpm パッケージマネージャーのみ使用
+- インストール: `pnpm add package`
+- 開発依存関係: `pnpm add -D package`
+- 禁止事項: `npm install`、`yarn`、`bun`
 
 ### 2. コード品質基準
 
@@ -88,27 +88,27 @@ cc-safe-stack/
 
 ```bash
 # 初期セットアップ
-bun run setup
+pnpm run setup
 
 # 開発サーバー起動（フロント＋バック並行）
-bun run dev
+pnpm run dev
 
 # 個別起動
-bun run dev:frontend    # http://localhost:3000
-bun run dev:backend     # http://localhost:8000
+pnpm run dev:frontend    # http://localhost:3000
+pnpm run dev:backend     # http://localhost:8000
 
 # 全体ビルド
-bun run build
+pnpm run build
 
 # 全体テスト
-bun run test
+pnpm run test
 
 # 全体リント
-bun run lint
-bun run lint:fix
+pnpm run lint
+pnpm run lint:fix
 
 # 全体フォーマット
-bun run format
+pnpm run format
 ```
 
 ### 言語別コマンド
@@ -138,21 +138,21 @@ uv run --frozen mypy .
 
 ```bash
 # 依存関係インストール
-bun install
+pnpm install
 
 # 開発サーバー
-bun dev
+pnpm run dev
 
 # ビルド
-bun run build
+pnpm run build
 
 # リント・フォーマット
-bun run lint
-bun run lint:fix
-bun prettier --write .
+pnpm run lint
+pnpm run lint:fix
+pnpm prettier --write .
 
 # 型チェック
-bun run type-check
+pnpm run type-check
 ```
 
 ## テスト要件
@@ -193,23 +193,23 @@ uv run --frozen ruff format .
 
 ```bash
 # リント
-bun run lint
+pnpm run lint
 
 # 自動修正
-bun run lint:fix
+pnpm run lint:fix
 
 # フォーマット
-bun prettier --write .
+pnpm prettier --write .
 ```
 
 #### Markdown/ドキュメント (textlint)
 
 ```bash
 # 日本語文書チェック
-bun run lint:text
+pnpm run lint:text
 
 # 自動修正
-bun run lint:text:fix
+pnpm run lint:text:fix
 ```
 
 ### Pre-commit フック
@@ -264,8 +264,8 @@ style(shared): format type definitions
 
 ```bash
 # コンテナビルド・起動
-bun run docker:build
-bun run docker:up
+pnpm run docker:build
+pnpm run docker:up
 ```
 
 ## 共有コンポーネント管理

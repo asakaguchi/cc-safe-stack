@@ -52,5 +52,5 @@ prettier --write "*.json" "*.md" ".eslintrc.js" ".prettierrc" 2>/dev/null || tru
 log_success "🎉 All code has been formatted!"
 echo ""
 echo "💡 Next steps:"
-echo "  🔍 Run 'bun run lint' to check for issues"
-echo "  🧪 Run 'bun run test' to ensure tests still pass"
+echo "  🔍 Run 'pnpm run lint' to check for issues"
+echo "  🧪 Run 'pnpm run test' to ensure tests still pass"

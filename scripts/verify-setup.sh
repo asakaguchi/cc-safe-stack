@@ -87,7 +87,7 @@ main() {
 
     # 1. 必須コマンドの確認
     log_info "1. 必須コマンドの確認"
-    check_command "bun" "Bun" "1.0.0"
+    check_command "pnpm" "pnpm" "8.0.0"
     check_command "uv" "uv" "0.1.0"
     check_command "git" "Git" "2.0.0"
     echo
@@ -125,7 +125,7 @@ main() {
         log_success "Node.js 依存関係がインストール済み"
         ((SUCCESS_COUNT++))
     else
-        log_warning "Node.js 依存関係が未インストール - 'bun install' を実行してください"
+        log_warning "Node.js 依存関係が未インストール - 'pnpm install --recursive' を実行してください"
     fi
 
     # Python 依存関係
@@ -187,7 +187,7 @@ main() {
         log_success "すべての検証に成功しました！Claude Code での開発を開始できます。"
         echo
         log_info "次のステップ:"
-        echo "1. 'bun run dev' で開発サーバーを起動"
+        echo "1. 'pnpm run dev' で開発サーバーを起動"
         echo "2. Claude Code に仕様書を使った実装を依頼"
         echo "   例: \"specs/examples/todo-app.spec.md の仕様で実装してください\""
         exit 0
@@ -195,9 +195,9 @@ main() {
         log_error "$ERROR_COUNT 個の問題が見つかりました。上記のエラーを解決してから再実行してください。"
         echo
         log_info "トラブルシューティング:"
-        echo "- 依存関係の問題: 'bun run setup' を実行"
+        echo "- 依存関係の問題: 'pnpm run setup' を実行"
         echo "- 詳細なセットアップ手順: README.md を参照"
-        echo "- Docker 関連の問題: 'bun run docker:dev' を試行"
+        echo "- Docker 関連の問題: 'pnpm run docker:dev' を試行"
         exit 1
     fi
 }

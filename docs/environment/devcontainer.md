@@ -230,7 +230,7 @@ sudo .devcontainer/secure/init-firewall.sh
 代表的な症状として、以下があります。
 
 - `uv sync` で企業レジストリへの接続失敗
-- `bun install` の外部取得失敗
+- `pnpm install` の外部取得失敗
 - `curl` が `icmp-admin-prohibited` で拒否
 
 ### 解決手順
@@ -274,7 +274,7 @@ sudo iptables -S OUTPUT | head
 
 - DNS は UDP/53 を許可済み。名前解決は `dig example.com +short` で確認。
 - 失敗する場合はコンテナを「Rebuild」しスクリプトの初期化を再実行。
-- 社内プロキシ経由が必要な場合は `curl`/`uv`/`bun` にプロキシ設定を適用。
+- 社内プロキシ経由が必要な場合は `curl`/`uv`/`pnpm` にプロキシ設定を適用。
 
 ## VS Code なしでの DevContainer 利用
 
@@ -295,7 +295,7 @@ devcontainer up --workspace-folder .
 devcontainer exec --workspace-folder . bash
 
 # 開発サーバー起動
-devcontainer exec --workspace-folder . bun run dev
+devcontainer exec --workspace-folder . pnpm run dev
 
 # クリーンアップ
 devcontainer down --workspace-folder . --remove-volumes

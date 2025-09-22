@@ -12,7 +12,7 @@ CONTAINER_NAME="${PROJECT_NAME}-dev-1"
 # コンテナが実行中か確認
 if ! docker ps --format "table {{.Names}}" | grep -q "^${CONTAINER_NAME}$"; then
     echo "エラー: コンテナ '${CONTAINER_NAME}' が実行されていません"
-    echo "まず 'bun run docker:dev' でコンテナを起動してください"
+    echo "まず 'pnpm run docker:dev' でコンテナを起動してください"
     exit 1
 fi
 

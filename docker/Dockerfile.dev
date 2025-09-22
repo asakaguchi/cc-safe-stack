@@ -55,14 +55,11 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | d
 # uvのインストール（Python パッケージマネージャー）
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 
-# Node.js 20とbunのインストール
+# Node.js 20とpnpmのインストール
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
-    && npm install -g npm@latest
-
-# bunのインストール
-RUN curl -fsSL https://bun.sh/install | bash \
-    && mv /root/.bun/bin/bun /usr/local/bin/
+    && npm install -g npm@latest \
+    && corepack enable pnpm
 
 # Claude Code CLIのインストール（正しいパッケージ名）
 RUN npm install -g @anthropic-ai/claude-code@latest

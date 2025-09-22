@@ -86,8 +86,8 @@ fi
 # フロントエンド依存関係
 if [ ! -d "$FRONTEND_DIR/node_modules" ]; then
     log_warning "Node.js依存関係が見つかりません。インストール中..."
-    cd "$FRONTEND_DIR"
-    bun install
+    cd "$WORKSPACE_ROOT"
+    pnpm install --recursive
 fi
 
 # Streamlitの確認
@@ -115,7 +115,7 @@ fi
 # フロントエンドサーバーの起動
 log_info "Starting frontend server (TypeScript/React)..."
 cd "$FRONTEND_DIR"
-bun dev --host 0.0.0.0 --port 3000 > /tmp/frontend.log 2>&1 &
+pnpm dev -- --host 0.0.0.0 --port 3000 > /tmp/frontend.log 2>&1 &
 FRONTEND_PID=$!
 
 # 少し待ってからフロントエンドの起動確認
@@ -185,7 +185,7 @@ monitor_processes() {
         if [ -n "${FRONTEND_PID:-}" ] && ! kill -0 $FRONTEND_PID 2>/dev/null; then
             log_warning "Frontend server stopped unexpectedly. Restarting..."
             cd "$FRONTEND_DIR"
-            bun dev --host 0.0.0.0 --port 3000 > /tmp/frontend.log 2>&1 &
+            pnpm dev -- --host 0.0.0.0 --port 3000 > /tmp/frontend.log 2>&1 &
             FRONTEND_PID=$!
         fi
         
