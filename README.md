@@ -73,11 +73,11 @@ Claude Code（Anthropic の AI 開発パートナー）を使って、仕様書�
 
 以下の 3 つから最適な環境を選択してください。
 
-| 環境             | 特徴                       | 推奨ケース               |
-| ---------------- | -------------------------- | ------------------------ |
-| **DevContainer** | VS Code専用・ゼロ設定      | **VS Code利用者**        |
-| **Docker**       | エディタ不問・コンテナ統一 | **Vim/Emacs/IntelliJ等** |
-| **ローカル**     | 高速・カスタマイズ自由     | パフォーマンス重視       |
+| 環境             | 特徴                           | 推奨ケース                            |
+| ---------------- | ------------------------------ | ------------------------------------- |
+| **DevContainer** | VS Code専用・ゼロ設定          | **VS Code利用者**                     |
+| **Docker**       | エディタ不問・ブラウザ接続対応 | **Vim/Emacs/IntelliJ等/ブラウザのみ** |
+| **ローカル**     | 高速・カスタマイズ自由         | パフォーマンス重視                    |
 
 #### オプション A: VS Code DevContainer（セキュア隔離環境・デフォルト）
 
@@ -100,6 +100,8 @@ code .
 #### オプション B: Docker Compose（セキュア隔離環境）
 
 Claude Code を隔離環境で安全に実行し、破壊的コマンドの実行リスクを最小化します。
+ブラウザ中心の **Web ダッシュボード** と、従来の **CLI 接続** のどちらでも同じセ
+キュア開発コンテナを共有します。
 
 ```bash
 # 1. 環境変数ファイルを作成（初回のみ）
@@ -109,23 +111,90 @@ cp .env.example .env
 #    主な設定項目：
 #    - SECURE_MODE: セキュアモード有効/無効（デフォルト: true）
 #    - ADDITIONAL_ALLOWED_DOMAINS: 追加で許可するドメイン（企業プロキシ等）
+#    - OPENVSCODE_TOKEN: Webダッシュボードの VS Code で使用する接続トークン
 #    - USER_ID/GROUP_ID: ホストとの権限同期（通常は自動設定）
 #    詳細は .env.example のコメントを参照
-# nano .env  # または好みのエディタで編集
-
-# 3. セキュア開発環境を起動（Claude Code CLI内蔵）
-pnpm run docker:dev
-
-# 4. コンテナに接続してClaude Codeを実行
-pnpm run docker:dev:connect
-claude  # コンテナ内で安全に実行
-
-# 開発サーバーはコンテナ内で起動
-pnpm run dev
-# - React: http://localhost:3000
-# - FastAPI: http://localhost:8000
-# - Streamlit: http://localhost:8501
 ```
+
+- **ブラウザ中心（推奨）**
+
+  ```bash
+  pnpm run docker:dashboard         # セキュア開発コンテナ + Web ダッシュボードを起動
+  pnpm run docker:dashboard -- -d   # バックグラウンド実行（任意）
+  ```
+
+  1. ブラウザで <http://localhost:8080/?vscodeToken=<トークン>> にアクセス
+     （`.env` の `OPENVSCODE_TOKEN` と同じ値）
+  2. 2x2 レイアウトで VS Code / アプリプレビュー / ターミナル / ユーティリティ画
+     面を操作
+  3. 左下ターミナルは `claude` CLI を含むセキュア開発コンテナに接続
+  4. 利用終了後は `pnpm run docker:dashboard:down` で停止
+
+- **CLI で直接接続（従来の手順）**
+
+  ```bash
+  pnpm run docker:dev         # セキュア開発コンテナを起動
+  pnpm run docker:dev:connect # シェルで接続
+  claude                     # CLI から直接実行
+
+  pnpm run dev               # 必要に応じて開発サーバー起動
+  # - React: http://localhost:3000
+  # - FastAPI: http://localhost:8000
+  # - Streamlit: http://localhost:8501
+  ```
+
+##### Web ダッシュボードで 4 分割ワークスペースを利用する
+
+ブラウザ一枚で VS Code / アプリプレビュー / ターミナル / メモ & 追加ビューを操作
+できる 2x2 ダッシュボードを用意しています。Docker Compose 環境で以下を実行してく
+ださい。
+
+1. 任意で `OPENVSCODE_TOKEN` を `.env` に設定して VS Code への接続トークンを固定
+   します（未指定の場合は自動生成されます）。
+2. ダッシュボードを起動:
+
+   ```bash
+   pnpm run docker:dashboard
+   ```
+
+   必要に応じてバックグラウンド実行したい場合は
+   `pnpm run docker:dashboard -- -d` を利用できます。`proxy` サービスの依存とし
+   て `frontend` / `app` / `streamlit` / `workspace` が自動的に立ち上がります。
+
+3. ブラウザで <http://localhost:8080> にアクセスすると以下の 4 画面が表示されま
+   す。
+
+   - 左上: `/vscode/`（OpenVSCode Server - セキュア開発コンテナ内で動作）
+   - 右上: `/preview/`（Vite 開発サーバー）
+   - 左下: `/terminal/`（ttyd ベースのシェル。同じセキュア開発コンテナに接続して
+     おり `claude` コマンドも利用可能）
+   - 右下: ローカルストレージ保存メモ／`Streamlit`／`API Docs` を切り替え
+
+   ダッシュボード上部のショートカット説明にある通り、`Ctrl + Shift + Alt + D` で
+   全画面表示をトグルできます。
+
+4. VS Code へ初回アクセス時は接続トークンを要求されます。`.env` に
+   `OPENVSCODE_TOKEN` を用意している場合はその値を入力してください。未設定の場合
+   はデフォルトの `changeme` が使用されるため、実運用では必ず独自の値に変更して
+   ください。
+
+> **ヒント:** Path ベースのリバースプロキシを行っているため、各サービスに直接ア
+> クセスしたい場合は `http://localhost:8080/vscode/` などのパスをそのまま利用で
+> きます。
+
+> **停止方法:** ダッシュボード一式を停止するには
+> `pnpm run docker:dashboard:down` を実行してください。
+
+> **トークンの切り替え:** ダッシュボード内の VS Code iframe は
+> `http://localhost:8080/?vscodeToken=changeme` のように `vscodeToken` クエリを
+> 追加すると指定したトークンでアクセスします。`.env` の `OPENVSCODE_TOKEN` を変
+> 更した場合は、このパラメーターを同じ値に更新してください。
+
+> **セキュア環境との連携:** ダッシュボードの VS Code / ターミナルは
+> `docker compose --profile dev up` で利用するセキュア開発コンテナと同じ環境を共
+> 有しています。ファイアウォール設定（`SECURE_MODE` や
+> `ADDITIONAL_ALLOWED_DOMAINS`）や `claude` CLI の設定も引き継がれるため、ブラウ
+> ザからでも安全なワークスペースを利用できます。
 
 主な利点は次のとおりです。
 
@@ -178,7 +247,8 @@ Code に実装を依頼！
 
 ### Claude Code を今すぐ始める
 
-- **[Claude Code 実践ガイド](TUTORIAL.md)** - 30 分でアプリ完成。具体的な手順
+- **[Claude Code 実践ガイド](docs/TUTORIAL.md)** - 30 分でアプリ完成。具体的な手
+  順
 - **[仕様書の書き方](specs/README.md)** - Claude Code が理解しやすい仕様書作成法
 
 ### 環境構築（必要時のみ）

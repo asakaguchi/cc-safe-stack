@@ -36,19 +36,20 @@ flowchart TD
 
 ### 🚀 クイックスタート
 
-| ドキュメント                  | 説明                       | 対象者            |
-| ----------------------------- | -------------------------- | ----------------- |
-| [README.md](../README.md)     | プロジェクト概要・環境選択 | 全員必読          |
-| [TUTORIAL.md](../TUTORIAL.md) | Claude Code実践ガイド      | Claude Code利用者 |
+| ドキュメント                 | 説明                       | 対象者            |
+| ---------------------------- | -------------------------- | ----------------- |
+| [README.md](../README.md)    | プロジェクト概要・環境選択 | 全員必読          |
+| [TUTORIAL.md](./TUTORIAL.md) | Claude Code実践ガイド      | Claude Code利用者 |
 
 ### 🔧 環境構築
 
-| ドキュメント                                          | 説明                           | 対象者             |
-| ----------------------------------------------------- | ------------------------------ | ------------------ |
-| [DevContainer ガイド](environment/devcontainer.md)    | VS Code DevContainer設定       | VS Code利用者      |
-| [Docker ガイド](environment/docker.md)                | Docker開発環境設定             | 任意エディタ利用者 |
-| [セキュリティ設定](environment/security.md)           | ネットワーク制限・セキュリティ | セキュリティ重視   |
-| [インストールガイド](getting-started/installation.md) | 詳細セットアップ               | 手動構築希望者     |
+| ドキュメント                                                                                       | 説明                             | 対象者                         |
+| -------------------------------------------------------------------------------------------------- | -------------------------------- | ------------------------------ |
+| [DevContainer ガイド](environment/devcontainer.md)                                                 | VS Code DevContainer設定         | VS Code利用者                  |
+| [Docker ガイド](environment/docker.md)                                                             | Docker開発環境設定               | 任意エディタ利用者             |
+| [README: Web ダッシュボード手順](../README.md#web-ダッシュボードで-4-分割ワークスペースを利用する) | ブラウザで使える Docker 開発環境 | Claude Code をブラウザから操作 |
+| [セキュリティ設定](environment/security.md)                                                        | ネットワーク制限・セキュリティ   | セキュリティ重視               |
+| [インストールガイド](getting-started/installation.md)                                              | 詳細セットアップ                 | 手動構築希望者                 |
 
 ### 🏗️ 開発・設計
 
@@ -63,8 +64,20 @@ flowchart TD
 ### Claude Codeで即座に開発開始
 
 1. [README.md](../README.md) - 環境選択
-2. [TUTORIAL.md](../TUTORIAL.md) - セキュア実行方法
-3. 開発開始
+2. [README.md](../README.md#web-ダッシュボードで-4-分割ワークスペースを利用する) -
+   Webダッシュボード起動
+3. [TUTORIAL.md](./TUTORIAL.md) - Claude Code 実行手順
+4. 開発開始
+
+#### Web ベース Docker ワークスペースの概要
+
+- `pnpm run docker:dashboard`（もしくは `pnpm run docker:dashboard -- -d`）でセ
+  キュア開発コンテナを起動
+- ブラウザで <http://localhost:8080/?vscodeToken=YOUR_TOKEN> にアクセスして 2x2
+  レイアウトを利用
+- VS Code / ターミナルは従来の Docker セキュア環境と同じコンテナに接続
+  し、`claude` CLI もそのまま利用可能
+- 終了時は `pnpm run docker:dashboard:down` を実行
 
 ### VS Code DevContainerを詳しく知りたい
 

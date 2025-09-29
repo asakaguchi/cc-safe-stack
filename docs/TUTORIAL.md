@@ -18,12 +18,40 @@ Claude Code は強力な AI ですが、誤って破壊的なコマンド（`rm 
 1. **VS Code DevContainer**（最も簡単）
    - デフォルトで SECURE_MODE=true
    - `code .` →「コンテナで再度開く」
-2. **Docker開発環境**（任意エディタ）
-   - `pnpm run docker:dev` → `pnpm run docker:dev:connect`
+2. **Docker開発環境**（任意エディタ／ブラウザ）
+   - ブラウザ中心: `pnpm run docker:dashboard` →
+     <http://localhost:8080/?vscodeToken=...>
+   - 既存 CLI 手順: `pnpm run docker:dev` → `pnpm run docker:dev:connect`
 
 ### 重要な注意事項
 
 ローカル環境での直接実行は避けてください。
+
+## 🌐 Web ダッシュボードで Docker 開発環境に接続する
+
+ブラウザから利用できる 2x2 ワークスペースを使うと、VS Code、ターミナル、アプリプ
+レビューをまとめて確認できます。すべて従来のセキュア Docker 環境（`docker:dev`）
+と同じコンテナで動作します。
+
+1. 必要なら `.env` に `OPENVSCODE_TOKEN=<任意のトークン>` を設定
+2. セキュアコンテナを起動
+   ```bash
+   pnpm run docker:dashboard        # フォアグラウンド
+   # または
+   pnpm run docker:dashboard -- -d  # バックグラウンド
+   ```
+3. ブラウザで <http://localhost:8080/?vscodeToken=<トークン>> にアクセス
+   - 左上: VS Code（セキュアコンテナ上）
+   - 左下: ターミナル（`claude` が利用可能）
+   - 右上: フロントエンドプレビュー
+   - 右下: メモ／Streamlit／API Docs の切り替え
+4. 利用後は停止
+   ```bash
+   pnpm run docker:dashboard:down
+   ```
+
+この方法でもファイアウォールや `SECURE_MODE` 設定は有効で、既存の `docker:dev`
+ワークフローと同等の安全性が保たれます。
 
 ## 🎯 Claude Code とは
 

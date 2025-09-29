@@ -295,6 +295,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 package-lock.json
+/.pnpm-store/
 
 # Frontend build files  
 frontend/dist/

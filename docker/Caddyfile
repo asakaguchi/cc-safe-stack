@@ -1,0 +1,52 @@
+:8080 {
+  encode zstd gzip
+
+  @vscode path_regexp vscode ^/vscode(?:/.*)?$
+  handle @vscode {
+    reverse_proxy workspace:3000 {
+      header_down -X-Frame-Options
+      header_down -Content-Security-Policy
+    }
+  }
+
+  @terminal path_regexp terminal ^/terminal(?:/.*)?$
+  handle @terminal {
+    reverse_proxy workspace:7681 {
+      header_down -X-Frame-Options
+      header_down -Content-Security-Policy
+    }
+  }
+
+  @preview path_regexp preview ^/preview(?:/.*)?$
+  handle @preview {
+    uri strip_prefix /preview
+    reverse_proxy frontend:3000 {
+      header_down -X-Frame-Options
+      header_down -Content-Security-Policy
+    }
+  }
+
+  @streamlit path_regexp streamlit ^/streamlit(?:/.*)?$
+  handle @streamlit {
+    uri strip_prefix /streamlit
+    reverse_proxy streamlit:8501 {
+      header_down -X-Frame-Options
+      header_down -Content-Security-Policy
+    }
+  }
+
+  @api path_regexp api ^/api(?:/.*)?$
+  handle @api {
+    uri strip_prefix /api
+    reverse_proxy app:8000 {
+      header_down -X-Frame-Options
+      header_down -Content-Security-Policy
+    }
+  }
+
+  handle {
+    root * /srv/dashboard
+    try_files {path} {path}/ /index.html
+    file_server
+  }
+}
