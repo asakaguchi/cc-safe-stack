@@ -79,21 +79,18 @@ echo ""
 
 # 実行モードに応じた処理
 if [[ "$DEV_ENTRY_MODE" == "workspace" ]]; then
-    echo "🌐 Webワークスペースモードで起動します"
-
-    OPENVSCODE_TOKEN_VALUE=${OPENVSCODE_TOKEN:-changeme}
-    echo "🔐 VS Code 接続トークン: ${OPENVSCODE_TOKEN_VALUE}"
+    echo "🌐 Webワークスペースモードで起動します（ローカル開発専用 - 認証なし）"
 
     WORKSPACE_TMP=/tmp/workspace-services
     mkdir -p "$WORKSPACE_TMP"
 
     start_openvscode() {
-        echo "▶️  OpenVSCode Server を起動します..."
+        echo "▶️  OpenVSCode Server を起動します（認証なし - ローカル開発専用）..."
         exec gosu ${USER_NAME} "${OPENVSCODE_SERVER_DIR}/bin/openvscode-server" \
             --host 0.0.0.0 \
             --port 3000 \
             --server-base-path /vscode \
-            --connection-token "${OPENVSCODE_TOKEN_VALUE}" \
+            --without-connection-token \
             --telemetry-level off
     }
 

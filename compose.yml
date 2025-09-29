@@ -92,7 +92,6 @@ services:
       PYTHONUNBUFFERED: "1"
       PYTHONDONTWRITEBYTECODE: "1"
       DEV_ENTRY_MODE: workspace
-      OPENVSCODE_TOKEN: ${OPENVSCODE_TOKEN:-changeme}
     cap_add:
       - NET_ADMIN
     volumes:

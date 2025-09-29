@@ -111,7 +111,6 @@ cp .env.example .env
 #    主な設定項目：
 #    - SECURE_MODE: セキュアモード有効/無効（デフォルト: true）
 #    - ADDITIONAL_ALLOWED_DOMAINS: 追加で許可するドメイン（企業プロキシ等）
-#    - OPENVSCODE_TOKEN: Webダッシュボードの VS Code で使用する接続トークン
 #    - USER_ID/GROUP_ID: ホストとの権限同期（通常は自動設定）
 #    詳細は .env.example のコメントを参照
 ```
@@ -123,8 +122,8 @@ cp .env.example .env
   pnpm run docker:dashboard -- -d   # バックグラウンド実行（任意）
   ```
 
-  1. ブラウザで <http://localhost:8080/?vscodeToken=<トークン>> にアクセス
-     （`.env` の `OPENVSCODE_TOKEN` と同じ値）
+  1. ブラウザで <http://localhost:8080> にアクセス（認証なし - ローカル開発専
+     用）
   2. 2x2 レイアウトで VS Code / アプリプレビュー / ターミナル / ユーティリティ画
      面を操作
   3. 左下ターミナルは `claude` CLI を含むセキュア開発コンテナに接続
@@ -149,9 +148,7 @@ cp .env.example .env
 できる 2x2 ダッシュボードを用意しています。Docker Compose 環境で以下を実行してく
 ださい。
 
-1. 任意で `OPENVSCODE_TOKEN` を `.env` に設定して VS Code への接続トークンを固定
-   します（未指定の場合は自動生成されます）。
-2. ダッシュボードを起動:
+1. ダッシュボードを起動:
 
    ```bash
    pnpm run docker:dashboard
@@ -161,7 +158,7 @@ cp .env.example .env
    `pnpm run docker:dashboard -- -d` を利用できます。`proxy` サービスの依存とし
    て `frontend` / `app` / `streamlit` / `workspace` が自動的に立ち上がります。
 
-3. ブラウザで <http://localhost:8080> にアクセスすると以下の 4 画面が表示されま
+2. ブラウザで <http://localhost:8080> にアクセスすると以下の 4 画面が表示されま
    す。
 
    - 左上: `/vscode/`（OpenVSCode Server - セキュア開発コンテナ内で動作）
@@ -173,10 +170,7 @@ cp .env.example .env
    ダッシュボード上部のショートカット説明にある通り、`Ctrl + Shift + Alt + D` で
    全画面表示をトグルできます。
 
-4. VS Code へ初回アクセス時は接続トークンを要求されます。`.env` に
-   `OPENVSCODE_TOKEN` を用意している場合はその値を入力してください。未設定の場合
-   はデフォルトの `changeme` が使用されるため、実運用では必ず独自の値に変更して
-   ください。
+3. VS Code は認証なしで即座にアクセスできます（ローカル開発専用設定）。
 
 > **ヒント:** Path ベースのリバースプロキシを行っているため、各サービスに直接ア
 > クセスしたい場合は `http://localhost:8080/vscode/` などのパスをそのまま利用で
@@ -185,10 +179,9 @@ cp .env.example .env
 > **停止方法:** ダッシュボード一式を停止するには
 > `pnpm run docker:dashboard:down` を実行してください。
 
-> **トークンの切り替え:** ダッシュボード内の VS Code iframe は
-> `http://localhost:8080/?vscodeToken=changeme` のように `vscodeToken` クエリを
-> 追加すると指定したトークンでアクセスします。`.env` の `OPENVSCODE_TOKEN` を変
-> 更した場合は、このパラメーターを同じ値に更新してください。
+> **セキュリティ注意:** ローカル開発専用のため VS Code 認証は無効化されていま
+> す。本番環境や共有環境で使用する場合は、Caddy で basicauth 等の認証を追加して
+> ください（詳細は `.env.example` を参照）。
 
 > **セキュア環境との連携:** ダッシュボードの VS Code / ターミナルは
 > `docker compose --profile dev up` で利用するセキュア開発コンテナと同じ環境を共

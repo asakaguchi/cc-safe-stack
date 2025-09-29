@@ -73,8 +73,8 @@ flowchart TD
 
 - `pnpm run docker:dashboard`（もしくは `pnpm run docker:dashboard -- -d`）でセ
   キュア開発コンテナを起動
-- ブラウザで <http://localhost:8080/?vscodeToken=YOUR_TOKEN> にアクセスして 2x2
-  レイアウトを利用
+- ブラウザで <http://localhost:8080> にアクセスして 2x2 レイアウトを利用（認証な
+  し - ローカル開発専用）
 - VS Code / ターミナルは従来の Docker セキュア環境と同じコンテナに接続
   し、`claude` CLI もそのまま利用可能
 - 終了時は `pnpm run docker:dashboard:down` を実行
