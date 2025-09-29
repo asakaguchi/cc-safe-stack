@@ -22,16 +22,22 @@
     <section class="tile" aria-label="アプリプレビュー">
       <div class="tile__header">
         <h2>アプリプレビュー</h2>
-        <a href="/preview/" target="_blank" rel="noreferrer noopener">別タブで開く</a>
+        <form id="preview-controls" class="tile__actions tile__actions--preview">
+          <label class="visually-hidden" for="preview-url">プレビュー URL</label>
+          <input id="preview-url" name="preview-url" type="text" inputmode="url" placeholder="/preview/ または http://..." autocomplete="off" />
+          <button type="submit" title="入力した URL を適用">適用</button>
+          <button id="reload-preview" type="button" title="プレビューだけを再読込">リロード</button>
+          <a data-preview-link href="/preview/" target="_blank" rel="noreferrer noopener">別タブで開く</a>
+        </form>
       </div>
-      <iframe src="/preview/" title="アプリプレビュー" loading="lazy"></iframe>
+      <iframe data-preview-frame src="/preview/" title="アプリプレビュー" loading="lazy"></iframe>
     </section>
     <section class="tile" aria-label="ターミナル">
       <div class="tile__header">
         <h2>ターミナル</h2>
         <a href="/terminal/" target="_blank" rel="noreferrer noopener">別タブで開く</a>
       </div>
-      <iframe src="/terminal/" title="ターミナル" loading="lazy"></iframe>
+      <iframe data-terminal-frame src="/terminal/" title="ターミナル" allow="clipboard-read; clipboard-write" loading="lazy"></iframe>
     </section>
     <section class="tile" aria-label="ユーティリティ">
       <div class="tile__header">
@@ -40,6 +46,7 @@
           <label for="aux-mode" class="visually-hidden">表示を選択</label>
           <select id="aux-mode">
             <option value="notes">メモ</option>
+            <option value="logs">ログ</option>
             <option value="streamlit">Streamlit</option>
             <option value="docs">API Docs</option>
           </select>
@@ -51,6 +58,29 @@
         <div class="aux aux--notes" data-mode="notes">
           <textarea id="notes" placeholder="ここにメモを入力…"></textarea>
           <label class="notes__hint">ブラウザのローカルストレージに自動保存されます</label>
+        </div>
+        <div class="aux aux--logs" data-mode="logs" hidden>
+          <div class="logs__controls">
+            <label class="visually-hidden" for="logs-service">ログ種別</label>
+            <select id="logs-service">
+              <option value="frontend">フロントエンド</option>
+              <option value="backend">バックエンド</option>
+              <option value="streamlit">Streamlit</option>
+            </select>
+            <label class="visually-hidden" for="logs-tail">取得行数</label>
+            <select id="logs-tail">
+              <option value="200">200 行</option>
+              <option value="500">500 行</option>
+              <option value="1000">1000 行</option>
+            </select>
+            <label class="logs__autorefresh" for="logs-auto-refresh">
+              <input id="logs-auto-refresh" type="checkbox" />
+              自動更新
+            </label>
+            <button id="logs-refresh" type="button">更新</button>
+          </div>
+          <pre id="logs-output" class="logs__output" role="log" aria-live="polite"></pre>
+          <p id="logs-status" class="logs__status" aria-live="polite"></p>
         </div>
         <iframe class="aux aux--iframe" data-mode="streamlit" src="/streamlit/" title="Streamlit" loading="lazy" hidden></iframe>
         <iframe class="aux aux--iframe" data-mode="docs" src="/api/docs" title="API Docs" loading="lazy" hidden></iframe>

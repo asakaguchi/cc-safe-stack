@@ -20,7 +20,8 @@ services:
     ports:
       - "8000:8000"
     entrypoint: ["/usr/local/bin/entrypoint.sh"]
-    command: ["uv", "run", "--no-sync", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+    command: >-
+      bash -lc "set -o pipefail; mkdir -p /app/.logs && uv run --no-sync uvicorn main:app --host 0.0.0.0 --port 8000 2>&1 | tee -a /app/.logs/backend.log"
 
   frontend:
     build:
@@ -43,8 +44,8 @@ services:
       - /app/frontend/node_modules
     ports:
       - "3000:3000"
-    command: >
-      bash -lc "pnpm install --recursive --force && pnpm --dir frontend dev -- --host 0.0.0.0"
+    command: >-
+      bash -lc "set -o pipefail; mkdir -p /app/.logs && pnpm install --recursive --force && pnpm --dir frontend dev -- --host 0.0.0.0 2>&1 | tee -a /app/.logs/frontend.log"
     depends_on:
       - app
 
@@ -69,7 +70,8 @@ services:
     ports:
       - "8501:8501"
     entrypoint: ["/usr/local/bin/entrypoint.sh"]
-    command: ["bash", "-c", "uv run --no-sync --group streamlit streamlit run ../streamlit/app.py --server.port 8501 --server.address 0.0.0.0"]
+    command: >-
+      bash -lc "set -o pipefail; mkdir -p /app/.logs && uv run --no-sync --group streamlit streamlit run ../streamlit/app.py --server.port 8501 --server.address 0.0.0.0 2>&1 | tee -a /app/.logs/streamlit.log"
     depends_on:
       - app
 

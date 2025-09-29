@@ -198,6 +198,10 @@ venv.bak/
 # Rope project settings
 .ropeproject
 
+# Dashboard runtime logs
+.logs/*
+!.logs/.gitignore
+
 # mkdocs documentation
 /site
 

@@ -103,6 +103,22 @@ header p {
   cursor: pointer;
 }
 
+.tile__header input[type='text'] {
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  color: inherit;
+  padding: 0.35rem 0.65rem;
+  border-radius: 0.55rem;
+  font-size: 0.8rem;
+  min-width: 10rem;
+  flex: 1 1 12rem;
+}
+
+.tile__header input[type='text']:focus {
+  outline: 2px solid rgba(56, 189, 248, 0.6);
+  outline-offset: 2px;
+}
+
 .tile__header a:hover,
 .tile__header button:hover,
 .tile__header select:hover {
@@ -123,6 +139,11 @@ header p {
   align-items: center;
 }
 
+.tile__actions--preview {
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
 .tile__content {
   flex: 1;
   position: relative;
@@ -138,6 +159,12 @@ header p {
 }
 
 .aux--notes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.aux--logs {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -188,6 +215,74 @@ header p {
   overflow: hidden;
   padding: 0;
   border: 0;
+}
+
+.logs__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logs__controls select,
+.logs__controls button {
+  background: none;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  color: inherit;
+  padding: 0.35rem 0.65rem;
+  border-radius: 0.5rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.logs__controls select:hover,
+.logs__controls button:hover {
+  background: rgba(56, 189, 248, 0.15);
+  color: var(--accent);
+}
+
+.logs__autorefresh {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  opacity: 0.85;
+}
+
+.logs__output {
+  flex: 1;
+  min-height: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: rgba(15, 23, 42, 0.7);
+  font-family: 'Fira Code', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', monospace;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow: auto;
+}
+
+.logs__output.is-empty {
+  opacity: 0.6;
+  font-style: italic;
+}
+
+.logs__status {
+  font-size: 0.75rem;
+  opacity: 0.75;
+  min-height: 1em;
+}
+
+.logs__status.is-error {
+  color: #f87171;
+  opacity: 1;
 }
 
 @media (max-width: 1200px) {

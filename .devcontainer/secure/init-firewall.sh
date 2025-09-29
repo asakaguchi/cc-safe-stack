@@ -64,16 +64,51 @@ while read -r cidr; do
 done < <(echo "$gh_ranges" | jq -r '(.web + .api + .git)[]' | aggregate -q)
 
 # Resolve and add other allowed domains
-for domain in \
-    "registry.npmjs.org" \
-    "pypi.org" \
-    "files.pythonhosted.org" \
-    "api.anthropic.com" \
-    "sentry.io" \
-    "statsig.anthropic.com" \
-    "statsig.com" \
-    "mcp.context7.com" \
-    "context7.com"; do
+DEFAULT_ALLOWED_DOMAINS=(
+    # JavaScript / Node.js
+    "registry.npmjs.org"
+    "registry.yarnpkg.com"
+    "npmjs.org"
+    "nodejs.org"
+    "deb.nodesource.com"
+    # Python
+    "pypi.org"
+    "files.pythonhosted.org"
+    # Rust
+    "crates.io"
+    "static.crates.io"
+    "index.crates.io"
+    # Ruby
+    "rubygems.org"
+    # Containers / Docker
+    "registry-1.docker.io"
+    "production.cloudflare.docker.com"
+    # Java / Maven ecosystems
+    "repo.maven.apache.org"
+    "jitpack.io"
+    # PHP / Packagist
+    "packagist.org"
+    # Go
+    "proxy.golang.org"
+    "sum.golang.org"
+    # General developer tooling / VCS
+    "github.com"
+    "api.github.com"
+    "codeload.github.com"
+    "raw.githubusercontent.com"
+    "objects.githubusercontent.com"
+    "archive.mozilla.org"
+    # Anthropic / product telemetry
+    "api.anthropic.com"
+    "sentry.io"
+    "statsig.anthropic.com"
+    "statsig.com"
+    # Context7 MCP endpoints
+    "mcp.context7.com"
+    "context7.com"
+)
+
+for domain in "${DEFAULT_ALLOWED_DOMAINS[@]}"; do
     echo "Resolving $domain..."
     ips=$(dig +noall +answer A "$domain" | awk '$4 == "A" {print $5}')
     if [ -z "$ips" ]; then
