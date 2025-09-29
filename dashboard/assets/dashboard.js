@@ -188,21 +188,58 @@ function setupTerminalClipboard() {
 
     const clipboardApi = frameWindow.navigator?.clipboard ?? navigator.clipboard
 
+    const getTerm = () => {
+      try {
+        const candidate = frameWindow.term
+        if (candidate && typeof candidate === 'object') {
+          return candidate
+        }
+      } catch (error) {
+        // ignore access errors
+      }
+      return null
+    }
+
+    const focusTerminal = term => {
+      try {
+        if (term && typeof term.focus === 'function') {
+          term.focus()
+        }
+      } catch (error) {
+        // ignore focus errors
+      }
+    }
+
+    const getSelectionText = () => {
+      try {
+        const term = getTerm()
+        if (term && typeof term.getSelection === 'function') {
+          const selection = term.getSelection()
+          if (selection) {
+            return selection
+          }
+        }
+      } catch (error) {
+        // ignore selection errors
+      }
+      try {
+        return frameWindow.getSelection()?.toString() || ''
+      } catch (error) {
+        return ''
+      }
+    }
+
     const pasteText = text => {
       if (!text) {
         return
       }
-      const term = frameWindow.term
+      const term = getTerm()
       if (term && typeof term.paste === 'function') {
         term.paste(text)
-        if (typeof term.focus === 'function') {
-          term.focus()
-        }
+        focusTerminal(term)
       } else if (term && typeof term.write === 'function') {
         term.write(text)
-        if (typeof term.focus === 'function') {
-          term.focus()
-        }
+        focusTerminal(term)
       }
     }
 
@@ -217,38 +254,35 @@ function setupTerminalClipboard() {
 
       const key = (event.key || '').toLowerCase()
       if (key === 'c' && !event.shiftKey) {
-        let selectionText = ''
-        try {
-          selectionText = frameWindow.getSelection()?.toString() || ''
-        } catch (error) {
-          selectionText = ''
-        }
+        const selectionText = getSelectionText()
         if (!selectionText) {
           return
         }
 
         event.preventDefault()
 
-        let copied = false
-        try {
-          copied = frameDocument.execCommand('copy')
-        } catch (error) {
-          copied = false
+        const term = getTerm()
+
+        const fallbackExecCommand = () => {
+          try {
+            return frameDocument.execCommand('copy')
+          } catch (error) {
+            return false
+          }
         }
 
-        if (!copied && clipboardApi && typeof clipboardApi.writeText === 'function') {
-          clipboardApi.writeText(selectionText).catch(err => {
-            console.warn('ターミナルのコピーに失敗しました', err)
-          })
+        const handleFailure = err => {
+          console.warn('ターミナルのコピーに失敗しました', err)
+          fallbackExecCommand()
         }
-        try {
-          const term = frameWindow.term
-          if (term && typeof term.focus === 'function') {
-            term.focus()
-          }
-        } catch (error) {
-          // ignore focus errors
+
+        if (clipboardApi && typeof clipboardApi.writeText === 'function') {
+          clipboardApi.writeText(selectionText).catch(handleFailure)
+        } else {
+          fallbackExecCommand()
         }
+
+        focusTerminal(term)
         return
       }
 
@@ -279,8 +313,25 @@ function setupTerminalClipboard() {
       pasteText(text)
     }
 
+    const handleCopyEvent = event => {
+      const selectionText = getSelectionText()
+      if (!selectionText) {
+        return
+      }
+      if (event.clipboardData) {
+        event.clipboardData.setData('text/plain', selectionText)
+        event.preventDefault()
+      }
+      if (clipboardApi && typeof clipboardApi.writeText === 'function') {
+        clipboardApi.writeText(selectionText).catch(err => {
+          console.warn('ターミナルのコピーに失敗しました', err)
+        })
+      }
+    }
+
     frameDocument.addEventListener('keydown', handleKeydown, true)
     frameDocument.addEventListener('paste', handlePasteEvent, true)
+    frameDocument.addEventListener('copy', handleCopyEvent, true)
   }
 
   const scheduleInstall = () => {
