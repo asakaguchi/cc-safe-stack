@@ -5,6 +5,8 @@ IFS=$'\n\t'
 # Docker開発環境用エントリポイントスクリプト
 echo "🚀 Docker開発環境を初期化中..."
 
+DEV_ENTRY_MODE=${DEV_ENTRY_MODE:-shell}
+
 # ユーザーIDとグループIDの設定（ホストとの同期）
 USER_ID=${USER_ID:-$(stat -c '%u' /workspace 2>/dev/null || echo 1000)}
 GROUP_ID=${GROUP_ID:-$(stat -c '%g' /workspace 2>/dev/null || echo 1000)}
@@ -74,6 +76,45 @@ echo "   - React(frontend): http://localhost:3000"
 echo "   - FastAPI(backend): http://localhost:8000"  
 echo "   - Streamlit: http://localhost:8501"
 echo ""
+
+# 実行モードに応じた処理
+if [[ "$DEV_ENTRY_MODE" == "workspace" ]]; then
+    echo "🌐 Webワークスペースモードで起動します"
+
+    OPENVSCODE_TOKEN_VALUE=${OPENVSCODE_TOKEN:-changeme}
+    echo "🔐 VS Code 接続トークン: ${OPENVSCODE_TOKEN_VALUE}"
+
+    WORKSPACE_TMP=/tmp/workspace-services
+    mkdir -p "$WORKSPACE_TMP"
+
+    start_openvscode() {
+        echo "▶️  OpenVSCode Server を起動します..."
+        exec gosu ${USER_NAME} "${OPENVSCODE_SERVER_DIR}/bin/openvscode-server" \
+            --host 0.0.0.0 \
+            --port 3000 \
+            --server-base-path /vscode \
+            --connection-token "${OPENVSCODE_TOKEN_VALUE}" \
+            --telemetry-level off
+    }
+
+    start_ttyd() {
+        echo "▶️  ttyd を起動します..."
+        exec ttyd -p 7681 -i 0.0.0.0 -b /terminal -W gosu ${USER_NAME} /bin/zsh
+    }
+
+    trap 'echo "⏹️  サービスを停止中..."; kill 0' SIGINT SIGTERM
+
+    start_openvscode &
+    vscode_pid=$!
+
+    start_ttyd &
+    ttyd_pid=$!
+
+    echo "✅ Webワークスペースが起動しました (VSCode PID=${vscode_pid}, ttyd PID=${ttyd_pid})"
+
+    wait -n $vscode_pid $ttyd_pid
+    exit $?
+fi
 
 # コマンドの実行（引数がある場合はそれを実行、なければzshを起動）
 if [[ $# -eq 0 ]]; then

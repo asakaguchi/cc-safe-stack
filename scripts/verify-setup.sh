@@ -113,7 +113,7 @@ main() {
     check_file "package.json" "ルート package.json"
     check_file "backend/pyproject.toml" "バックエンド設定"
     check_file "frontend/package.json" "フロントエンド package.json"
-    check_file "TUTORIAL.md" "チュートリアル"
+    check_file "docs/TUTORIAL.md" "チュートリアル"
     check_file "CLAUDE.md" "Claude Code 設定"
     echo
 

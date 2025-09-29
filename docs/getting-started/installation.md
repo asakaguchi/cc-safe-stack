@@ -412,7 +412,7 @@ pnpm run dev
 
 セットアップが完了したら、以下のドキュメントを参照して開発を始めてください。
 
-1. [Claude Code 実践ガイド](../../TUTORIAL.md) - Claude Code を使った開発方法
+1. [Claude Code 実践ガイド](../TUTORIAL.md) - Claude Code を使った開発方法
 2. [API開発ガイド](../development/api-development.md) - FastAPI による API 開発
 3. [アーキテクチャガイド](../development/architecture.md) - プロジェクト構造の理
    解

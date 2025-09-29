@@ -20,28 +20,31 @@ services:
     ports:
       - "8000:8000"
     entrypoint: ["/usr/local/bin/entrypoint.sh"]
-    command: ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+    command: ["uv", "run", "--no-sync", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 
   frontend:
-    image: node:20
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend
     working_dir: /app
     restart: unless-stopped
-    user: "${USER_ID:-1000}:${GROUP_ID:-1000}"
     environment:
       # When running both services in containers, proxy to backend service name
       VITE_BACKEND_ORIGIN: http://app:8000
       NODE_ENV: development
+      CI: "true"
       # ホストとの権限同期用環境変数（参考用）
       USER_ID: ${USER_ID:-1000}
       GROUP_ID: ${GROUP_ID:-1000}
     volumes:
       - .:/app
       # Use anonymous volume for node_modules inside container
+      - /app/node_modules
       - /app/frontend/node_modules
     ports:
       - "3000:3000"
     command: >
-      bash -lc "corepack enable pnpm && pnpm install --recursive && pnpm --dir frontend dev -- --host 0.0.0.0"
+      bash -lc "pnpm install --recursive --force && pnpm --dir frontend dev -- --host 0.0.0.0"
     depends_on:
       - app
 
@@ -66,9 +69,53 @@ services:
     ports:
       - "8501:8501"
     entrypoint: ["/usr/local/bin/entrypoint.sh"]
-    command: ["bash", "-c", "uv sync --group streamlit && uv run --group streamlit streamlit run ../streamlit/app.py --server.port 8501 --server.address 0.0.0.0"]
+    command: ["bash", "-c", "uv run --no-sync --group streamlit streamlit run ../streamlit/app.py --server.port 8501 --server.address 0.0.0.0"]
     depends_on:
       - app
+
+  workspace:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    restart: unless-stopped
+    working_dir: /workspace
+    environment:
+      SECURE_MODE: ${SECURE_MODE:-true}
+      ADDITIONAL_ALLOWED_DOMAINS: ${ADDITIONAL_ALLOWED_DOMAINS:-}
+      USER_ID: ${USER_ID:-1000}
+      GROUP_ID: ${GROUP_ID:-1000}
+      USER_NAME: ${USER_NAME:-developer}
+      GROUP_NAME: ${GROUP_NAME:-developer}
+      NODE_ENV: development
+      PYTHONUNBUFFERED: "1"
+      PYTHONDONTWRITEBYTECODE: "1"
+      DEV_ENTRY_MODE: workspace
+      OPENVSCODE_TOKEN: ${OPENVSCODE_TOKEN:-changeme}
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - .:/workspace
+      - claude-config:/home/developer/.claude
+      - dev-cache:/workspace/.cache
+      - /workspace/.venv
+      - /workspace/frontend/node_modules
+    expose:
+      - "3000"
+      - "7681"
+
+  proxy:
+    image: caddy:2.8-alpine
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./docker/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./dashboard:/srv/dashboard:ro
+    depends_on:
+      - frontend
+      - app
+      - streamlit
+      - workspace
 
   # セキュア開発環境（Claude Code + ファイアウォール）
   dev:

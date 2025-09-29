@@ -43,7 +43,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     # 追加ツール
     sudo \
     gosu \
-    zsh
+    zsh \
+    ttyd
 
 # GitHub CLIのインストール
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
@@ -60,6 +61,18 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
     && npm install -g npm@latest \
     && corepack enable pnpm
+
+# Install OpenVSCode Server (open-source build)
+ARG OPENVSCODE_VERSION="openvscode-server-v1.103.1"
+ARG OPENVSCODE_TARBALL="${OPENVSCODE_VERSION}-linux-x64.tar.gz"
+ARG OPENVSCODE_BASE_URL="https://github.com/gitpod-io/openvscode-server/releases/download"
+RUN mkdir -p /opt/openvscode-server \
+    && curl -fsSL "${OPENVSCODE_BASE_URL}/${OPENVSCODE_VERSION}/${OPENVSCODE_TARBALL}" -o /tmp/openvscode-server.tar.gz \
+    && tar -xzf /tmp/openvscode-server.tar.gz -C /opt/openvscode-server --strip-components=1 \
+    && rm /tmp/openvscode-server.tar.gz
+
+ENV OPENVSCODE_SERVER_DIR="/opt/openvscode-server"
+ENV PATH="${OPENVSCODE_SERVER_DIR}/bin:${PATH}"
 
 # Claude Code CLIのインストール（正しいパッケージ名）
 RUN npm install -g @anthropic-ai/claude-code@latest
@@ -92,7 +105,7 @@ WORKDIR /workspace
 RUN chsh -s /usr/bin/zsh vscode || true
 
 # ポート設定（開発サーバー用）
-EXPOSE 3000 8000 8501
+EXPOSE 3000 7681 8000 8501
 
 # エントリポイントの設定
 ENTRYPOINT ["/usr/local/bin/entrypoint-dev.sh"]

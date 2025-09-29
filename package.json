@@ -44,7 +44,9 @@
     "docker:dev": "export USER_ID=$(id -u) GROUP_ID=$(id -g) USER_NAME=$(id -un) && docker compose --profile dev up -d dev",
     "docker:dev:connect": "export USER_ID=$(id -u) GROUP_ID=$(id -g) USER_NAME=$(id -un) && ./scripts/docker-dev-connect.sh",
     "docker:dev:logs": "export USER_ID=$(id -u) GROUP_ID=$(id -g) USER_NAME=$(id -un) && docker compose --profile dev logs -f dev",
-    "docker:dev:down": "export USER_ID=$(id -u) GROUP_ID=$(id -g) USER_NAME=$(id -un) && docker compose --profile dev down"
+    "docker:dev:down": "export USER_ID=$(id -u) GROUP_ID=$(id -g) USER_NAME=$(id -un) && docker compose --profile dev down",
+    "docker:dashboard": "./scripts/docker-dashboard.sh",
+    "docker:dashboard:down": "./scripts/docker-dashboard-down.sh"
   },
   "devDependencies": {
     "@eslint/js": "^9.14.0",
