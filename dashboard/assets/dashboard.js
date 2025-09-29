@@ -57,7 +57,12 @@ function setupVscodeIframe() {
   const params = new URLSearchParams(window.location.search)
   const token = params.get('vscodeToken') ?? 'changeme'
   const basePath = vscodeFrame.dataset.basePath || '/vscode/'
-  const suffix = token ? `?tkn=${encodeURIComponent(token)}` : ''
+  const launchParams = new URLSearchParams()
+  if (token) {
+    launchParams.set('tkn', token)
+  }
+  launchParams.set('folder', '/workspace')
+  const suffix = `?${launchParams.toString()}`
   vscodeFrame.src = `${basePath}${suffix}`
 
   const vscodeLink = document.querySelector('[data-service-link="vscode"]')
