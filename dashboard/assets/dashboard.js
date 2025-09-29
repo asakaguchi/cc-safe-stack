@@ -1,8 +1,4 @@
-import { marked } from 'https://cdn.jsdelivr.net/npm/marked@12.0.2/+esm'
-import DOMPurify from 'https://cdn.jsdelivr.net/npm/dompurify@3.1.6/+esm'
-
 const notesKey = 'safe-stack-dashboard-notes'
-const notesModeKey = 'safe-stack-dashboard-notes-mode'
 const previewUrlKey = 'safe-stack-dashboard-preview-url'
 const logsServiceKey = 'safe-stack-dashboard-logs-service'
 const logsTailKey = 'safe-stack-dashboard-logs-tail'
@@ -11,15 +7,11 @@ const logsAutoKey = 'safe-stack-dashboard-logs-auto'
 const defaultPreviewUrl = '/preview/'
 const defaultLogTail = '200'
 const logRefreshIntervalMs = 5000
-const defaultNotesMode = 'edit'
-
-const notesEl = document.getElementById('notes')
-const notesHint = document.querySelector('.notes__hint')
-const notesPreview = document.getElementById('notes-preview')
-const notesModeButtons = document.querySelectorAll('[data-notes-mode]')
+const notesEditorContainer = document.getElementById('notes-editor')
+const auxTabs = document.querySelectorAll('[data-aux-target]')
+const auxActionBlocks = document.querySelectorAll('[data-actions-for]')
 const clearBtn = document.getElementById('clear-notes')
 const downloadBtn = document.getElementById('download-notes')
-const modeSelect = document.getElementById('aux-mode')
 const auxBlocks = document.querySelectorAll('.aux')
 
 const previewForm = document.getElementById('preview-controls')
@@ -46,7 +38,53 @@ const logLabels = new Map([
 let logsAutoTimer = null
 let logsAbortController = null
 let isLogsActive = false
-let currentNotesMode = defaultNotesMode
+let quill = null
+let currentAuxMode = 'notes'
+let isNotesReady = false
+let quillLoaderPromise = null
+
+async function loadQuill() {
+  if (window.Quill) {
+    return window.Quill
+  }
+  if (!quillLoaderPromise) {
+    quillLoaderPromise = import('https://cdn.jsdelivr.net/npm/quill@1.3.7/+esm')
+      .then(module => module?.default ?? module)
+      .catch(error => {
+        console.error('Quill の読み込みに失敗しました', error)
+        throw error
+      })
+  }
+  return quillLoaderPromise
+}
+
+function showNotesPlaceholder(type, message) {
+  if (!notesEditorContainer) {
+    return
+  }
+  notesEditorContainer.dataset.state = type
+  notesEditorContainer.innerHTML = `<div class="notes__placeholder notes__placeholder--${type}">${message}</div>`
+}
+
+function clearNotesPlaceholder() {
+  if (!notesEditorContainer) {
+    return
+  }
+  notesEditorContainer.innerHTML = ''
+  delete notesEditorContainer.dataset.state
+}
+
+function updateNotesActionsAvailability() {
+  const isActiveNotesTab = currentAuxMode === 'notes'
+  const shouldEnable = isActiveNotesTab && isNotesReady
+  ;[clearBtn, downloadBtn].forEach(btn => {
+    if (!btn) {
+      return
+    }
+    btn.disabled = !shouldEnable
+    btn.setAttribute('aria-disabled', String(!shouldEnable))
+  })
+}
 
 function setupVscodeIframe() {
   const vscodeFrame = document.querySelector('[data-service="vscode"]')
@@ -54,13 +92,8 @@ function setupVscodeIframe() {
     return
   }
 
-  const params = new URLSearchParams(window.location.search)
-  const token = params.get('vscodeToken') ?? 'changeme'
   const basePath = vscodeFrame.dataset.basePath || '/vscode/'
   const launchParams = new URLSearchParams()
-  if (token) {
-    launchParams.set('tkn', token)
-  }
   launchParams.set('folder', '/workspace')
   const suffix = `?${launchParams.toString()}`
   vscodeFrame.src = `${basePath}${suffix}`
@@ -73,7 +106,11 @@ function setupVscodeIframe() {
 
 function saveNotes(value) {
   try {
-    localStorage.setItem(notesKey, value)
+    if (value && value.trim() !== '') {
+      localStorage.setItem(notesKey, value)
+    } else {
+      localStorage.removeItem(notesKey)
+    }
   } catch (error) {
     console.warn('メモの保存に失敗しました', error)
   }
@@ -81,12 +118,10 @@ function saveNotes(value) {
 
 function loadNotes() {
   try {
-    const stored = localStorage.getItem(notesKey)
-    if (stored && notesEl) {
-      notesEl.value = stored
-    }
+    return localStorage.getItem(notesKey) ?? ''
   } catch (error) {
     console.warn('メモの読み込みに失敗しました', error)
+    return ''
   }
 }
 
@@ -123,96 +158,61 @@ function setStoredValue(key, value) {
   }
 }
 
-marked.setOptions({
-  gfm: true,
-  breaks: true,
-})
+async function initializeNotesEditor() {
+  if (!notesEditorContainer) {
+    return
+  }
+  showNotesPlaceholder('loading', 'メモエディタを読み込み中…')
 
-function renderNotesPreview(value) {
-  if (!notesPreview) {
-    return
-  }
-  const content = value ?? ''
-  if (!content.trim()) {
-    notesPreview.innerHTML = ''
-    return
-  }
   try {
-    const html = DOMPurify.sanitize(marked.parse(content))
-    notesPreview.innerHTML = html
+    const Quill = await loadQuill()
+    clearNotesPlaceholder()
+
+    quill = new Quill(notesEditorContainer, {
+      theme: 'snow',
+      placeholder: 'ここにメモを入力…',
+      modules: {
+        toolbar: [
+          ['bold', 'italic', 'underline', 'strike'],
+          [{ header: [1, 2, 3, false] }],
+          [{ list: 'ordered' }, { list: 'bullet' }],
+          [{ align: [] }],
+          [{ color: [] }, { background: [] }],
+          ['link', 'code-block'],
+          ['clean'],
+        ],
+      },
+    })
+
+    const stored = loadNotes()
+    if (stored) {
+      const isHtml = /^\s*</.test(stored)
+      if (isHtml) {
+        quill.clipboard.dangerouslyPasteHTML(stored)
+      } else {
+        quill.setText(stored)
+      }
+    }
+
+    quill.on('text-change', () => {
+      const html = quill.root.innerHTML
+      if (html === '<p><br></p>') {
+        saveNotes('')
+      } else {
+        saveNotes(html)
+      }
+    })
+
+    isNotesReady = true
+    updateNotesActionsAvailability()
   } catch (error) {
-    console.warn('Markdownプレビューの生成に失敗しました', error)
-    notesPreview.innerHTML = ''
-  }
-}
-
-function updateNotesModeControls(mode) {
-  notesModeButtons.forEach(button => {
-    const isActive = button.dataset.notesMode === mode
-    button.setAttribute('aria-pressed', String(isActive))
-  })
-}
-
-function applyNotesMode(mode) {
-  if (!notesEl) {
-    return
-  }
-  const normalized = mode === 'preview' ? 'preview' : 'edit'
-  currentNotesMode = normalized
-  updateNotesModeControls(normalized)
-  const isPreview = normalized === 'preview'
-
-  if (isPreview) {
-    notesEl.setAttribute('hidden', 'true')
-    notesEl.setAttribute('aria-hidden', 'true')
-  } else {
-    notesEl.removeAttribute('hidden')
-    notesEl.setAttribute('aria-hidden', 'false')
-  }
-
-  if (notesHint) {
-    if (isPreview) {
-      notesHint.setAttribute('hidden', 'true')
-      notesHint.setAttribute('aria-hidden', 'true')
-    } else {
-      notesHint.removeAttribute('hidden')
-      notesHint.setAttribute('aria-hidden', 'false')
-    }
-  }
-
-  if (notesPreview) {
-    if (isPreview) {
-      notesPreview.removeAttribute('hidden')
-      notesPreview.setAttribute('aria-hidden', 'false')
-      renderNotesPreview(notesEl.value ?? '')
-    } else {
-      notesPreview.setAttribute('hidden', 'true')
-      notesPreview.setAttribute('aria-hidden', 'true')
-    }
-  }
-
-  if (!isPreview) {
-    try {
-      notesEl.focus({ preventScroll: true })
-    } catch (error) {
-      // フォーカス取得に失敗しても無視
-    }
-  }
-}
-
-function setNotesMode(mode, { save = true } = {}) {
-  applyNotesMode(mode)
-  if (save) {
-    setStoredValue(notesModeKey, currentNotesMode)
-  }
-}
-
-function initNotesMode() {
-  const storedMode = getStoredValue(notesModeKey)
-  if (storedMode === 'preview' || storedMode === 'edit') {
-    applyNotesMode(storedMode)
-  } else {
-    applyNotesMode(defaultNotesMode)
+    console.error('メモエディタの初期化に失敗しました', error)
+    isNotesReady = false
+    showNotesPlaceholder(
+      'error',
+      'メモエディタの読み込みに失敗しました。ネットワーク設定を確認して再読み込みしてください。'
+    )
+    updateNotesActionsAvailability()
   }
 }
 
@@ -459,33 +459,46 @@ function setupTerminalClipboard() {
 }
 
 function updateAuxMode(mode) {
+  currentAuxMode = mode
+
   auxBlocks.forEach(element => {
     const blockMode = element.dataset.mode
     if (!blockMode) return
-    const shouldShow = blockMode === mode
-    if (shouldShow) {
+    if (blockMode === mode) {
       element.removeAttribute('hidden')
-      if (blockMode === 'notes') {
-        applyNotesMode(currentNotesMode)
+      if (blockMode === 'notes' && quill) {
+        quill.focus()
       }
     } else {
       element.setAttribute('hidden', 'true')
     }
   })
 
-  const isNotes = mode === 'notes'
-  ;[clearBtn, downloadBtn].forEach(btn => {
-    if (!btn) return
-    btn.disabled = !isNotes
-    btn.setAttribute('aria-disabled', String(!isNotes))
+  auxTabs.forEach(tab => {
+    const isActive = tab.dataset.auxTarget === mode
+    tab.setAttribute('aria-selected', String(isActive))
   })
 
-  const isLogs = mode === 'logs'
-  handleLogsVisibility(isLogs)
+  auxActionBlocks.forEach(block => {
+    const target = block.dataset.actionsFor
+    if (target === mode) {
+      block.removeAttribute('hidden')
+    } else {
+      block.setAttribute('hidden', 'true')
+    }
+  })
+
+  updateNotesActionsAvailability()
+
+  handleLogsVisibility(mode === 'logs')
 }
 
-function downloadNotes(value) {
-  const blob = new Blob([value], { type: 'text/plain;charset=utf-8' })
+function downloadNotesFile() {
+  if (!quill) {
+    return
+  }
+  const text = quill.getText().trim()
+  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' })
   const url = URL.createObjectURL(blob)
   const anchor = document.createElement('a')
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
@@ -748,57 +761,42 @@ function initLogsControls() {
   })
 }
 
-if (notesEl) {
-  loadNotes()
-  renderNotesPreview(notesEl.value ?? '')
-  let saveTimer
-  notesEl.addEventListener('input', event => {
-    const { value } = event.target
-    clearTimeout(saveTimer)
-    renderNotesPreview(value)
-    saveTimer = setTimeout(() => saveNotes(value), 300)
-  })
-}
+initializeNotesEditor()
 
-if (clearBtn && notesEl) {
+if (clearBtn) {
   clearBtn.addEventListener('click', () => {
+    if (!quill) {
+      return
+    }
     if (!window.confirm('メモをすべて削除しますか？')) {
       return
     }
-    notesEl.value = ''
+    quill.setText('')
     saveNotes('')
-    renderNotesPreview('')
   })
 }
 
-if (downloadBtn && notesEl) {
+if (downloadBtn) {
   downloadBtn.addEventListener('click', () => {
-    downloadNotes(notesEl.value ?? '')
+    downloadNotesFile()
   })
 }
 
 initPreviewControls()
 initLogsControls()
 
-if (modeSelect) {
-  modeSelect.addEventListener('change', event => {
-    updateAuxMode(event.target.value)
-  })
-  updateAuxMode(modeSelect.value ?? 'notes')
-}
-
-if (notesModeButtons.length > 0) {
-  notesModeButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      const mode = button.dataset.notesMode
-      if (mode) {
-        setNotesMode(mode)
+if (auxTabs.length > 0) {
+  auxTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.auxTarget
+      if (target) {
+        updateAuxMode(target)
       }
     })
   })
 }
 
-initNotesMode()
+updateAuxMode(currentAuxMode)
 setupVscodeIframe()
 setupTerminalClipboard()
 setupFullscreenShortcut()

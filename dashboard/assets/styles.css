@@ -144,6 +144,18 @@ header p {
   flex-wrap: wrap;
 }
 
+.tile__actions--tabs {
+  flex-wrap: wrap;
+}
+
+.tile__actions--notes[hidden] {
+  display: none;
+}
+
+.tile__actions--notes {
+  margin-left: auto;
+}
+
 .tile__content {
   flex: 1;
   position: relative;
@@ -170,39 +182,13 @@ header p {
   gap: 0.5rem;
 }
 
-.aux--notes textarea {
-  flex: 1;
-  width: 100%;
-  min-height: 0;
-  resize: none;
-  padding: 0.75rem;
-  border-radius: 0.5rem;
-  border: 1px solid var(--border);
-  background: rgba(15, 23, 42, 0.65);
-  color: inherit;
-  font-family: 'Fira Code', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    'Liberation Mono', monospace;
-  font-size: 0.9rem;
-}
-
-.aux--notes textarea:focus {
-  outline: 2px solid rgba(56, 189, 248, 0.6);
-}
-
-.notes__toolbar {
-  display: inline-flex;
-  gap: 0.5rem;
-  margin-bottom: 0.25rem;
-  flex-wrap: wrap;
-}
-
-.notes__mode {
+.aux-tab {
   background: rgba(15, 23, 42, 0.5);
   border: 1px solid rgba(148, 163, 184, 0.45);
   color: inherit;
-  padding: 0.35rem 0.75rem;
+  padding: 0.35rem 0.85rem;
   border-radius: 999px;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   cursor: pointer;
   transition:
     background 0.2s ease,
@@ -211,96 +197,93 @@ header p {
     box-shadow 0.2s ease;
 }
 
-.notes__mode[aria-pressed='true'] {
-  background: rgba(56, 189, 248, 0.2);
+.aux-tab[aria-selected='true'] {
+  background: rgba(56, 189, 248, 0.25);
   color: var(--accent);
-  border-color: rgba(56, 189, 248, 0.4);
+  border-color: rgba(56, 189, 248, 0.45);
   box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.2);
 }
 
-.notes__mode:focus-visible {
+.aux-tab:focus-visible {
   outline: 2px solid rgba(56, 189, 248, 0.6);
   outline-offset: 2px;
 }
 
-.notes__preview {
-  display: block;
-  width: 100%;
-  min-height: 10rem;
-  padding: 0.75rem;
-  border-radius: 0.5rem;
+.notes__editor {
+  flex: 1;
+  min-height: 14rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.notes__editor .ql-toolbar {
+  border-radius: 0.5rem 0.5rem 0 0;
   border: 1px solid var(--border);
-  background: rgba(15, 23, 42, 0.7);
-  color: inherit;
-  overflow: auto;
-  line-height: 1.5;
-  font-family: 'Inter', 'Noto Sans JP', system-ui, sans-serif;
+  background: rgba(15, 23, 42, 0.6);
 }
 
-.notes__preview :is(pre, code) {
-  font-family: 'Fira Code', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    'Liberation Mono', monospace;
-}
-
-.notes__preview pre {
-  background: rgba(15, 23, 42, 0.8);
-  padding: 0.65rem;
-  border-radius: 0.4rem;
-  overflow-x: auto;
-  border: 1px solid rgba(148, 163, 184, 0.25);
-}
-
-.notes__preview blockquote {
-  border-left: 3px solid rgba(148, 163, 184, 0.5);
-  margin: 0.75rem 0;
-  padding-left: 0.75rem;
-  color: rgba(226, 232, 240, 0.85);
-}
-
-.notes__preview ul,
-.notes__preview ol {
-  padding-left: 1.25rem;
-  margin: 0.75rem 0;
-}
-
-.notes__preview table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 0.75rem 0;
-}
-
-.notes__preview th,
-.notes__preview td {
-  border: 1px solid rgba(148, 163, 184, 0.3);
-  padding: 0.5rem;
-  text-align: left;
-}
-
-.notes__preview a {
+.notes__editor .ql-toolbar button:hover,
+.notes__editor .ql-toolbar .ql-picker:hover {
   color: var(--accent);
 }
 
-.notes__preview h1,
-.notes__preview h2,
-.notes__preview h3 {
-  margin-top: 1.1rem;
-  margin-bottom: 0.6rem;
-  font-weight: 600;
+.notes__editor .ql-container {
+  border-radius: 0 0 0.5rem 0.5rem;
+  border: 1px solid var(--border);
+  background: rgba(15, 23, 42, 0.7);
+  color: inherit;
 }
 
-.notes__preview p {
-  margin: 0.6rem 0;
+.notes__editor .ql-editor {
+  min-height: 12rem;
+  font-family: 'Inter', 'Noto Sans JP', system-ui, sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
-.notes__preview:empty::before {
-  content: 'Markdownプレビューは編集内容に合わせて更新されます';
-  opacity: 0.6;
-  font-style: italic;
+.notes__editor .ql-editor a {
+  color: var(--accent);
 }
 
 .notes__hint {
   font-size: 0.75rem;
   opacity: 0.65;
+  margin-top: 0.25rem;
+}
+
+.notes__placeholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 1px dashed var(--border);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  opacity: 0.8;
+}
+
+.notes__placeholder--loading {
+  animation: notesPlaceholderPulse 1.6s ease-in-out infinite;
+}
+
+.notes__placeholder--error {
+  border-color: #f87171;
+  color: #fca5a5;
+  opacity: 1;
+}
+
+@keyframes notesPlaceholderPulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.9;
+  }
 }
 
 .aux--iframe {

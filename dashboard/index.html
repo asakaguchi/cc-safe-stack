@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Safe Stack Dashboard</title>
+  <link rel="stylesheet" href="assets/vendor/quill.snow.css" />
   <link rel="stylesheet" href="assets/styles.css" />
 </head>
 <body>
@@ -42,26 +43,20 @@
     <section class="tile" aria-label="ユーティリティ">
       <div class="tile__header">
         <h2>ユーティリティ</h2>
-        <div class="tile__actions">
-          <label for="aux-mode" class="visually-hidden">表示を選択</label>
-          <select id="aux-mode">
-            <option value="notes">メモ</option>
-            <option value="logs">ログ</option>
-            <option value="streamlit">Streamlit</option>
-            <option value="docs">API Docs</option>
-          </select>
+        <div class="tile__actions tile__actions--tabs" role="tablist">
+          <button type="button" class="aux-tab" data-aux-target="notes" role="tab" aria-selected="true">メモ</button>
+          <button type="button" class="aux-tab" data-aux-target="logs" role="tab" aria-selected="false">ログ</button>
+          <button type="button" class="aux-tab" data-aux-target="streamlit" role="tab" aria-selected="false">Streamlit</button>
+          <button type="button" class="aux-tab" data-aux-target="docs" role="tab" aria-selected="false">API Docs</button>
+        </div>
+        <div class="tile__actions tile__actions--notes" data-actions-for="notes">
           <button id="clear-notes" type="button" title="メモをクリア">クリア</button>
           <button id="download-notes" type="button" title="メモをダウンロード">ダウンロード</button>
         </div>
       </div>
       <div class="tile__content">
         <div class="aux aux--notes" data-mode="notes">
-          <div class="notes__toolbar" role="group" aria-label="メモ表示モード">
-            <button type="button" class="notes__mode" data-notes-mode="edit" aria-pressed="true">編集</button>
-            <button type="button" class="notes__mode" data-notes-mode="preview" aria-pressed="false">プレビュー</button>
-          </div>
-          <textarea id="notes" placeholder="ここにメモを入力…" aria-label="メモ入力欄"></textarea>
-          <div id="notes-preview" class="notes__preview" hidden aria-live="polite"></div>
+          <div id="notes-editor" class="notes__editor" aria-label="メモ入力欄"></div>
           <label class="notes__hint">ブラウザのローカルストレージに自動保存されます</label>
         </div>
         <div class="aux aux--logs" data-mode="logs" hidden>
@@ -95,6 +90,7 @@
   <footer>
     <small>ホットキー: Ctrl+Shift+Alt+D でフルスクリーン切替</small>
   </footer>
+  <script src="assets/vendor/quill.min.js"></script>
   <script src="assets/dashboard.js" type="module"></script>
 </body>
 </html>
