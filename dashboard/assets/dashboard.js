@@ -1,4 +1,8 @@
+import { marked } from 'https://cdn.jsdelivr.net/npm/marked@12.0.2/+esm'
+import DOMPurify from 'https://cdn.jsdelivr.net/npm/dompurify@3.1.6/+esm'
+
 const notesKey = 'safe-stack-dashboard-notes'
+const notesModeKey = 'safe-stack-dashboard-notes-mode'
 const previewUrlKey = 'safe-stack-dashboard-preview-url'
 const logsServiceKey = 'safe-stack-dashboard-logs-service'
 const logsTailKey = 'safe-stack-dashboard-logs-tail'
@@ -7,8 +11,12 @@ const logsAutoKey = 'safe-stack-dashboard-logs-auto'
 const defaultPreviewUrl = '/preview/'
 const defaultLogTail = '200'
 const logRefreshIntervalMs = 5000
+const defaultNotesMode = 'edit'
 
 const notesEl = document.getElementById('notes')
+const notesHint = document.querySelector('.notes__hint')
+const notesPreview = document.getElementById('notes-preview')
+const notesModeButtons = document.querySelectorAll('[data-notes-mode]')
 const clearBtn = document.getElementById('clear-notes')
 const downloadBtn = document.getElementById('download-notes')
 const modeSelect = document.getElementById('aux-mode')
@@ -38,6 +46,7 @@ const logLabels = new Map([
 let logsAutoTimer = null
 let logsAbortController = null
 let isLogsActive = false
+let currentNotesMode = defaultNotesMode
 
 function setupVscodeIframe() {
   const vscodeFrame = document.querySelector('[data-service="vscode"]')
@@ -106,6 +115,99 @@ function setStoredValue(key, value) {
     localStorage.setItem(key, value)
   } catch (error) {
     console.warn('ローカルストレージの更新に失敗しました', key, error)
+  }
+}
+
+marked.setOptions({
+  gfm: true,
+  breaks: true,
+})
+
+function renderNotesPreview(value) {
+  if (!notesPreview) {
+    return
+  }
+  const content = value ?? ''
+  if (!content.trim()) {
+    notesPreview.innerHTML = ''
+    return
+  }
+  try {
+    const html = DOMPurify.sanitize(marked.parse(content))
+    notesPreview.innerHTML = html
+  } catch (error) {
+    console.warn('Markdownプレビューの生成に失敗しました', error)
+    notesPreview.innerHTML = ''
+  }
+}
+
+function updateNotesModeControls(mode) {
+  notesModeButtons.forEach(button => {
+    const isActive = button.dataset.notesMode === mode
+    button.setAttribute('aria-pressed', String(isActive))
+  })
+}
+
+function applyNotesMode(mode) {
+  if (!notesEl) {
+    return
+  }
+  const normalized = mode === 'preview' ? 'preview' : 'edit'
+  currentNotesMode = normalized
+  updateNotesModeControls(normalized)
+  const isPreview = normalized === 'preview'
+
+  if (isPreview) {
+    notesEl.setAttribute('hidden', 'true')
+    notesEl.setAttribute('aria-hidden', 'true')
+  } else {
+    notesEl.removeAttribute('hidden')
+    notesEl.setAttribute('aria-hidden', 'false')
+  }
+
+  if (notesHint) {
+    if (isPreview) {
+      notesHint.setAttribute('hidden', 'true')
+      notesHint.setAttribute('aria-hidden', 'true')
+    } else {
+      notesHint.removeAttribute('hidden')
+      notesHint.setAttribute('aria-hidden', 'false')
+    }
+  }
+
+  if (notesPreview) {
+    if (isPreview) {
+      notesPreview.removeAttribute('hidden')
+      notesPreview.setAttribute('aria-hidden', 'false')
+      renderNotesPreview(notesEl.value ?? '')
+    } else {
+      notesPreview.setAttribute('hidden', 'true')
+      notesPreview.setAttribute('aria-hidden', 'true')
+    }
+  }
+
+  if (!isPreview) {
+    try {
+      notesEl.focus({ preventScroll: true })
+    } catch (error) {
+      // フォーカス取得に失敗しても無視
+    }
+  }
+}
+
+function setNotesMode(mode, { save = true } = {}) {
+  applyNotesMode(mode)
+  if (save) {
+    setStoredValue(notesModeKey, currentNotesMode)
+  }
+}
+
+function initNotesMode() {
+  const storedMode = getStoredValue(notesModeKey)
+  if (storedMode === 'preview' || storedMode === 'edit') {
+    applyNotesMode(storedMode)
+  } else {
+    applyNotesMode(defaultNotesMode)
   }
 }
 
@@ -358,6 +460,9 @@ function updateAuxMode(mode) {
     const shouldShow = blockMode === mode
     if (shouldShow) {
       element.removeAttribute('hidden')
+      if (blockMode === 'notes') {
+        applyNotesMode(currentNotesMode)
+      }
     } else {
       element.setAttribute('hidden', 'true')
     }
@@ -640,10 +745,12 @@ function initLogsControls() {
 
 if (notesEl) {
   loadNotes()
+  renderNotesPreview(notesEl.value ?? '')
   let saveTimer
   notesEl.addEventListener('input', event => {
     const { value } = event.target
     clearTimeout(saveTimer)
+    renderNotesPreview(value)
     saveTimer = setTimeout(() => saveNotes(value), 300)
   })
 }
@@ -655,6 +762,7 @@ if (clearBtn && notesEl) {
     }
     notesEl.value = ''
     saveNotes('')
+    renderNotesPreview('')
   })
 }
 
@@ -674,6 +782,18 @@ if (modeSelect) {
   updateAuxMode(modeSelect.value ?? 'notes')
 }
 
+if (notesModeButtons.length > 0) {
+  notesModeButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const mode = button.dataset.notesMode
+      if (mode) {
+        setNotesMode(mode)
+      }
+    })
+  })
+}
+
+initNotesMode()
 setupVscodeIframe()
 setupTerminalClipboard()
 setupFullscreenShortcut()
