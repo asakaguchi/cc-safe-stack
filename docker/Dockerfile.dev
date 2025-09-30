@@ -98,6 +98,11 @@ COPY --chmod=755 .devcontainer/secure/init-firewall.sh /usr/local/bin/init-firew
 # エントリポイントスクリプトをコピー
 COPY --chmod=755 docker/entrypoint-dev.sh /usr/local/bin/entrypoint-dev.sh
 
+# ZShell設定ファイルをコピー（初期設定ウィザードを回避）
+COPY docker/.zshrc /etc/skel/.zshrc
+COPY docker/.zshrc /home/vscode/.zshrc
+RUN chown vscode:vscode /home/vscode/.zshrc
+
 # 作業ディレクトリの設定
 WORKDIR /workspace
 

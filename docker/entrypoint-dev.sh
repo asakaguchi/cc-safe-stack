@@ -20,6 +20,12 @@ userdel -r vscode > /dev/null 2>&1 || true
 groupadd -g ${GROUP_ID} ${GROUP_NAME} > /dev/null 2>&1 || true
 useradd -u ${USER_ID} -g ${GROUP_NAME} -G sudo -o -m -s /bin/zsh ${USER_NAME} > /dev/null 2>&1 || true
 
+# ZShell設定をユーザーホームディレクトリにコピー
+if [ -f /etc/skel/.zshrc ]; then
+    cp /etc/skel/.zshrc /home/${USER_NAME}/.zshrc
+    chown ${USER_NAME}:${GROUP_NAME} /home/${USER_NAME}/.zshrc
+fi
+
 # 作業ディレクトリの権限を調整
 chown -R ${USER_NAME}:${GROUP_NAME} /workspace || true
 
