@@ -86,8 +86,8 @@ services:
       ADDITIONAL_ALLOWED_DOMAINS: ${ADDITIONAL_ALLOWED_DOMAINS:-}
       USER_ID: ${USER_ID:-1000}
       GROUP_ID: ${GROUP_ID:-1000}
-      USER_NAME: ${USER_NAME:-developer}
-      GROUP_NAME: ${GROUP_NAME:-developer}
+      USER_NAME: developer
+      GROUP_NAME: developer
       NODE_ENV: development
       PYTHONUNBUFFERED: "1"
       PYTHONDONTWRITEBYTECODE: "1"
