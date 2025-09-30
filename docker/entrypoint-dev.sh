@@ -56,6 +56,38 @@ gosu ${USER_NAME} bash -c "
     echo 'Claude Code CLIディレクトリを設定しました'
 "
 
+# .mcp.jsonが存在する場合、自動的に承認済み状態にする
+if [ -f "/workspace/.mcp.json" ]; then
+    echo "🔌 .mcp.jsonを検出、MCP サーバーを自動承認設定中..."
+    gosu ${USER_NAME} bash -c '
+        CLAUDE_CONFIG="/home/'${USER_NAME}'/.claude.json"
+
+        # Claude Codeを一度起動して設定ファイルを生成
+        if [ ! -f "$CLAUDE_CONFIG" ]; then
+            echo "📝 Claude Code設定ファイルを初期化中..."
+            timeout 5 claude --version > /dev/null 2>&1 || true
+            sleep 1
+        fi
+
+        # .claude.jsonが存在する場合のみ承認設定を適用
+        if [ -f "$CLAUDE_CONFIG" ]; then
+            # jqを使ってhasTrustDialogAcceptedをtrueに設定
+            TMP_FILE=$(mktemp)
+            if jq -e ".projects" "$CLAUDE_CONFIG" > /dev/null 2>&1; then
+                # projectsキーが存在する場合
+                jq ".projects.\"/workspace\".hasTrustDialogAccepted = true" "$CLAUDE_CONFIG" > "$TMP_FILE" 2>/dev/null && mv "$TMP_FILE" "$CLAUDE_CONFIG"
+                echo "✅ MCP サーバーの自動承認が完了しました"
+            else
+                # projectsキーが存在しない場合は初期化
+                jq ".projects = {\"/workspace\": {\"hasTrustDialogAccepted\": true}}" "$CLAUDE_CONFIG" > "$TMP_FILE" 2>/dev/null && mv "$TMP_FILE" "$CLAUDE_CONFIG"
+                echo "✅ MCP サーバーの自動承認設定を初期化しました"
+            fi
+        else
+            echo "⚠️  .claude.json が作成されませんでした。初回起動時に手動で承認してください。"
+        fi
+    '
+fi
+
 # Python環境の初期化
 echo "🐍 Python環境を確認中..."
 if [ -f "/workspace/backend/pyproject.toml" ]; then
