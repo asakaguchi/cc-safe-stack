@@ -11,25 +11,37 @@
 
   @terminal1 path_regexp terminal1 ^/terminal/1(?:/.*)?$
   handle @terminal1 {
+    uri strip_prefix /terminal/1
     reverse_proxy workspace:7681 {
       header_down -X-Frame-Options
       header_down -Content-Security-Policy
+      transport http {
+        versions 1.1
+      }
     }
   }
 
   @terminal2 path_regexp terminal2 ^/terminal/2(?:/.*)?$
   handle @terminal2 {
+    uri strip_prefix /terminal/2
     reverse_proxy workspace:7682 {
       header_down -X-Frame-Options
       header_down -Content-Security-Policy
+      transport http {
+        versions 1.1
+      }
     }
   }
 
   @terminal3 path_regexp terminal3 ^/terminal/3(?:/.*)?$
   handle @terminal3 {
+    uri strip_prefix /terminal/3
     reverse_proxy workspace:7683 {
       header_down -X-Frame-Options
       header_down -Content-Security-Policy
+      transport http {
+        versions 1.1
+      }
     }
   }
 

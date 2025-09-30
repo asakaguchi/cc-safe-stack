@@ -102,17 +102,17 @@ if [[ "$DEV_ENTRY_MODE" == "workspace" ]]; then
 
     start_ttyd_1() {
         echo "▶️  ttyd 1 を起動します..."
-        exec ttyd -p 7681 -i 0.0.0.0 -b /terminal/1 bash -c "cd /workspace && exec gosu ${USER_NAME} /bin/zsh"
+        exec ttyd -W -p 7681 -i 0.0.0.0 bash -c "cd /workspace && exec gosu ${USER_NAME} /bin/zsh"
     }
 
     start_ttyd_2() {
         echo "▶️  ttyd 2 を起動します..."
-        exec ttyd -p 7682 -i 0.0.0.0 -b /terminal/2 bash -c "cd /workspace && exec gosu ${USER_NAME} /bin/zsh"
+        exec ttyd -W -p 7682 -i 0.0.0.0 bash -c "cd /workspace && exec gosu ${USER_NAME} /bin/zsh"
     }
 
     start_ttyd_3() {
         echo "▶️  ttyd 3 を起動します..."
-        exec ttyd -p 7683 -i 0.0.0.0 -b /terminal/3 bash -c "cd /workspace && exec gosu ${USER_NAME} /bin/zsh"
+        exec ttyd -W -p 7683 -i 0.0.0.0 bash -c "cd /workspace && exec gosu ${USER_NAME} /bin/zsh"
     }
 
     trap 'echo "⏹️  サービスを停止中..."; kill 0' SIGINT SIGTERM
