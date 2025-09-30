@@ -5,9 +5,9 @@
       "args": ["-y", "@upstash/context7-mcp@latest"],
       "env": {}
     },
-    "playwright": {
+    "chrome-devtools": {
       "command": "npx",
-      "args": ["-y", "@playwright/mcp@latest"],
+      "args": ["chrome-devtools-mcp@latest", "--isolated"],
       "env": {}
     }
   }

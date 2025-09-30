@@ -69,77 +69,105 @@ Context7 MCP サーバーにより、常に最新のライブラリドキュメ�
 
 詳細は [Context7 公式サイト](https://context7.com) を参照してください。
 
-## Playwright - ブラウザ自動化
+## Chrome DevTools - ブラウザデバッグ＆パフォーマンス分析
 
-### Playwright の概要
+### Chrome DevTools の概要
 
-Playwright MCP サーバーにより、ブラウザの自動操作や Web スクレイピング、E2E テス
-トの実行が可能になります。
+Chrome DevTools MCP サーバーにより、ブラウザの自動操作、デバッグ、パフォーマンス
+分析が可能になります。Google Chrome の開発者ツール機能を AI から直接利用できま
+す。
 
-### Playwright の主な機能
+### Chrome DevTools の主な機能
 
-- Web ページの自動操作: クリック、入力、ナビゲーション
-- スクリーンショット: ページの状態を視覚的に記録
-- PDF 生成: Web ページからの PDF 出力
-- 複数ブラウザ対応: Chromium、Firefox、WebKit
-- フォーム自動入力: フォームデータの自動入力とファイルアップロード
-- JavaScript 実行: ページ要素の操作とカスタムスクリプト実行
+- ブラウザ自動操作: クリック、入力、ナビゲーション、フォーム送信
+- パフォーマンス分析: Core Web Vitals (CWV) の測定、トレース記録、最適化提案
+- デバッグ機能: コンソールログ確認、ネットワークリクエスト分析、エラー検出
+- スクリーンショット: ページやDOM要素の状態を視覚的に記録
+- 複数ブラウザチャンネル対応: Stable、Canary、Beta、Dev
+- JavaScript実行: ページ内でのカスタムスクリプト実行
 
-### Playwright の使用方法
+### Chrome DevTools の使用方法
 
-プロンプトに「playwright mcp」を含めて指示します。
+Chrome DevTools MCP は自動的に利用可能になります。ブラウザ操作やデバッグが必要な
+タスクを指示してください。
 
-#### Webスクレイピングの例
-
-```text
-「playwright mcpを使って https://example.com から情報を取得して」
-```
-
-#### E2Eテストの例
+#### パフォーマンス分析の例
 
 ```text
-「playwright mcpでログインフォームのテストを実行して」
+「このページのパフォーマンスを分析して、Core Web Vitalsのスコアを教えて」
 ```
 
-#### スクリーンショットの例
+#### ネットワーク分析の例
 
 ```text
-「playwright mcpでページのスクリーンショットを撮って」
+「https://example.com にアクセスして、APIリクエストの応答時間を確認して」
 ```
 
-### Playwright の設定
+#### UI要素の操作例
 
-プロジェクトルートの `.mcp.json` に Playwright の設定を記載済みです。初回使用時
-に自動でインストールされます。
+```text
+「ログインフォームに情報を入力してテストして」
+```
+
+### Chrome DevTools の設定
+
+プロジェクトルートの `.mcp.json` に Chrome DevTools の設定を記載済みです。
+
+```json
+{
+  "mcpServers": {
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["chrome-devtools-mcp@latest", "--isolated"],
+      "env": {}
+    }
+  }
+}
+```
+
+#### 設定オプションの説明
+
+- `--isolated`: 一時的なユーザーデータディレクトリを使用（クリーンな環境）
+- Docker開発環境に最適化された設定
+- 初回使用時に自動でインストールされます
 
 ### 活用事例
 
-#### 1. フォーム操作の自動化
+#### 1. フロントエンドのパフォーマンス最適化
 
 ```text
-「playwright mcpで以下の操作を自動化して：
-1. ログインページにアクセス
-2. ユーザー名とパスワードを入力
-3. ログインボタンをクリック
-4. ダッシュボードのスクリーンショットを撮影」
+「ダッシュボードページのパフォーマンスを分析して：
+- LCP、FID、CLSの値を測定
+- ボトルネックを特定
+- 改善提案を提示」
 ```
 
-#### 2. データ収集
+#### 2. API通信のデバッグ
 
 ```text
-「playwright mcpで商品一覧ページから以下の情報を収集して：
-- 商品名
-- 価格
-- 在庫状況
-結果をCSVファイルで出力」
+「ログイン処理のネットワークリクエストを確認して：
+- リクエストヘッダーの内容
+- レスポンスステータス
+- エラーの有無」
 ```
 
-#### 3. UIテスト
+#### 3. UI動作テスト
 
 ```text
-「playwright mcpでヘッダーナビゲーションのテストを実行：
+「ヘッダーナビゲーションの動作をテスト：
 - 各メニューリンクが正しく動作するか
-- レスポンシブデザインが適切に表示されるか」
+- コンソールにエラーが出ていないか
+- スクリーンショットを撮影」
+```
+
+#### 4. フォーム操作の自動化
+
+```text
+「ユーザー登録フォームの動作を確認：
+1. フォームに情報を入力
+2. バリデーションをテスト
+3. 送信後の挙動を確認
+4. コンソールログをチェック」
 ```
 
 ## MCP設定ファイル
@@ -151,17 +179,25 @@ Playwright MCP サーバーにより、ブラウザの自動操作や Web スク
   "mcpServers": {
     "context7": {
       "command": "npx",
-      "args": ["context7-mcp"],
+      "args": ["-y", "@upstash/context7-mcp@latest"],
       "env": {}
     },
-    "playwright": {
+    "chrome-devtools": {
       "command": "npx",
-      "args": ["playwright-mcp"],
+      "args": ["chrome-devtools-mcp@latest", "--isolated"],
       "env": {}
     }
   }
 }
 ```
+
+#### Chrome DevTools 利用可能オプション
+
+- `--isolated`: 一時的なユーザーデータディレクトリを使用（推奨）
+- `--headless`: UIなしでブラウザを実行（CI/CD環境向け）
+- `--channel`: Chromeチャンネルを指定（stable/canary/beta/dev）
+- `--executablePath`: カスタムChrome実行パスを指定
+- `--logFile`: デバッグログの出力先を指定
 
 ### 設定の管理
 
@@ -193,34 +229,33 @@ Playwright MCP サーバーにより、ブラウザの自動操作や Web スク
 「FastAPI + SQLAlchemy + Pydantic use context7でユーザー管理API」
 ```
 
-### Playwright 活用のコツ
+### Chrome DevTools 活用のコツ
 
-#### 1. ステップを明確に分ける
+#### 1. 目的を明確にする
+
+```text
+✅ 良い例: 「ログインページのパフォーマンスを測定してLCPを改善して」
+❌ 悪い例: 「ページを速くして」
+```
+
+#### 2. ステップを分けて指示
 
 ```text
 ✅ 良い例:
-「playwright mcpで以下を順番に実行：
-1. ページにアクセス
-2. フォームに入力
-3. 送信ボタンをクリック
-4. 結果を確認」
+「以下の手順でテスト：
+1. https://example.com にアクセス
+2. ログインフォームに入力
+3. コンソールエラーを確認
+4. ネットワークリクエストを分析」
 
 ❌ 悪い例:
-「playwright mcpでフォーム送信をテストして」
+「ログインをテストして」
 ```
 
-#### 2. 期待値を明確にする
+#### 3. 具体的な要素を指定
 
 ```text
-「playwright mcpでログインテスト：
-- 成功時: ダッシュボードにリダイレクト
-- 失敗時: エラーメッセージが表示される」
-```
-
-#### 3. セレクターを具体的に指定
-
-```text
-「playwright mcpで #login-form の username フィールドに入力」
+「#submit-button をクリックして、.error-message が表示されるか確認」
 ```
 
 ## トラブルシューティング
@@ -246,18 +281,21 @@ Playwright MCP サーバーにより、ブラウザの自動操作や Web スク
 - より具体的なバージョンを指定
 - 「最新版」「latest」などのキーワードを追加
 
-### Playwright 関連
+### Chrome DevTools 関連
 
 #### 問題: ブラウザが起動しない
 
-原因: ブラウザの依存関係が不足。
+原因: Chrome がシステムにインストールされていない、またはDocker環境でディスプレ
+イが利用できない。
 
 解決策:
 
 ```bash
-# 必要な依存関係をインストール
-npx playwright install-deps
-npx playwright install
+# Chromeの確認
+google-chrome --version
+
+# Docker環境の場合、X11フォワーディング確認
+echo $DISPLAY
 ```
 
 #### 問題: 要素が見つからない
@@ -266,19 +304,32 @@ npx playwright install
 
 解決策:
 
-- より具体的なセレクターを使用
-- 明示的な待機処理を追加
-- ページの読み込み完了を待つ
+- ページスナップショット機能でDOM構造を確認
+- より具体的なセレクター（ID、クラス、データ属性）を使用
+- ページ読み込み完了を明示的に待つ
 
-#### 問題: 権限エラー
+#### 問題: パフォーマンス測定が不正確
 
-原因: ファイルアクセス権限の問題。
+原因: キャッシュやネットワーク状態の影響。
+
+解決策:
+
+- `--isolated` オプションでクリーンな環境を使用（設定済み）
+- ネットワークスロットリングを適用
+- 複数回測定して平均値を取る
+
+#### 問題: スクリーンショットが撮れない
+
+原因: ディスプレイ設定やファイル権限の問題。
 
 解決策:
 
 ```bash
-# スクリーンショット保存ディレクトリの権限確認
+# 保存ディレクトリの権限確認
 chmod 755 screenshots/
+
+# Docker環境でヘッドレスモードに切り替え
+# .mcp.json に --headless オプション追加
 ```
 
 ## セキュリティ考慮事項
@@ -288,17 +339,18 @@ chmod 755 screenshots/
 - API 制限: レート制限や API キーの管理
 - データプライバシー: 機密情報を含むコードの取り扱い注意
 
-### Playwright
+### Chrome DevTools
 
 - 認証情報: ログイン情報の適切な管理
-- スクレイピング倫理: robots.txt の遵守
-- セッション管理: ブラウザセッションの適切なクリーンアップ
+- セッション管理: `--isolated` オプションで一時的な環境を使用（設定済み）
+- データ保護: スクリーンショットやログに機密情報が含まれないよう注意
+- クッキー・ストレージ: 一時環境のため、セッション終了時に自動削除
 
 ### 推奨事項
 
 - 機密情報は環境変数で管理
-- 認証が必要なサイトでは、最初にブラウザを表示して手動でログイン
-- セッション中はクッキーが保持されるため、継続的な操作が可能
+- テスト用の専用アカウントを使用
+- スクリーンショットやログファイルの共有時は情報を確認
 
 ## パフォーマンス最適化
 
@@ -308,20 +360,22 @@ chmod 755 screenshots/
 - 複数のライブラリを同時に指定して効率化
 - キャッシュされた情報の活用
 
-### Playwright の最適化
+### Chrome DevTools の最適化
 
-- ヘッドレスモードの活用
-- 並列実行による処理時間短縮
-- 不要なリソース読み込みの無効化
+- `--isolated` オプション: クリーンな環境で一貫した結果を取得（設定済み）
+- ヘッドレスモード: CI/CD環境やリソース制約時に `--headless` を追加
+- ネットワークスロットリング: リアルな条件でパフォーマンステスト
+- 複数タブ操作: 並列でのテスト実行も可能
 
 ```text
-「playwright mcpでヘッドレスモードで複数ページを並列処理」
+「複数のページのパフォーマンスを並列で測定して」
 ```
 
 ## 関連リンク
 
 - [Context7 公式サイト](https://context7.com)
-- [Playwright MCP GitHub](https://github.com/microsoft/playwright-mcp)
+- [Chrome DevTools MCP GitHub](https://github.com/ChromeDevTools/chrome-devtools-mcp)
+- [Chrome DevTools 公式ブログ](https://developer.chrome.com/blog/chrome-devtools-mcp)
 - [MCP 公式ドキュメント](https://modelcontextprotocol.io/)
 
 ## 関連ドキュメント
