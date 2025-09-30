@@ -286,15 +286,15 @@ header p {
   }
 }
 
+.aux[hidden] {
+  display: none !important;
+}
+
 .aux--iframe {
   flex: 1;
   width: 100%;
   border: 1px solid var(--border);
   border-radius: 0.5rem;
-}
-
-.aux--iframe[hidden] {
-  display: none;
 }
 
 .visually-hidden {
