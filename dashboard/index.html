@@ -26,14 +26,14 @@
       <div class="tile__header">
         <div class="tile__header-row">
           <h2>アプリプレビュー</h2>
-          <form id="preview-controls" class="tile__actions tile__actions--preview">
-            <label class="visually-hidden" for="preview-url">プレビュー URL</label>
-            <input id="preview-url" name="preview-url" type="text" inputmode="url" placeholder="/preview/ または http://..." autocomplete="off" />
-            <button type="submit" title="入力した URL を適用">適用</button>
-            <button id="reload-preview" type="button" title="プレビューだけを再読込">リロード</button>
-            <a data-preview-link href="/preview/" target="_blank" rel="noreferrer noopener">別タブで開く</a>
-          </form>
         </div>
+        <form id="preview-controls" class="tile__actions tile__actions--preview">
+          <label class="visually-hidden" for="preview-url">プレビュー URL</label>
+          <input id="preview-url" name="preview-url" type="text" inputmode="url" placeholder="/preview/ または http://..." autocomplete="off" />
+          <button type="submit" title="入力した URL を適用">適用</button>
+          <button id="reload-preview" type="button" title="プレビューだけを再読込">リロード</button>
+          <a data-preview-link href="/preview/" target="_blank" rel="noreferrer noopener">別タブで開く</a>
+        </form>
       </div>
       <iframe data-preview-frame src="/preview/" title="アプリプレビュー" loading="lazy"></iframe>
     </section>
