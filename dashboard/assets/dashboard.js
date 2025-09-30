@@ -19,7 +19,8 @@ const previewInput = document.getElementById('preview-url')
 const previewReloadBtn = document.getElementById('reload-preview')
 const previewIframe = document.querySelector('[data-preview-frame]')
 const previewLink = document.querySelector('[data-preview-link]')
-const terminalIframe = document.querySelector('[data-terminal-frame]')
+const terminalTabs = document.querySelectorAll('[data-terminal-target]')
+const terminalFrames = document.querySelectorAll('.terminal-frame')
 
 const logsContainer = document.querySelector('[data-mode="logs"]')
 const logsOutput = document.getElementById('logs-output')
@@ -796,7 +797,33 @@ if (auxTabs.length > 0) {
   })
 }
 
+function setupTerminalTabs() {
+  if (terminalTabs.length === 0) return
+
+  terminalTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const targetId = tab.dataset.terminalTarget
+      if (!targetId) return
+
+      terminalTabs.forEach(t => {
+        const isActive = t.dataset.terminalTarget === targetId
+        t.setAttribute('aria-selected', String(isActive))
+      })
+
+      terminalFrames.forEach(frame => {
+        const frameId = frame.dataset.terminalId
+        if (frameId === targetId) {
+          frame.removeAttribute('hidden')
+        } else {
+          frame.setAttribute('hidden', 'true')
+        }
+      })
+    })
+  })
+}
+
 updateAuxMode(currentAuxMode)
 setupVscodeIframe()
 setupTerminalClipboard()
+setupTerminalTabs()
 setupFullscreenShortcut()

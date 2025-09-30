@@ -35,10 +35,20 @@
     </section>
     <section class="tile" aria-label="ターミナル">
       <div class="tile__header">
-        <h2>ターミナル</h2>
-        <a href="/terminal/" target="_blank" rel="noreferrer noopener">別タブで開く</a>
+        <div class="tile__header-row">
+          <h2>ターミナル</h2>
+        </div>
+        <div class="tile__tabs" role="tablist">
+          <button type="button" class="tile__tab" data-terminal-target="1" role="tab" aria-selected="true">ターミナル 1</button>
+          <button type="button" class="tile__tab" data-terminal-target="2" role="tab" aria-selected="false">ターミナル 2</button>
+          <button type="button" class="tile__tab" data-terminal-target="3" role="tab" aria-selected="false">ターミナル 3</button>
+        </div>
       </div>
-      <iframe data-terminal-frame src="/terminal/" title="ターミナル" allow="clipboard-read; clipboard-write" loading="lazy"></iframe>
+      <div class="tile__content">
+        <iframe class="terminal-frame" data-terminal-id="1" src="/terminal/1/" title="ターミナル 1" allow="clipboard-read; clipboard-write" loading="lazy"></iframe>
+        <iframe class="terminal-frame" data-terminal-id="2" src="/terminal/2/" title="ターミナル 2" allow="clipboard-read; clipboard-write" loading="lazy" hidden></iframe>
+        <iframe class="terminal-frame" data-terminal-id="3" src="/terminal/3/" title="ターミナル 3" allow="clipboard-read; clipboard-write" loading="lazy" hidden></iframe>
+      </div>
     </section>
     <section class="tile" aria-label="ユーティリティ">
       <div class="tile__header">

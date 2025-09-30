@@ -138,6 +138,10 @@ header p {
   background: #000;
 }
 
+.terminal-frame[hidden] {
+  display: none !important;
+}
+
 .tile__tabs {
   display: flex;
   gap: 0;

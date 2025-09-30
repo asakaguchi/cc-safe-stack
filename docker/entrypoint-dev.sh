@@ -100,9 +100,19 @@ if [[ "$DEV_ENTRY_MODE" == "workspace" ]]; then
             --telemetry-level off
     }
 
-    start_ttyd() {
-        echo "▶️  ttyd を起動します..."
-        exec ttyd -p 7681 -i 0.0.0.0 -b /terminal -W gosu ${USER_NAME} /bin/zsh
+    start_ttyd_1() {
+        echo "▶️  ttyd 1 を起動します..."
+        exec ttyd -p 7681 -i 0.0.0.0 -b /terminal/1 -W gosu ${USER_NAME} /bin/zsh
+    }
+
+    start_ttyd_2() {
+        echo "▶️  ttyd 2 を起動します..."
+        exec ttyd -p 7682 -i 0.0.0.0 -b /terminal/2 -W gosu ${USER_NAME} /bin/zsh
+    }
+
+    start_ttyd_3() {
+        echo "▶️  ttyd 3 を起動します..."
+        exec ttyd -p 7683 -i 0.0.0.0 -b /terminal/3 -W gosu ${USER_NAME} /bin/zsh
     }
 
     trap 'echo "⏹️  サービスを停止中..."; kill 0' SIGINT SIGTERM
@@ -110,12 +120,22 @@ if [[ "$DEV_ENTRY_MODE" == "workspace" ]]; then
     start_openvscode &
     vscode_pid=$!
 
-    start_ttyd &
-    ttyd_pid=$!
+    start_ttyd_1 &
+    ttyd1_pid=$!
 
-    echo "✅ Webワークスペースが起動しました (VSCode PID=${vscode_pid}, ttyd PID=${ttyd_pid})"
+    start_ttyd_2 &
+    ttyd2_pid=$!
 
-    wait -n $vscode_pid $ttyd_pid
+    start_ttyd_3 &
+    ttyd3_pid=$!
+
+    echo "✅ Webワークスペースが起動しました"
+    echo "   VSCode: PID=${vscode_pid}"
+    echo "   ターミナル1: PID=${ttyd1_pid}"
+    echo "   ターミナル2: PID=${ttyd2_pid}"
+    echo "   ターミナル3: PID=${ttyd3_pid}"
+
+    wait -n $vscode_pid $ttyd1_pid $ttyd2_pid $ttyd3_pid
     exit $?
 fi
 

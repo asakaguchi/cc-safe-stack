@@ -9,9 +9,25 @@
     }
   }
 
-  @terminal path_regexp terminal ^/terminal(?:/.*)?$
-  handle @terminal {
+  @terminal1 path_regexp terminal1 ^/terminal/1(?:/.*)?$
+  handle @terminal1 {
     reverse_proxy workspace:7681 {
+      header_down -X-Frame-Options
+      header_down -Content-Security-Policy
+    }
+  }
+
+  @terminal2 path_regexp terminal2 ^/terminal/2(?:/.*)?$
+  handle @terminal2 {
+    reverse_proxy workspace:7682 {
+      header_down -X-Frame-Options
+      header_down -Content-Security-Policy
+    }
+  }
+
+  @terminal3 path_regexp terminal3 ^/terminal/3(?:/.*)?$
+  handle @terminal3 {
+    reverse_proxy workspace:7683 {
       header_down -X-Frame-Options
       header_down -Content-Security-Policy
     }
