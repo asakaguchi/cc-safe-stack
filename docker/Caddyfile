@@ -48,7 +48,7 @@
   @preview path_regexp preview ^/preview(?:/.*)?$
   handle @preview {
     uri strip_prefix /preview
-    reverse_proxy frontend:3000 {
+    reverse_proxy frontend:3001 {
       header_down -X-Frame-Options
       header_down -Content-Security-Policy
     }

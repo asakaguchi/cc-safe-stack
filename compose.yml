@@ -43,9 +43,9 @@ services:
       - /app/node_modules
       - /app/frontend/node_modules
     expose:
-      - "3000"
+      - "3001"
     command: >-
-      bash -lc "set -o pipefail; mkdir -p /app/.logs && pnpm install --recursive --force && pnpm --dir frontend dev -- --host 0.0.0.0 2>&1 | tee -a /app/.logs/frontend.log"
+      bash -lc "set -o pipefail; mkdir -p /app/.logs && pnpm install --recursive --force && pnpm --dir frontend dev -- --host 0.0.0.0 --port 3001 2>&1 | tee -a /app/.logs/frontend.log"
     depends_on:
       - app
 
