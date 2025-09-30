@@ -105,6 +105,7 @@ services:
       - "7681"
       - "7682"
       - "7683"
+      - "8300"
 
   proxy:
     image: caddy:2.8-alpine

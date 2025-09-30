@@ -3,7 +3,7 @@
 
   @vscode path_regexp vscode ^/vscode(?:/.*)?$
   handle @vscode {
-    reverse_proxy workspace:3000 {
+    reverse_proxy workspace:8300 {
       header_down -X-Frame-Options
       header_down -Content-Security-Policy
     }

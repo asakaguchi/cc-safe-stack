@@ -24,7 +24,7 @@ Claude Code（Anthropic の AI 開発パートナー）を使って、仕様書�
 
 - **Claude Code** - 仕様書からアプリを自動実装する AI エンジニア
 - **Context7 MCP** - 最新ライブラリドキュメントのリアルタイム統合
-- **Playwright MCP** - 自動ブラウザテストで品質担保
+- **Chrome DevTools MCP** - パフォーマンス分析・デバッグ・Core Web Vitals測定
 - **VS Code DevContainers** - ゼロ設定の統一開発環境
 
 ### 並列実装対応スタック

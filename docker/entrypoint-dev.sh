@@ -94,7 +94,7 @@ if [[ "$DEV_ENTRY_MODE" == "workspace" ]]; then
         echo "▶️  OpenVSCode Server を起動します（認証なし - ローカル開発専用）..."
         exec gosu ${USER_NAME} "${OPENVSCODE_SERVER_DIR}/bin/openvscode-server" \
             --host 0.0.0.0 \
-            --port 3000 \
+            --port 8300 \
             --server-base-path /vscode \
             --without-connection-token \
             --telemetry-level off
