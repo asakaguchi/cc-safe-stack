@@ -48,26 +48,6 @@ else
     echo "ℹ️  セキュアモード無効（SECURE_MODE=${SECURE_MODE:-}）"
 fi
 
-# Claude Code CLIディレクトリの設定
-echo "🤖 Claude Code CLI設定中..."
-# ユーザーのホームディレクトリにClaude設定を配置
-gosu ${USER_NAME} bash -c "
-    mkdir -p /home/${USER_NAME}/.claude
-    echo 'Claude Code CLIディレクトリを設定しました'
-"
-
-# .mcp.jsonが存在する場合、承認ダイアログが表示されるようにリセット
-if [ -f "/workspace/.mcp.json" ]; then
-    echo "🔌 .mcp.jsonを検出、MCP サーバーの承認状態をリセット中..."
-    gosu ${USER_NAME} bash -c '
-        cd /workspace
-        # Claude Code CLIの承認状態をリセット
-        # 次回起動時に承認ダイアログが表示されるようになる
-        claude mcp reset-project-choices > /dev/null 2>&1 || true
-        echo "✅ MCP サーバーの承認ダイアログが初回起動時に表示されます"
-    '
-fi
-
 # Python環境の初期化
 echo "🐍 Python環境を確認中..."
 if [ -f "/workspace/backend/pyproject.toml" ]; then
