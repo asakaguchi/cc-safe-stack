@@ -68,15 +68,20 @@ header p {
 
 .tile__header {
   display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: rgba(30, 41, 59, 0.85);
+  border-bottom: 1px solid var(--border);
+}
+
+.tile__header-row {
+  display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 0.75rem;
-  background: rgba(30, 41, 59, 0.85);
-  border-bottom: 1px solid var(--border);
-  gap: 0.5rem;
 }
 
-.tile__header h2 {
+.tile__header-row h2 {
   margin: 0;
   font-size: 1rem;
 }
@@ -133,6 +138,42 @@ header p {
   background: #000;
 }
 
+.tile__tabs {
+  display: flex;
+  gap: 0;
+  padding: 0 0.75rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.tile__tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: rgba(249, 250, 251, 0.65);
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.tile__tab:hover {
+  color: rgba(249, 250, 251, 0.9);
+}
+
+.tile__tab[aria-selected='true'] {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  font-weight: 500;
+}
+
+.tile__tab:focus-visible {
+  outline: 2px solid rgba(56, 189, 248, 0.6);
+  outline-offset: -2px;
+}
+
 .tile__actions {
   display: flex;
   gap: 0.35rem;
@@ -144,16 +185,37 @@ header p {
   flex-wrap: wrap;
 }
 
-.tile__actions--tabs {
-  flex-wrap: wrap;
+.tile__actions--notes {
+  display: flex;
+  gap: 0.35rem;
 }
 
 .tile__actions--notes[hidden] {
   display: none;
 }
 
-.tile__actions--notes {
-  margin-left: auto;
+.tile__actions--notes button {
+  background: none;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  color: inherit;
+  padding: 0.35rem 0.65rem;
+  border-radius: 0.55rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.tile__actions--notes button:hover {
+  background: rgba(56, 189, 248, 0.15);
+  color: var(--accent);
+}
+
+.tile__actions--notes button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .tile__content {
@@ -180,33 +242,6 @@ header p {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-}
-
-.aux-tab {
-  background: rgba(15, 23, 42, 0.5);
-  border: 1px solid rgba(148, 163, 184, 0.45);
-  color: inherit;
-  padding: 0.35rem 0.85rem;
-  border-radius: 999px;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition:
-    background 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.aux-tab[aria-selected='true'] {
-  background: rgba(56, 189, 248, 0.25);
-  color: var(--accent);
-  border-color: rgba(56, 189, 248, 0.45);
-  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.2);
-}
-
-.aux-tab:focus-visible {
-  outline: 2px solid rgba(56, 189, 248, 0.6);
-  outline-offset: 2px;
 }
 
 .notes__editor {

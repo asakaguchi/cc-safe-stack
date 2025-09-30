@@ -42,16 +42,18 @@
     </section>
     <section class="tile" aria-label="ユーティリティ">
       <div class="tile__header">
-        <h2>ユーティリティ</h2>
-        <div class="tile__actions tile__actions--tabs" role="tablist">
-          <button type="button" class="aux-tab" data-aux-target="notes" role="tab" aria-selected="true">メモ</button>
-          <button type="button" class="aux-tab" data-aux-target="logs" role="tab" aria-selected="false">ログ</button>
-          <button type="button" class="aux-tab" data-aux-target="streamlit" role="tab" aria-selected="false">Streamlit</button>
-          <button type="button" class="aux-tab" data-aux-target="docs" role="tab" aria-selected="false">API Docs</button>
+        <div class="tile__header-row">
+          <h2>ユーティリティ</h2>
+          <div class="tile__actions tile__actions--notes" data-actions-for="notes">
+            <button id="clear-notes" type="button" title="メモをクリア">クリア</button>
+            <button id="download-notes" type="button" title="メモをダウンロード">ダウンロード</button>
+          </div>
         </div>
-        <div class="tile__actions tile__actions--notes" data-actions-for="notes">
-          <button id="clear-notes" type="button" title="メモをクリア">クリア</button>
-          <button id="download-notes" type="button" title="メモをダウンロード">ダウンロード</button>
+        <div class="tile__tabs" role="tablist">
+          <button type="button" class="tile__tab" data-aux-target="notes" role="tab" aria-selected="true">メモ</button>
+          <button type="button" class="tile__tab" data-aux-target="logs" role="tab" aria-selected="false">ログ</button>
+          <button type="button" class="tile__tab" data-aux-target="streamlit" role="tab" aria-selected="false">Streamlit</button>
+          <button type="button" class="tile__tab" data-aux-target="docs" role="tab" aria-selected="false">API Docs</button>
         </div>
       </div>
       <div class="tile__content">
