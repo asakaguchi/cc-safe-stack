@@ -26,6 +26,9 @@ if [ -f /etc/skel/.zshrc ]; then
     chown ${USER_NAME}:${GROUP_NAME} /home/${USER_NAME}/.zshrc
 fi
 
+# ユーザーホームディレクトリの所有者を確実に設定
+chown -R ${USER_NAME}:${GROUP_NAME} /home/${USER_NAME}
+
 # 作業ディレクトリの権限を調整
 chown -R ${USER_NAME}:${GROUP_NAME} /workspace || true
 
