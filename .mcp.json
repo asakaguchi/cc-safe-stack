@@ -7,7 +7,7 @@
     },
     "chrome-devtools": {
       "command": "npx",
-      "args": ["chrome-devtools-mcp@latest", "--isolated"],
+      "args": ["chrome-devtools-mcp@latest", "--headless", "--isolated"],
       "env": {}
     }
   }
