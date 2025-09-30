@@ -138,8 +138,20 @@ header p {
   background: #000;
 }
 
+.terminal-frame {
+  flex: 1;
+  width: 100%;
+  border: none;
+  background: #000;
+}
+
 .terminal-frame[hidden] {
   display: none !important;
+}
+
+/* ターミナルセクションのコンテンツエリアはpaddingなし */
+.tile[aria-label='ターミナル'] .tile__content {
+  padding: 0;
 }
 
 .tile__tabs {

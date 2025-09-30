@@ -275,188 +275,194 @@ function initPreviewControls() {
 }
 
 function setupTerminalClipboard() {
-  if (!terminalIframe) {
-    return
-  }
-
-  const installHandlers = () => {
-    const frameWindow = terminalIframe.contentWindow
-    if (!frameWindow) {
-      return
-    }
-    if (frameWindow.__safeStackClipboardReady) {
-      return
-    }
-    const frameDocument = frameWindow.document
-    if (!frameDocument) {
+  // 全てのターミナルフレームに対してクリップボード機能を設定
+  terminalFrames.forEach(terminalIframe => {
+    if (!terminalIframe) {
       return
     }
 
-    frameWindow.__safeStackClipboardReady = true
-
-    const clipboardApi = frameWindow.navigator?.clipboard ?? navigator.clipboard
-
-    const getTerm = () => {
-      try {
-        const candidate = frameWindow.term
-        if (candidate && typeof candidate === 'object') {
-          return candidate
-        }
-      } catch (error) {
-        // ignore access errors
+    const installHandlers = () => {
+      const frameWindow = terminalIframe.contentWindow
+      if (!frameWindow) {
+        return
       }
-      return null
-    }
-
-    const focusTerminal = term => {
-      try {
-        if (term && typeof term.focus === 'function') {
-          term.focus()
-        }
-      } catch (error) {
-        // ignore focus errors
+      if (frameWindow.__safeStackClipboardReady) {
+        return
       }
-    }
+      const frameDocument = frameWindow.document
+      if (!frameDocument) {
+        return
+      }
 
-    const getSelectionText = () => {
-      try {
-        const term = getTerm()
-        if (term && typeof term.getSelection === 'function') {
-          const selection = term.getSelection()
-          if (selection) {
-            return selection
+      frameWindow.__safeStackClipboardReady = true
+
+      const clipboardApi = frameWindow.navigator?.clipboard ?? navigator.clipboard
+
+      const getTerm = () => {
+        try {
+          const candidate = frameWindow.term
+          if (candidate && typeof candidate === 'object') {
+            return candidate
           }
+        } catch (error) {
+          // ignore access errors
         }
-      } catch (error) {
-        // ignore selection errors
-      }
-      try {
-        return frameWindow.getSelection()?.toString() || ''
-      } catch (error) {
-        return ''
-      }
-    }
-
-    const pasteText = text => {
-      if (!text) {
-        return
-      }
-      const term = getTerm()
-      if (term && typeof term.paste === 'function') {
-        term.paste(text)
-        focusTerminal(term)
-      } else if (term && typeof term.write === 'function') {
-        term.write(text)
-        focusTerminal(term)
-      }
-    }
-
-    const handleKeydown = event => {
-      if (event.defaultPrevented) {
-        return
-      }
-      const isModifier = event.ctrlKey || event.metaKey
-      if (!isModifier || event.altKey) {
-        return
+        return null
       }
 
-      const key = (event.key || '').toLowerCase()
-      if (key === 'c' && !event.shiftKey) {
+      const focusTerminal = term => {
+        try {
+          if (term && typeof term.focus === 'function') {
+            term.focus()
+          }
+        } catch (error) {
+          // ignore focus errors
+        }
+      }
+
+      const getSelectionText = () => {
+        try {
+          const term = getTerm()
+          if (term && typeof term.getSelection === 'function') {
+            const selection = term.getSelection()
+            if (selection) {
+              return selection
+            }
+          }
+        } catch (error) {
+          // ignore selection errors
+        }
+        try {
+          return frameWindow.getSelection()?.toString() || ''
+        } catch (error) {
+          return ''
+        }
+      }
+
+      const pasteText = text => {
+        if (!text) {
+          return
+        }
+        const term = getTerm()
+        if (term && typeof term.paste === 'function') {
+          term.paste(text)
+          focusTerminal(term)
+        } else if (term && typeof term.write === 'function') {
+          term.write(text)
+          focusTerminal(term)
+        }
+      }
+
+      const handleKeydown = event => {
+        if (event.defaultPrevented) {
+          return
+        }
+        const isModifier = event.ctrlKey || event.metaKey
+        if (!isModifier || event.altKey) {
+          return
+        }
+
+        const key = (event.key || '').toLowerCase()
+        if (key === 'c' && !event.shiftKey) {
+          const selectionText = getSelectionText()
+          if (!selectionText) {
+            return
+          }
+
+          event.preventDefault()
+
+          const term = getTerm()
+
+          const fallbackExecCommand = () => {
+            try {
+              return frameDocument.execCommand('copy')
+            } catch (error) {
+              return false
+            }
+          }
+
+          const handleFailure = err => {
+            console.warn('ターミナルのコピーに失敗しました', err)
+            fallbackExecCommand()
+          }
+
+          if (clipboardApi && typeof clipboardApi.writeText === 'function') {
+            clipboardApi.writeText(selectionText).catch(handleFailure)
+          } else {
+            fallbackExecCommand()
+          }
+
+          focusTerminal(term)
+          return
+        }
+
+        if (key === 'v' && !event.shiftKey) {
+          if (!clipboardApi || typeof clipboardApi.readText !== 'function') {
+            return
+          }
+
+          event.preventDefault()
+          clipboardApi
+            .readText()
+            .then(text => pasteText(text))
+            .catch(err => {
+              console.warn('ターミナルへの貼り付けに失敗しました', err)
+            })
+        }
+      }
+
+      const handlePasteEvent = event => {
+        if (!event.clipboardData) {
+          return
+        }
+        const text = event.clipboardData.getData('text')
+        if (!text) {
+          return
+        }
+        event.preventDefault()
+        pasteText(text)
+      }
+
+      const handleCopyEvent = event => {
         const selectionText = getSelectionText()
         if (!selectionText) {
           return
         }
-
-        event.preventDefault()
-
-        const term = getTerm()
-
-        const fallbackExecCommand = () => {
-          try {
-            return frameDocument.execCommand('copy')
-          } catch (error) {
-            return false
-          }
+        if (event.clipboardData) {
+          event.clipboardData.setData('text/plain', selectionText)
+          event.preventDefault()
         }
-
-        const handleFailure = err => {
-          console.warn('ターミナルのコピーに失敗しました', err)
-          fallbackExecCommand()
-        }
-
         if (clipboardApi && typeof clipboardApi.writeText === 'function') {
-          clipboardApi.writeText(selectionText).catch(handleFailure)
-        } else {
-          fallbackExecCommand()
-        }
-
-        focusTerminal(term)
-        return
-      }
-
-      if (key === 'v' && !event.shiftKey) {
-        if (!clipboardApi || typeof clipboardApi.readText !== 'function') {
-          return
-        }
-
-        event.preventDefault()
-        clipboardApi
-          .readText()
-          .then(text => pasteText(text))
-          .catch(err => {
-            console.warn('ターミナルへの貼り付けに失敗しました', err)
+          clipboardApi.writeText(selectionText).catch(err => {
+            console.warn('ターミナルのコピーに失敗しました', err)
           })
+        }
       }
+
+      frameDocument.addEventListener('keydown', handleKeydown, true)
+      frameDocument.addEventListener('paste', handlePasteEvent, true)
+      frameDocument.addEventListener('copy', handleCopyEvent, true)
     }
 
-    const handlePasteEvent = event => {
-      if (!event.clipboardData) {
-        return
-      }
-      const text = event.clipboardData.getData('text')
-      if (!text) {
-        return
-      }
-      event.preventDefault()
-      pasteText(text)
+    const scheduleInstall = () => {
+      window.setTimeout(() => {
+        try {
+          installHandlers()
+        } catch (error) {
+          console.warn('ターミナルのクリップボード初期化に失敗しました', error)
+        }
+      }, 0)
     }
 
-    const handleCopyEvent = event => {
-      const selectionText = getSelectionText()
-      if (!selectionText) {
-        return
-      }
-      if (event.clipboardData) {
-        event.clipboardData.setData('text/plain', selectionText)
-        event.preventDefault()
-      }
-      if (clipboardApi && typeof clipboardApi.writeText === 'function') {
-        clipboardApi.writeText(selectionText).catch(err => {
-          console.warn('ターミナルのコピーに失敗しました', err)
-        })
-      }
+    terminalIframe.addEventListener('load', scheduleInstall)
+
+    if (
+      terminalIframe.contentDocument &&
+      terminalIframe.contentDocument.readyState === 'complete'
+    ) {
+      scheduleInstall()
     }
-
-    frameDocument.addEventListener('keydown', handleKeydown, true)
-    frameDocument.addEventListener('paste', handlePasteEvent, true)
-    frameDocument.addEventListener('copy', handleCopyEvent, true)
-  }
-
-  const scheduleInstall = () => {
-    window.setTimeout(() => {
-      try {
-        installHandlers()
-      } catch (error) {
-        console.warn('ターミナルのクリップボード初期化に失敗しました', error)
-      }
-    }, 0)
-  }
-
-  terminalIframe.addEventListener('load', scheduleInstall)
-
-  if (terminalIframe.contentDocument && terminalIframe.contentDocument.readyState === 'complete') {
-    scheduleInstall()
-  }
+  })
 }
 
 function updateAuxMode(mode) {
@@ -798,12 +804,22 @@ if (auxTabs.length > 0) {
 }
 
 function setupTerminalTabs() {
-  if (terminalTabs.length === 0) return
+  if (terminalTabs.length === 0) {
+    console.warn('ターミナルタブが見つかりません')
+    return
+  }
+
+  console.log(`ターミナルタブを ${terminalTabs.length} 個検出しました`)
 
   terminalTabs.forEach(tab => {
     tab.addEventListener('click', () => {
       const targetId = tab.dataset.terminalTarget
-      if (!targetId) return
+      if (!targetId) {
+        console.warn('ターミナルタブにtargetIdがありません', tab)
+        return
+      }
+
+      console.log(`ターミナル ${targetId} に切り替え中...`)
 
       terminalTabs.forEach(t => {
         const isActive = t.dataset.terminalTarget === targetId
@@ -814,8 +830,10 @@ function setupTerminalTabs() {
         const frameId = frame.dataset.terminalId
         if (frameId === targetId) {
           frame.removeAttribute('hidden')
+          console.log(`ターミナル ${frameId} を表示`)
         } else {
           frame.setAttribute('hidden', 'true')
+          console.log(`ターミナル ${frameId} を非表示`)
         }
       })
     })
