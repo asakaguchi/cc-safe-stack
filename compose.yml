@@ -100,8 +100,9 @@ services:
       - dev-cache:/workspace/.cache
       - /workspace/.venv
       - /workspace/frontend/node_modules
+    ports:
+      - "3000:3000"
     expose:
-      - "3000"
       - "7681"
       - "7682"
       - "7683"
