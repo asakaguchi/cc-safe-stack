@@ -103,6 +103,8 @@ services:
     expose:
       - "3000"
       - "7681"
+      - "7682"
+      - "7683"
 
   proxy:
     image: caddy:2.8-alpine

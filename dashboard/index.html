@@ -15,21 +15,25 @@
   <main class="grid">
     <section class="tile" aria-label="VS Code">
       <div class="tile__header">
-        <h2>VS Code</h2>
-        <a data-service-link="vscode" data-base-path="/vscode/" href="#" target="_blank" rel="noreferrer noopener">別タブで開く</a>
+        <div class="tile__header-row">
+          <h2>VS Code</h2>
+          <a data-service-link="vscode" data-base-path="/vscode/" href="#" target="_blank" rel="noreferrer noopener">別タブで開く</a>
+        </div>
       </div>
       <iframe data-service="vscode" data-base-path="/vscode/" src="about:blank" title="VS Code" allow="clipboard-read; clipboard-write" loading="lazy"></iframe>
     </section>
     <section class="tile" aria-label="アプリプレビュー">
       <div class="tile__header">
-        <h2>アプリプレビュー</h2>
-        <form id="preview-controls" class="tile__actions tile__actions--preview">
-          <label class="visually-hidden" for="preview-url">プレビュー URL</label>
-          <input id="preview-url" name="preview-url" type="text" inputmode="url" placeholder="/preview/ または http://..." autocomplete="off" />
-          <button type="submit" title="入力した URL を適用">適用</button>
-          <button id="reload-preview" type="button" title="プレビューだけを再読込">リロード</button>
-          <a data-preview-link href="/preview/" target="_blank" rel="noreferrer noopener">別タブで開く</a>
-        </form>
+        <div class="tile__header-row">
+          <h2>アプリプレビュー</h2>
+          <form id="preview-controls" class="tile__actions tile__actions--preview">
+            <label class="visually-hidden" for="preview-url">プレビュー URL</label>
+            <input id="preview-url" name="preview-url" type="text" inputmode="url" placeholder="/preview/ または http://..." autocomplete="off" />
+            <button type="submit" title="入力した URL を適用">適用</button>
+            <button id="reload-preview" type="button" title="プレビューだけを再読込">リロード</button>
+            <a data-preview-link href="/preview/" target="_blank" rel="noreferrer noopener">別タブで開く</a>
+          </form>
+        </div>
       </div>
       <iframe data-preview-frame src="/preview/" title="アプリプレビュー" loading="lazy"></iframe>
     </section>
