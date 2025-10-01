@@ -30,9 +30,9 @@
       "shellAutocompletion": true
     },
     "ghcr.io/devcontainers/features/node:1": {
-      "version": "20"
-    },
-    "ghcr.io/devcontainers/features/pnpm:1": {}
+      "version": "20",
+      "pnpmVersion": "latest"
+    }
   },
   "runArgs": ["--init", "--cap-add=NET_ADMIN", "--cap-add=NET_RAW"],
   "hostRequirements": {
