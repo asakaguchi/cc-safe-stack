@@ -49,6 +49,10 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     wget \
     gnupg \
     fonts-liberation \
+    fonts-noto-cjk \
+    fonts-noto-cjk-extra \
+    fonts-ipafont-gothic \
+    fonts-ipafont-mincho \
     libasound2t64 \
     libatk-bridge2.0-0 \
     libatk1.0-0 \
