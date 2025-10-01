@@ -59,6 +59,7 @@ if [ ! -f /var/run/dbus/pid ]; then
 fi
 # ユーザー用D-Busセッションを起動
 gosu ${USER_NAME} bash -c "
+    set +u  # 未定義変数エラーを一時的に無効化
     if [ -z \"\${DBUS_SESSION_BUS_ADDRESS:-}\" ]; then
         eval \$(dbus-launch --sh-syntax) > /dev/null 2>&1 || true
         if [ -n \"\${DBUS_SESSION_BUS_ADDRESS:-}\" ]; then
