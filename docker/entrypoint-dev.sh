@@ -48,27 +48,6 @@ else
     echo "ℹ️  セキュアモード無効（SECURE_MODE=${SECURE_MODE:-}）"
 fi
 
-# D-Busデーモンの起動（Chrome DevTools MCP用）
-echo "🔌 D-Busデーモンを起動中..."
-if [ ! -d /var/run/dbus ]; then
-    mkdir -p /var/run/dbus
-fi
-# D-Busデーモンが既に起動していない場合のみ起動
-if [ ! -f /var/run/dbus/pid ]; then
-    dbus-daemon --system --fork > /dev/null 2>&1 || echo "⚠️  D-Bus system daemon起動に失敗（通常は無視可能）"
-fi
-# ユーザー用D-Busセッションを起動
-gosu ${USER_NAME} bash -c "
-    set +u  # 未定義変数エラーを一時的に無効化
-    if [ -z \"\${DBUS_SESSION_BUS_ADDRESS:-}\" ]; then
-        eval \$(dbus-launch --sh-syntax) > /dev/null 2>&1 || true
-        if [ -n \"\${DBUS_SESSION_BUS_ADDRESS:-}\" ]; then
-            echo 'export DBUS_SESSION_BUS_ADDRESS=${DBUS_SESSION_BUS_ADDRESS}' >> /home/${USER_NAME}/.zshrc
-        fi
-    fi
-" || echo "⚠️  D-Bus session起動に失敗（通常は無視可能）"
-echo "✅ D-Bus設定完了"
-
 # Python環境の初期化
 echo "🐍 Python環境を確認中..."
 if [ -f "/workspace/backend/pyproject.toml" ]; then
