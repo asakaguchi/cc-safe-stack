@@ -50,6 +50,25 @@ if command -v npm >/dev/null 2>&1; then
   npm i -g @anthropic-ai/claude-code@latest
   hash -r || true
   claude --version || echo "Claude Code のインストールが完了しました"
+
+  # Chrome DevTools MCP 関連パッケージをインストール
+  echo "🌐 Chrome DevTools MCP 関連パッケージをインストール中..."
+  npm i -g \
+    chrome-devtools-mcp@latest \
+    puppeteer@latest \
+    lighthouse@latest
+
+  # Google Chrome のインストール
+  echo "🌐 Google Chrome をインストール中..."
+  if ! command -v google-chrome-stable >/dev/null 2>&1; then
+    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo gpg --dearmor -o /usr/share/keyrings/google-chrome-keyring.gpg
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+    sudo apt-get update
+    sudo apt-get install -y google-chrome-stable
+    echo "✓ Google Chrome がインストールされました"
+  else
+    echo "✓ Google Chrome は既にインストールされています"
+  fi
 else
   echo "❌ npm が利用できません。手動でツールをインストールしてください。"
   echo "   コンテナ内で以下を実行してください："
@@ -65,6 +84,11 @@ echo "🤖 Claude CLI セットアップ中..."
 sudo mkdir -p /home/vscode/.claude/plugins
 sudo chmod -R 755 /home/vscode/.claude
 sudo chown -R vscode:vscode /home/vscode/.claude
+
+# Puppeteer キャッシュディレクトリのセットアップ
+echo "🌐 Puppeteer キャッシュディレクトリセットアップ中..."
+mkdir -p "${PUPPETEER_CACHE_DIR:-/workspace/.cache/puppeteer}"
+chmod -R 755 "${PUPPETEER_CACHE_DIR:-/workspace/.cache/puppeteer}"
 
 # pre-commit のセットアップ
 echo "🔒 pre-commit セットアップ中..."
