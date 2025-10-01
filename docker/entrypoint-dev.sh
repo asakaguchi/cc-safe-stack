@@ -59,10 +59,11 @@ if [ ! -f /var/run/dbus/pid ]; then
 fi
 # ユーザー用D-Busセッションを起動
 gosu ${USER_NAME} bash -c "
-    if [ -z \"\$DBUS_SESSION_BUS_ADDRESS\" ]; then
+    if [ -z \"\${DBUS_SESSION_BUS_ADDRESS:-}\" ]; then
         eval \$(dbus-launch --sh-syntax) > /dev/null 2>&1 || true
-        export DBUS_SESSION_BUS_ADDRESS
-        echo 'export DBUS_SESSION_BUS_ADDRESS=${DBUS_SESSION_BUS_ADDRESS}' >> /home/${USER_NAME}/.zshrc
+        if [ -n \"\${DBUS_SESSION_BUS_ADDRESS:-}\" ]; then
+            echo 'export DBUS_SESSION_BUS_ADDRESS=${DBUS_SESSION_BUS_ADDRESS}' >> /home/${USER_NAME}/.zshrc
+        fi
     fi
 " || echo "⚠️  D-Bus session起動に失敗（通常は無視可能）"
 echo "✅ D-Bus設定完了"
