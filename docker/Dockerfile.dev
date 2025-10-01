@@ -108,8 +108,18 @@ RUN mkdir -p /opt/openvscode-server \
 ENV OPENVSCODE_SERVER_DIR="/opt/openvscode-server"
 ENV PATH="${OPENVSCODE_SERVER_DIR}/bin:${PATH}"
 
+# Puppeteer/Chrome DevTools設定
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
+
 # Claude Code CLIのインストール（正しいパッケージ名）
 RUN npm install -g @anthropic-ai/claude-code@latest
+
+# Chrome DevTools MCP用パッケージ（Puppeteer、Lighthouse等）
+RUN npm install -g \
+    chrome-devtools-mcp@latest \
+    puppeteer@latest \
+    lighthouse@latest
 
 # textlintの日本語文書用設定
 RUN npm install -g \
