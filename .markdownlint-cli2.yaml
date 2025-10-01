@@ -1,0 +1,12 @@
+# markdownlint-cli2 configuration
+# https://github.com/DavidAnson/markdownlint
+
+config:
+  # MD013: Line length - 無効化（テーブルや長い URL を含む行に対応）
+  MD013: false
+
+  # MD033: Inline HTML - 無効化（特定の表現に HTML を使用する場合あり）
+  MD033: false
+
+  # MD041: First line in file should be a top level heading - 無効化（README の導入文に対応）
+  MD041: false
