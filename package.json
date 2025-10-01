@@ -1,6 +1,6 @@
 {
   "name": "cc-safe-stack",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Claude Code AI-powered full-stack development template with Python + TypeScript",
   "private": true,
   "type": "module",
