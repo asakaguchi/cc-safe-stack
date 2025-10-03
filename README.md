@@ -242,7 +242,8 @@ cp .env.example .env
    す。
 
    - 左上: `/vscode/`（OpenVSCode Server - セキュア開発コンテナ内で動作）
-   - 右上: `/preview/`（Vite 開発サーバー）
+   - 右上: アプリプレビュー（デフォルト: `/api/docs` FastAPI Swagger UI、URL入力
+     で変更可能）
    - 左下: `/terminal/`（ttyd ベースのシェル。同じセキュア開発コンテナに接続して
      おり `claude` コマンドも利用可能）
    - 右下: ローカルストレージ保存メモ／`Streamlit`／`API Docs` を切り替え
