@@ -159,6 +159,27 @@ header p {
   gap: 0;
   padding: 0 0.75rem;
   border-top: 1px solid rgba(148, 163, 184, 0.2);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.3) transparent;
+}
+
+.tile__tabs::-webkit-scrollbar {
+  height: 4px;
+}
+
+.tile__tabs::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tile__tabs::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.3);
+  border-radius: 2px;
+}
+
+.tile__tabs::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.5);
 }
 
 .tile__tab {
@@ -171,23 +192,41 @@ header p {
   cursor: pointer;
   transition:
     color 0.2s ease,
-    border-color 0.2s ease;
+    border-color 0.2s ease,
+    background 0.2s ease;
   white-space: nowrap;
+  flex-shrink: 0;
+  position: relative;
 }
 
 .tile__tab:hover {
   color: rgba(249, 250, 251, 0.9);
+  background: rgba(56, 189, 248, 0.08);
 }
 
 .tile__tab[aria-selected='true'] {
   color: var(--accent);
   border-bottom-color: var(--accent);
   font-weight: 500;
+  background: rgba(56, 189, 248, 0.12);
 }
 
 .tile__tab:focus-visible {
   outline: 2px solid rgba(56, 189, 248, 0.6);
   outline-offset: -2px;
+  z-index: 1;
+}
+
+.tile__tab:active {
+  transform: translateY(1px);
+}
+
+/* レスポンシブ: 狭い画面でのタブ表示最適化 */
+@media (max-width: 768px) {
+  .tile__tab {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
 }
 
 .tile__actions {

@@ -96,6 +96,15 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && npm install -g npm@latest \
     && corepack enable pnpm
 
+# Google Cloud SDK のインストール
+RUN curl -sSL https://sdk.cloud.google.com | bash -s -- --disable-prompts --install-dir=/opt && \
+    /opt/google-cloud-sdk/install.sh --quiet --path-update=true --usage-reporting=false && \
+    ln -s /opt/google-cloud-sdk/bin/gcloud /usr/local/bin/gcloud && \
+    ln -s /opt/google-cloud-sdk/bin/gsutil /usr/local/bin/gsutil && \
+    ln -s /opt/google-cloud-sdk/bin/bq /usr/local/bin/bq
+
+ENV PATH="/opt/google-cloud-sdk/bin:${PATH}"
+
 # Install OpenVSCode Server (open-source build)
 ARG OPENVSCODE_VERSION="openvscode-server-v1.103.1"
 ARG OPENVSCODE_TARBALL="${OPENVSCODE_VERSION}-linux-x64.tar.gz"
@@ -113,7 +122,10 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
 
 # Claude Code CLIのインストール（正しいパッケージ名）
-RUN npm install -g @anthropic-ai/claude-code@latest
+# vscodeユーザーでも更新可能にするため、グローバルインストール後に権限を調整
+RUN npm install -g @anthropic-ai/claude-code@latest && \
+    chmod -R 755 /usr/local/lib/node_modules/@anthropic-ai && \
+    chgrp -R sudo /usr/local/lib/node_modules/@anthropic-ai
 
 # Chrome DevTools MCP用パッケージ（Puppeteer、Lighthouse等）
 RUN npm install -g \

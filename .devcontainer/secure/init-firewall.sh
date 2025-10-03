@@ -106,6 +106,54 @@ DEFAULT_ALLOWED_DOMAINS=(
     # Context7 MCP endpoints
     "mcp.context7.com"
     "context7.com"
+    # Google Cloud Platform - SDK & CLI
+    "sdk.cloud.google.com"
+    "dl.google.com"
+    "packages.cloud.google.com"
+    # Google Cloud Platform - Console & Authentication
+    "console.cloud.google.com"
+    "reauth.cloud.google.com"
+    "accounts.google.com"
+    "apis.google.com"
+    # Google Cloud Platform - Static Assets
+    "www.gstatic.com"
+    "ssl.gstatic.com"
+    "fonts.gstatic.com"
+    "cloud.google.com"
+    # Google Cloud Platform - Storage & Container Registry
+    "storage.googleapis.com"
+    "gcr.io"
+    "asia.gcr.io"
+    "eu.gcr.io"
+    "us.gcr.io"
+    # Google Cloud Platform - Core APIs
+    "www.googleapis.com"
+    "oauth2.googleapis.com"
+    "cloudresourcemanager.googleapis.com"
+    "iam.googleapis.com"
+    "compute.googleapis.com"
+    "container.googleapis.com"
+    "artifactregistry.googleapis.com"
+    # Google Cloud Platform - Logging & Monitoring
+    "logging.googleapis.com"
+    "monitoring.googleapis.com"
+    "cloudtrace.googleapis.com"
+    # Google Cloud Platform - Service Management
+    "servicemanagement.googleapis.com"
+    "serviceusage.googleapis.com"
+    "servicecontrol.googleapis.com"
+    # Google Cloud Platform - Additional Services
+    "cloudfunctions.googleapis.com"
+    "run.googleapis.com"
+    "cloudbuild.googleapis.com"
+    "secretmanager.googleapis.com"
+    "pubsub.googleapis.com"
+    "bigquery.googleapis.com"
+    "datastore.googleapis.com"
+    "firestore.googleapis.com"
+    "spanner.googleapis.com"
+    "gkeconnect.googleapis.com"
+    "cloudkms.googleapis.com"
 )
 
 for domain in "${DEFAULT_ALLOWED_DOMAINS[@]}"; do
