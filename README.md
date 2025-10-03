@@ -242,7 +242,8 @@ cp .env.example .env
    す。
 
    - 左上: `/vscode/`（OpenVSCode Server - セキュア開発コンテナ内で動作）
-   - 右上: `/preview/`（Vite 開発サーバー）
+   - 右上: アプリプレビュー（デフォルト: `/api/docs` FastAPI Swagger UI、URL 入
+     力で変更可能）
    - 左下: `/terminal/`（ttyd ベースのシェル。同じセキュア開発コンテナに接続して
      おり `claude` コマンドも利用可能）
    - 右下: ローカルストレージ保存メモ／`Streamlit`／`API Docs` を切り替え
@@ -304,6 +305,36 @@ pnpm run dev
 ```text
 specs/examples/todo-app.spec.md の仕様で実装してください
 ```
+
+#### Claude Code 使用時の重要な注意事項
+
+**⚠️ 初回起動時の必須手順:**
+
+1. **必ず通常モードで一度起動する** 初回は `--dangerously-skip-permissions` オプ
+   ション**なし**で起動してください:
+
+   ```bash
+   claude
+   ```
+
+   これにより、プロジェクトスコープの `.mcp.json` が正しく認識されます。
+
+2. **2回目以降は高速モード利用可能** 一度認識された後は、パーミッション確認をス
+   キップできます:
+
+   ```bash
+   claude --dangerously-skip-permissions
+   ```
+
+**💡 ヒント**: `--dangerously-skip-permissions` は開発効率化のためのオプションで
+すが、このテンプレートのセキュアモード環境内で使用するため安全性が確保されていま
+す。
+
+**🔄 Claude Code のアップデート方法**:
+
+- DevContainer 環境: `npm i -g @anthropic-ai/claude-code@latest` でアップデート
+  可能
+- Docker 環境: コンテナ内で同様にアップデート可能
 
 **30分後に完成したアプリを確認：**
 

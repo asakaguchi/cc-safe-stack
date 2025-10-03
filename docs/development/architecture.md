@@ -13,9 +13,9 @@
 
 ### 3つのフロントエンド構成
 
-- Reactはプロダクション向けのモダン UI
-- Streamlitはデータ分析・管理者ダッシュボード
-- FastAPI Docsは自動生成される API 仕様書
+- React はプロダクション向けのモダン UI
+- Streamlit はデータ分析・管理者ダッシュボード
+- FastAPI Docs は自動生成される API 仕様書
 
 ## プロジェクト構造
 

@@ -272,7 +272,7 @@ pnpm run docker:up
 
 ### 型定義 (shared/types/)
 
-- API契約: shared/types/api.ts
+- API 契約: shared/types/api.ts
 - データモデル: Python Pydantic ⟷ TypeScript interface 対応
 - 更新ルール: 破壊的変更は両言語同時対応
 
