@@ -65,7 +65,7 @@ flowchart TD
 
 1. [README.md](../README.md) - 環境選択
 2. [README.md](../README.md#web-ダッシュボードで-4-分割ワークスペースを利用する) -
-   Webダッシュボード起動
+   Web ダッシュボード起動
 3. [TUTORIAL.md](./TUTORIAL.md) - Claude Code 実行手順
 4. 開発開始
 
