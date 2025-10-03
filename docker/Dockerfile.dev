@@ -122,10 +122,10 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
 
 # Claude Code CLIのインストール（正しいパッケージ名）
-# vscodeユーザーでも更新可能にするため、グローバルインストール後に権限を調整
+# vscodeユーザーでも更新可能にするため、グローバルインストール後に所有者と権限を調整
 RUN npm install -g @anthropic-ai/claude-code@latest && \
-    chmod -R 755 /usr/local/lib/node_modules/@anthropic-ai && \
-    chgrp -R sudo /usr/local/lib/node_modules/@anthropic-ai
+    chown -R vscode:sudo /usr/local/lib/node_modules/@anthropic-ai && \
+    chmod -R 775 /usr/local/lib/node_modules/@anthropic-ai
 
 # Chrome DevTools MCP用パッケージ（Puppeteer、Lighthouse等）
 RUN npm install -g \
