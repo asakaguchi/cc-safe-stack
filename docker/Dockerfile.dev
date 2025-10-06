@@ -125,8 +125,10 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
 # vscodeユーザーでも更新可能にするため、グローバルインストール後に所有者と権限を調整
 # /usr/local/bin と /usr/local/share もsudoグループ書き込み可能にする
 RUN npm install -g @anthropic-ai/claude-code@latest && \
-    chown -R vscode:sudo /usr/local/lib/node_modules/@anthropic-ai && \
-    chmod -R 775 /usr/local/lib/node_modules/@anthropic-ai && \
+    if [ -d /usr/local/lib/node_modules/@anthropic-ai ]; then \
+        chown -R vscode:sudo /usr/local/lib/node_modules/@anthropic-ai && \
+        chmod -R 775 /usr/local/lib/node_modules/@anthropic-ai; \
+    fi && \
     chgrp sudo /usr/local/bin && \
     chmod 775 /usr/local/bin && \
     chgrp -R sudo /usr/local/share && \
