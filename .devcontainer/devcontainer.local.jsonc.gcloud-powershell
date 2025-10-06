@@ -1,0 +1,27 @@
+{
+  // Windows PowerShell環境でGoogle Cloud認証情報をマウントする例
+  //
+  // このテンプレートは、Windows PowerShell側で gcloud auth login を実行した場合に使用します。
+  // PowerShellで認証すると、資格情報は %APPDATA%\gcloud に保存されます。
+  //
+  // 使い方:
+  // 1. PowerShellで gcloud auth login を実行
+  // 2. このファイルを .devcontainer/devcontainer.local.json にコピー
+  // 3. VS Codeで「Rebuild and Reopen in Container」を実行
+  //
+  // 前提条件:
+  // - PowerShellで gcloud auth login を実行済み
+  // - %APPDATA%\gcloud ディレクトリが存在すること
+  //
+  // 注意:
+  // - WSL2内で認証した場合は、このテンプレートは使用できません
+  // - WSL2で認証した場合は、devcontainer.jsonのデフォルト設定（HOME）を使用してください
+  // - mounts配列はベースのdevcontainer.jsonの設定を含める必要があります
+  "mounts": [
+    // ベースのdevcontainer.jsonで定義されているマウント（必須）
+    "source=claude-code-config,target=/home/vscode/.claude,type=volume",
+    "source=python-cache,target=/home/vscode/.cache,type=volume",
+    // Windows PowerShell環境用のgcloudマウント（APPDATA使用）
+    "source=${localEnv:APPDATA}/gcloud,target=/home/vscode/.config/gcloud,type=bind,consistency=cached"
+  ]
+}
