@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Safe Stack - ようこそ</title>
+  <style>
+    :root {
+      --color-bg: #1e1e1e;
+      --color-surface: #252526;
+      --color-border: #3e3e42;
+      --color-text: #cccccc;
+      --color-text-secondary: #999999;
+      --color-accent: #007acc;
+      --color-success: #4ec9b0;
+      --color-warning: #dcdcaa;
+      --color-error: #f48771;
+      --spacing-xs: 0.5rem;
+      --spacing-sm: 1rem;
+      --spacing-md: 1.5rem;
+      --spacing-lg: 2rem;
+      --spacing-xl: 3rem;
+      --radius: 6px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      padding: var(--spacing-lg);
+      overflow-y: auto;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-accent);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-top: var(--spacing-lg);
+      margin-bottom: var(--spacing-sm);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+      color: var(--color-text);
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-top: var(--spacing-md);
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-text);
+    }
+
+    p {
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-text-secondary);
+    }
+
+    .intro {
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .section {
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: var(--spacing-md);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .steps {
+      list-style: none;
+      counter-reset: step-counter;
+    }
+
+    .steps li {
+      counter-increment: step-counter;
+      position: relative;
+      padding-left: 2.5rem;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .steps li::before {
+      content: counter(step-counter);
+      position: absolute;
+      left: 0;
+      top: 0;
+      background-color: var(--color-accent);
+      color: white;
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    code {
+      background-color: var(--color-bg);
+      color: var(--color-warning);
+      padding: 0.2rem 0.4rem;
+      border-radius: 3px;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 0.9em;
+    }
+
+    .code-block {
+      background-color: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: var(--spacing-sm);
+      margin: var(--spacing-sm) 0;
+      overflow-x: auto;
+    }
+
+    .code-block code {
+      background-color: transparent;
+      padding: 0;
+      display: block;
+      white-space: pre;
+    }
+
+    .links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-sm);
+    }
+
+    .link-card {
+      background-color: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: var(--spacing-sm);
+      text-decoration: none;
+      color: var(--color-text);
+      transition: all 0.2s ease;
+      display: block;
+    }
+
+    .link-card:hover {
+      background-color: var(--color-surface);
+      border-color: var(--color-accent);
+      transform: translateY(-2px);
+    }
+
+    .link-card strong {
+      display: block;
+      color: var(--color-accent);
+      margin-bottom: 0.25rem;
+    }
+
+    .link-card small {
+      color: var(--color-text-secondary);
+      font-size: 0.875rem;
+    }
+
+    .panels {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-sm);
+    }
+
+    .panel-card {
+      background-color: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: var(--spacing-sm);
+    }
+
+    .panel-card strong {
+      display: block;
+      color: var(--color-success);
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .panel-card ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .panel-card li {
+      padding: 0.25rem 0;
+      color: var(--color-text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .commands {
+      list-style: none;
+    }
+
+    .commands li {
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .commands strong {
+      color: var(--color-success);
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    }
+
+    .note {
+      background-color: rgba(0, 122, 204, 0.1);
+      border-left: 3px solid var(--color-accent);
+      padding: var(--spacing-sm);
+      margin: var(--spacing-sm) 0;
+      border-radius: var(--radius);
+    }
+
+    .note strong {
+      color: var(--color-accent);
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: var(--spacing-sm);
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      h2 {
+        font-size: 1.25rem;
+      }
+
+      .links,
+      .panels {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>
+      <span>🚀</span>
+      Safe Stack - ようこそ
+    </h1>
+
+    <div class="intro">
+      <p>
+        <strong>Safe Stack</strong> は、Claude Code AI 駆動のフルスタック開発テンプレートです。
+        Python (FastAPI) バックエンド、TypeScript (React) フロントエンド、Streamlit ダッシュボードを統合した開発環境を提供します。
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>🚀 クイックスタート</h2>
+      <ol class="steps">
+        <li>
+          <strong>ターミナルパネル（左下）</strong> で以下のコマンドを実行:
+          <div class="code-block"><code>pnpm run dev</code></div>
+        </li>
+        <li>
+          開発サーバーが起動したら、<strong>アプリプレビュー（右上・このパネル）</strong> のURL入力欄に以下を入力:
+        </li>
+      </ol>
+
+      <div class="links">
+        <a href="/preview/" class="link-card">
+          <strong>フロントエンド</strong>
+          <small>/preview/ - React アプリケーション</small>
+        </a>
+        <a href="/api/docs" class="link-card">
+          <strong>API Docs</strong>
+          <small>/api/docs - FastAPI Swagger UI</small>
+        </a>
+        <a href="/streamlit/" class="link-card">
+          <strong>Streamlit</strong>
+          <small>/streamlit/ - ダッシュボード</small>
+        </a>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>📖 各パネルの使い方</h2>
+      <div class="panels">
+        <div class="panel-card">
+          <strong>VS Code (左上)</strong>
+          <ul>
+            <li>コード編集</li>
+            <li>ファイル操作</li>
+            <li>Git管理</li>
+          </ul>
+        </div>
+        <div class="panel-card">
+          <strong>アプリプレビュー (右上)</strong>
+          <ul>
+            <li>URLを入力してプレビュー</li>
+            <li>リロードボタンで再読込</li>
+            <li>別タブで開くリンクあり</li>
+          </ul>
+        </div>
+        <div class="panel-card">
+          <strong>ターミナル (左下)</strong>
+          <ul>
+            <li>開発コマンド実行</li>
+            <li>3つのターミナルを切替可能</li>
+            <li>ZShellで快適な操作</li>
+          </ul>
+        </div>
+        <div class="panel-card">
+          <strong>ユーティリティ (右下)</strong>
+          <ul>
+            <li>メモ: 作業メモを保存</li>
+            <li>ログ: サービスログ確認</li>
+            <li>Streamlit: ダッシュボード</li>
+            <li>API Docs: FastAPI仕様</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🔧 よく使うコマンド</h2>
+      <ul class="commands">
+        <li>
+          <strong>pnpm run dev</strong><br>
+          全開発サーバーを起動 (フロントエンド + バックエンド + Streamlit)
+        </li>
+        <li>
+          <strong>pnpm run lint</strong><br>
+          コード品質チェック (Python Ruff + TypeScript ESLint)
+        </li>
+        <li>
+          <strong>pnpm run format</strong><br>
+          コードフォーマット (Python Ruff + TypeScript Prettier)
+        </li>
+        <li>
+          <strong>pnpm run test</strong><br>
+          テスト実行
+        </li>
+        <li>
+          <strong>claude</strong><br>
+          Claude Code CLI を起動
+        </li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>💡 ヒント</h2>
+      <ul>
+        <li>
+          <strong>ホットキー:</strong> <code>Ctrl+Shift+Alt+D</code> でフルスクリーン切替
+        </li>
+        <li>
+          <strong>メモ:</strong> ユーティリティパネルのメモタブは自動保存されます
+        </li>
+        <li>
+          <strong>ログ:</strong> 各サービスのログをリアルタイムで確認できます
+        </li>
+        <li>
+          <strong>セキュアモード:</strong> ファイアウォールで外部通信を制限しています
+        </li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>📚 ドキュメント</h2>
+      <div class="note">
+        <strong>詳細情報:</strong> プロジェクトルートの <code>README.md</code> と <code>docs/</code> ディレクトリを参照してください。
+      </div>
+      <ul>
+        <li><code>README.md</code> - プロジェクト概要とセットアップ</li>
+        <li><code>docs/environment/</code> - 環境構築ガイド</li>
+        <li><code>docs/development/</code> - 開発ガイドライン</li>
+        <li><code>CLAUDE.md</code> - AI駆動開発のルール</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>🛠️ トラブルシューティング</h2>
+      <h3>開発サーバーが起動しない</h3>
+      <ul>
+        <li>ターミナルで <code>pnpm run dev</code> を実行していますか?</li>
+        <li>ポート 3000, 8000, 8501 が既に使用されていませんか?</li>
+        <li><code>pnpm install</code> で依存関係をインストールしましたか?</li>
+      </ul>
+
+      <h3>VS Code が表示されない</h3>
+      <ul>
+        <li>ブラウザのキャッシュをクリアしてみてください</li>
+        <li>別タブで開くリンクをクリックして確認してください</li>
+      </ul>
+
+      <h3>外部APIに接続できない</h3>
+      <ul>
+        <li>セキュアモード有効時は <code>ADDITIONAL_ALLOWED_DOMAINS</code> でドメインを許可してください</li>
+        <li>詳細は <code>docs/environment/security.md</code> を参照</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

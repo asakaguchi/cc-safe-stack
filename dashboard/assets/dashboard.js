@@ -4,7 +4,7 @@ const logsServiceKey = 'safe-stack-dashboard-logs-service'
 const logsTailKey = 'safe-stack-dashboard-logs-tail'
 const logsAutoKey = 'safe-stack-dashboard-logs-auto'
 
-const defaultPreviewUrl = '/api/docs'
+const defaultPreviewUrl = '/welcome.html'
 const defaultLogTail = '200'
 const logRefreshIntervalMs = 5000
 const notesEditorContainer = document.getElementById('notes-editor')
