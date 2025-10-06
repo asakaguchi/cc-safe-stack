@@ -121,7 +121,7 @@
   "mounts": [
     "source=claude-code-config,target=/home/vscode/.claude,type=volume",
     "source=python-cache,target=/home/vscode/.cache,type=volume",
-    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.config/gcloud,target=/home/vscode/.config/gcloud,type=bind,consistency=cached"
+    "source=${localEnv:HOME}/.config/gcloud,target=/home/vscode/.config/gcloud,type=bind,consistency=cached"
   ],
   "remoteUser": "vscode",
   "postCreateCommand": ".devcontainer/scripts/postCreateCommand.sh",

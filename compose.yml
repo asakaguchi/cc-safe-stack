@@ -100,11 +100,13 @@ services:
       - dev-cache:/workspace/.cache
       - /workspace/.venv
       - /workspace/frontend/node_modules
-      # Google Cloud認証情報のマウント（read-only）
+      # Google Cloud認証情報のマウント（トークン更新のため書き込み可能）
+      # Linux/Mac/WSL2の場合: GCLOUD_CONFIG_PATH=${HOME}/.config/gcloud
+      # Windows PowerShellの場合: GCLOUD_CONFIG_PATH=${APPDATA}/gcloud
       - type: bind
-        source: ${HOME}/.config/gcloud
+        source: ${GCLOUD_CONFIG_PATH:-${HOME}/.config/gcloud}
         target: /home/developer/.config/gcloud
-        read_only: true
+        read_only: false
     ports:
       - "3000:3000"
     expose:
@@ -164,11 +166,13 @@ services:
       # 仮想環境の分離
       - /workspace/.venv
       - /workspace/frontend/node_modules
-      # Google Cloud認証情報のマウント（read-only）
+      # Google Cloud認証情報のマウント（トークン更新のため書き込み可能）
+      # Linux/Mac/WSL2の場合: GCLOUD_CONFIG_PATH=${HOME}/.config/gcloud
+      # Windows PowerShellの場合: GCLOUD_CONFIG_PATH=${APPDATA}/gcloud
       - type: bind
-        source: ${HOME}/.config/gcloud
+        source: ${GCLOUD_CONFIG_PATH:-${HOME}/.config/gcloud}
         target: /home/developer/.config/gcloud
-        read_only: true
+        read_only: false
     
     ports:
       - "3000:3000"  # React開発サーバー

@@ -115,9 +115,9 @@ DevContainer 起動後に追加のドメインを許可。
 
 #### 推奨方法: ホスト側で認証
 
-この方式では、`gcloud auth login` をホスト側で実行し、認証情報をコンテナに
-read-onlyでマウントします。これにより、セキュアモードを維持したまま gcloudコマン
-ドが使用できます。
+この方式では、`gcloud auth login` をホスト側で実行し、認証情報をコンテナにマウン
+トします。トークン自動更新のため書き込み可能でマウントされます（約 1 時間で失
+効）。これにより、セキュアモードを維持したまま gcloud コマンドが使用できます。
 
 **ホスト側で認証（初回のみ）**:
 
@@ -131,7 +131,24 @@ gcloud auth application-default login
 
 認証情報は自動的にマウントされます。コンテナを起動するだけで使用可能です。
 
+Linux/Mac/WSL2 の場合:
+
 ```bash
+# コンテナ起動（認証情報は自動マウント）
+pnpm run docker:dev
+pnpm run docker:dev:connect
+
+# gcloudコマンドが使用可能
+gcloud auth list
+gcloud projects list
+```
+
+Windows PowerShell の場合:
+
+```bash
+# .env ファイルに以下を追加
+GCLOUD_CONFIG_PATH=%APPDATA%/gcloud
+
 # コンテナ起動
 pnpm run docker:dev
 pnpm run docker:dev:connect
@@ -156,19 +173,32 @@ gcloud projects list
 **マウントされる認証情報**:
 
 - ホスト側の `~/.config/gcloud` ディレクトリがコンテナにマウントされます
-- マウントは **read-only** のため、コンテナ内から認証情報を変更できません
+- マウントは **書き込み可能** です（トークン更新のため必須、詳細は後述）
 - 認証情報には以下が含まれます:
   - アクセストークン（`access_tokens.db`）
   - 認証情報（`credentials.db`）
   - 設定ファイル（`configurations/config_default`）
 
+**トークン更新の仕組み**:
+
+Google Cloud のアクセストークンは約1時間で失効します。`gcloud projects list` な
+どのコマンドを実行する際、gcloud CLI は自動的にトークンを更新
+し、`access_tokens.db` ファイルを書き換えます。このため、マウントは read-only で
+はなく **書き込み可能** である必要があります。
+
+read-only でマウントした場合、以下のような問題が発生します:
+
+- トークン失効後に `gcloud` コマンドが失敗する
+- `access_tokens.db` の更新ができずエラーになる
+- 毎回ホスト側で `gcloud auth login` を再実行する必要がある
+
 **セキュリティ上の利点**:
 
 - ✅ セキュアモード（SECURE_MODE=true）を維持
 - ✅ ファイアウォール設定変更不要
-- ✅ コンテナ内から認証情報を変更できない（read-only）
 - ✅ IPアドレス変更の影響を受けない（認証済み）
 - ✅ コンテナ再作成時も認証情報が保持される
+- ✅ トークン自動更新により長時間の作業が可能
 
 **Windows（WSL2）での注意事項**:
 
@@ -181,6 +211,27 @@ wsl
 gcloud auth login
 gcloud auth application-default login
 ```
+
+**Windows PowerShell で認証する場合**:
+
+PowerShell で `gcloud auth login` を実行した場合、資格情報は `%APPDATA%\gcloud`
+に保存されます。この場合は、`.devcontainer/devcontainer.local.json` を作成して
+`APPDATA` 環境変数を使用してマウントします。
+
+```bash
+# PowerShellで認証
+gcloud auth login
+gcloud auth application-default login
+
+# テンプレートをコピー
+cp .devcontainer/devcontainer.local.jsonc.gcloud-powershell .devcontainer/devcontainer.local.json
+
+# VS Codeで DevContainer を再ビルド
+# Ctrl+Shift+P → "Dev Containers: Rebuild Container"
+```
+
+**注意**: WSL2 で認証した場合は、このテンプレートは不要です。`devcontainer.json`
+のデフォルト設定（`HOME` 環境変数）がそのまま使用できます。
 
 ### 株式分析（Yahoo Finance）
 
