@@ -192,6 +192,15 @@ cp .env.example .env
 #    - SECURE_MODE: セキュアモード有効/無効（デフォルト: true）
 #    - ADDITIONAL_ALLOWED_DOMAINS: 追加で許可するドメイン（企業プロキシ等）
 #    - USER_ID/GROUP_ID: ホストとの権限同期（通常は自動設定）
+#
+#    【重要】Google Cloud Platform (gcloud) を使用する場合:
+#    ホスト側で gcloud auth login を実行してください。
+#    認証情報は自動的にコンテナにマウントされます。
+#
+#    ホスト側で実行:
+#      gcloud auth login
+#      gcloud auth application-default login
+#
 #    詳細は .env.example のコメントを参照
 ```
 

@@ -108,6 +108,80 @@ DevContainer 起動後に追加のドメインを許可。
 
 ## 外部API利用時の設定
 
+### Google Cloud Platform の認証
+
+セキュアモード環境で Google Cloud（gcloud）を使用する場合、ホスト側で認証を行
+い、認証情報をコンテナにマウントする方式を推奨します。
+
+#### 推奨方法: ホスト側で認証
+
+この方式では、`gcloud auth login` をホスト側で実行し、認証情報をコンテナに
+read-onlyでマウントします。これにより、セキュアモードを維持したまま gcloudコマン
+ドが使用できます。
+
+**ホスト側で認証（初回のみ）**:
+
+```bash
+# ホスト側（WSL/Linux/Mac）で実行
+gcloud auth login
+gcloud auth application-default login
+```
+
+**Docker環境の場合**:
+
+認証情報は自動的にマウントされます。コンテナを起動するだけで使用可能です。
+
+```bash
+# コンテナ起動
+pnpm run docker:dev
+pnpm run docker:dev:connect
+
+# gcloudコマンドが使用可能
+gcloud auth list
+gcloud projects list
+```
+
+**DevContainer環境の場合**:
+
+認証情報は自動的にマウントされます。VS Codeでコンテナを開くだけで使用可能です。
+
+```bash
+# コンテナ内で確認
+gcloud auth list
+gcloud projects list
+```
+
+#### 仕組みの説明
+
+**マウントされる認証情報**:
+
+- ホスト側の `~/.config/gcloud` ディレクトリがコンテナにマウントされます
+- マウントは **read-only** のため、コンテナ内から認証情報を変更できません
+- 認証情報には以下が含まれます:
+  - アクセストークン（`access_tokens.db`）
+  - 認証情報（`credentials.db`）
+  - 設定ファイル（`configurations/config_default`）
+
+**セキュリティ上の利点**:
+
+- ✅ セキュアモード（SECURE_MODE=true）を維持
+- ✅ ファイアウォール設定変更不要
+- ✅ コンテナ内から認証情報を変更できない（read-only）
+- ✅ IPアドレス変更の影響を受けない（認証済み）
+- ✅ コンテナ再作成時も認証情報が保持される
+
+**Windows（WSL2）での注意事項**:
+
+Windows環境では、WSL2内で `gcloud auth login` を実行してください。PowerShellやコ
+マンドプロンプトで認証した場合、パスが異なるためコンテナからアクセスできません。
+
+```bash
+# WSL2内で実行
+wsl
+gcloud auth login
+gcloud auth application-default login
+```
+
 ### 株式分析（Yahoo Finance）
 
 株式分析プラットフォーム等で外部 API（Yahoo Finance など）を使用する場合の設定
