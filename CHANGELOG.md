@@ -6,6 +6,61 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.3] - 2025-10-06
+
+### Added
+
+- **Google Cloud 認証マウント機能**
+  - ホスト側の gcloud 認証情報を DevContainer と Docker 環境にマウント
+  - トークン自動更新のため書き込み可能でマウント（約1時間で失効）
+  - Linux/Mac/WSL2 環境のデフォルト対応（`${HOME}/.config/gcloud`）
+  - Windows PowerShell 認証のサポート（`${APPDATA}/gcloud`）
+  - `.devcontainer/devcontainer.local.jsonc.gcloud-powershell` テンプレート追加
+
+### Changed
+
+- **compose.yml**
+
+  - gcloud マウントパスを `GCLOUD_CONFIG_PATH` 環境変数で設定可能に
+  - デフォルト値: `${HOME}/.config/gcloud` (Linux/Mac/WSL2)
+  - PowerShell用: `.env` で `GCLOUD_CONFIG_PATH=%APPDATA%/gcloud` を設定
+
+- **.env.example**
+
+  - Google Cloud 認証の詳細な手順を追加
+  - Linux/Mac/WSL2 と Windows PowerShell の両方のケースを説明
+  - トークン自動更新の仕組みを明記
+
+- **docs/environment/security.md**
+
+  - Google Cloud Platform 認証セクションを大幅拡充
+  - Docker 環境と DevContainer 環境の設定手順を追加
+  - トークン更新の仕組みとセキュリティ上の利点を詳細に説明
+  - Windows PowerShell 認証の手順を追加
+
+- **README.md**
+  - Google Cloud Platform の簡易セットアップガイドを追加
+  - ホスト側での `gcloud auth login` 実行を案内
+
+### Fixed
+
+- **DevContainer の gcloud マウント**
+
+  - ネスト展開未対応の問題を修正（`${localEnv:HOME:${localEnv:USERPROFILE}}` →
+    `${localEnv:HOME}`）
+  - Windows 環境でのパス連結問題を解決
+  - PowerShell 認証時のパス不一致を解決（APPDATA 環境変数を使用）
+
+- **mounts 配列の上書き問題**
+
+  - テンプレートが既存のマウント（claude-code-config, python-cache）を削除する問
+    題を修正
+  - ベースの全マウントを含めた完全な配列に修正
+
+- **ドキュメントの矛盾**
+  - 「read-only でマウント」という誤った記述を「書き込み可能」に統一
+  - トークン更新のため書き込み権限が必須であることを明記
+
 ## [0.1.2] - 2025-10-06
 
 ### Fixed
@@ -68,6 +123,7 @@ and this project adheres to
 - TDD/BDD サポート
 - 型安全性 (TypeScript ↔ Pydantic)
 
+[0.1.3]: https://github.com/your-username/cc-safe-stack/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/your-username/cc-safe-stack/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/your-username/cc-safe-stack/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/your-username/cc-safe-stack/releases/tag/v0.1.0
