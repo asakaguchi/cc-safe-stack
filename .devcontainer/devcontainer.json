@@ -37,9 +37,7 @@
       "version": "20",
       "pnpmVersion": "latest"
     },
-    "ghcr.io/devcontainers/features/google-cloud-cli:1": {
-      "installGkeGcloudAuthPlugin": false
-    }
+    "ghcr.io/dhoeric/features/google-cloud-cli:1": {}
   },
   "runArgs": ["--init", "--cap-add=NET_ADMIN", "--cap-add=NET_RAW"],
   "hostRequirements": {
