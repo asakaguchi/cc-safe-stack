@@ -70,17 +70,12 @@ if command -v npm >/dev/null 2>&1; then
     echo "✓ Google Chrome は既にインストールされています"
   fi
 
-  # Google Cloud SDK のインストール
-  echo "☁️  Google Cloud SDK をインストール中..."
-  if ! command -v gcloud >/dev/null 2>&1; then
-    curl -sSL https://sdk.cloud.google.com | bash -s -- --disable-prompts --install-dir=/home/vscode
-    # PATHに追加
-    echo 'source /home/vscode/google-cloud-sdk/path.bash.inc' >> ~/.bashrc
-    echo 'source /home/vscode/google-cloud-sdk/path.zsh.inc' >> ~/.zshrc
-    source /home/vscode/google-cloud-sdk/path.bash.inc 2>/dev/null || true
-    echo "✓ Google Cloud SDK がインストールされました"
+  # Google Cloud SDK の確認 (DevContainer Featureでインストール済み)
+  echo "☁️  Google Cloud SDK を確認中..."
+  if command -v gcloud >/dev/null 2>&1; then
+    echo "✓ Google Cloud SDK は利用可能です ($(gcloud version --format='value(version)'))"
   else
-    echo "✓ Google Cloud SDK は既にインストールされています"
+    echo "⚠️  Google Cloud SDK が見つかりません"
   fi
 else
   echo "❌ npm が利用できません。手動でツールをインストールしてください。"
