@@ -228,10 +228,10 @@ cp .env.example .env
   pnpm run docker:dev:connect # シェルで接続
   claude                     # CLI から直接実行
 
-  pnpm run dev               # 必要に応じて開発サーバー起動
+  pnpm run dev               # React + FastAPI の開発サーバーを起動
   # - React: http://localhost:3000
   # - FastAPI: http://localhost:8000
-  # - marimo: http://localhost:2718
+  # - marimo を含める場合: `pnpm run dev:all`（初回は `pnpm run enable:marimo`）
   ```
 
 ##### Web ダッシュボードで 4 分割ワークスペースを利用する
@@ -297,8 +297,14 @@ cp .env.example .env
 # 依存関係セットアップ
 pnpm run setup
 
-# 全サービス並列起動
+# React + FastAPI を起動
 pnpm run dev
+
+# React + FastAPI + marimo を同時起動（初回は `pnpm run enable:marimo`）
+pnpm run dev:all
+
+# marimo のみ個別に起動したい場合
+pnpm run dev:marimo
 ```
 
 重要な注意事項は次のとおりです。

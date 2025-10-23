@@ -11,6 +11,7 @@
   "scripts": {
     "setup": "./scripts/setup.sh",
     "dev": "./scripts/dev.sh",
+    "dev:all": "./scripts/dev-all.sh",
     "dev:docker": "./scripts/dev-docker.sh",
     "dev:frontend": "pnpm --dir \"${PWD}/apps/frontend\" dev",
     "dev:backend": "cd \"${PWD}/apps/backend\" && uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000",

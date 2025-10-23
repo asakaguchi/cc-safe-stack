@@ -70,6 +70,8 @@ pnpm run docker:marimo -- up -d marimo  # Docker 上で marimo 起動
 ### 2.5 スクリプト利用方法
 
 - `pnpm run dev` : React + FastAPI を起動
+- `pnpm run dev:all` : React + FastAPI + marimo を同時起動（初回は
+  enable:marimo）
 - `pnpm run dev:marimo` : marimo ノートブックをローカル実行
 - `pnpm run docker:dashboard` : 4 分割 Web ダッシュボード（marimo を含む）
 - `pnpm run docker:dashboard down` : 停止（`docker-dashboard.sh down` と等価）

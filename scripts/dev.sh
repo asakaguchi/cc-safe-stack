@@ -7,7 +7,19 @@ if [ -f "/.dockerenv" ]; then
     exec "$(dirname "$0")/dev-docker.sh"
 fi
 
-echo "🚀 Starting Full-Stack Development Servers (React + FastAPI)..."
+# marimo 同時起動の有無（環境変数 or フラグ）
+START_MARIMO="${WITH_MARIMO:-0}"
+
+if [[ "${1:-}" == "--with-marimo" ]]; then
+    START_MARIMO=1
+    shift
+fi
+
+if [[ "$START_MARIMO" == "1" ]]; then
+    echo "🚀 Starting Full-Stack Development Servers (React + FastAPI + marimo)..."
+else
+    echo "🚀 Starting Full-Stack Development Servers (React + FastAPI)..."
+fi
 
 # Get script directory for absolute paths
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -71,11 +83,25 @@ cd "$PROJECT_ROOT"
 pnpm --dir "$PROJECT_ROOT/apps/frontend" dev -- --host 0.0.0.0 &
 FRONTEND_PID=$!
 
+if [[ "$START_MARIMO" == "1" ]]; then
+    STATE_FILE="$PROJECT_ROOT/extensions/marimo/.enabled"
+    if [[ ! -f "$STATE_FILE" ]]; then
+        log_warning "marimo 拡張が有効化されていません。'pnpm run enable:marimo' 実行後に依存を同期してください。"
+    fi
+
+    log_info "Starting marimo dashboard (Python/marimo)..."
+    "$SCRIPT_DIR/dev-marimo.sh" &
+    MARIMO_PID=$!
+fi
+
 log_success "All development servers started!"
 echo ""
 echo "🌐 React UI:    http://localhost:3000"
 echo "🐍 FastAPI:     http://localhost:8000"
 echo "📚 API Docs:    http://localhost:8000/docs"
+if [[ "$START_MARIMO" == "1" ]]; then
+    echo "🧮 marimo:      http://localhost:2718"
+fi
 echo ""
 echo "Press Ctrl+C to stop all servers"
 echo ""

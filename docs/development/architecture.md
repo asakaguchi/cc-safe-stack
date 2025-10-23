@@ -140,6 +140,7 @@ pnpm add -D @types/node typescript
 
 # 高速な実行環境
 pnpm run dev
+# marimo を含める場合は pnpm run dev:all（初回は enable:marimo）
 ```
 
 ### 型安全性の確保

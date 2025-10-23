@@ -377,14 +377,21 @@ cd apps/backend && uv sync && uv sync --group marimo-extensions && cd -
 # データベース初期化
 cd backend && uv run python -c "from database import init_db; init_db()" && cd -
 
-# 開発サーバー起動
+# 開発サーバー起動（React + FastAPI）
 pnpm run dev
+
+# React + FastAPI + marimo を一括起動（初回は `pnpm run enable:marimo`）
+pnpm run dev:all
+
+# marimo ダッシュボードのみ追加で起動したい場合（別ターミナル）
+pnpm run dev:marimo
 ```
 
 ### アクセス先
 
 - React TODO アプリ：<http://localhost:3000>
-- marimo ダッシュボード：<http://localhost:2718>
+- marimo ダッシュボード：<http://localhost:2718>（`pnpm run dev:all` または
+  `pnpm run dev:marimo` 実行時）
 - FastAPI 仕様書：<http://localhost:8000/docs>
 
 ## リスク・制約

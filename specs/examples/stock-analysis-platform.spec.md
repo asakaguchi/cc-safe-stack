@@ -372,14 +372,21 @@ cd apps/backend && uv sync && uv sync --group marimo-extensions && cd -
 # 金融データライブラリ追加
 uv add yfinance plotly pandas numpy scipy
 
-# 開発サーバー起動（3つ同時）
+# 開発サーバー起動（React + FastAPI）
 pnpm run dev
+
+# React + FastAPI + marimo を一括起動（初回は `pnpm run enable:marimo`）
+pnpm run dev:all
+
+# marimo ダッシュボードのみ追加で起動したい場合（別ターミナル）
+pnpm run dev:marimo
 ```
 
 ### アクセス先
 
 - React ポートフォリオ管理：<http://localhost:3000>
-- marimo 分析ダッシュボード：<http://localhost:2718>
+- marimo 分析ダッシュボード：<http://localhost:2718>（`pnpm run dev:all` または
+  `pnpm run dev:marimo` 実行時）
 - FastAPI 仕様書：<http://localhost:8000/docs>
 - WebSocket：ws://localhost:8000/ws/stocks/{symbol}
 

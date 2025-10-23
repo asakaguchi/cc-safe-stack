@@ -34,10 +34,13 @@ pnpm run disable:marimo
 ## ローカル起動
 
 ```bash
-# FastAPI / React を別ターミナルで起動
+# FastAPI / React を起動
 pnpm run dev
 
-# marimo ダッシュボードを起動（http://localhost:2718）
+# 3 サービスをまとめて起動（初回は enable:marimo）
+pnpm run dev:all
+
+# marimo ダッシュボードを単独で起動（http://localhost:2718）
 pnpm run dev:marimo
 ```
 

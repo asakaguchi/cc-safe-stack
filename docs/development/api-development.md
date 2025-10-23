@@ -517,8 +517,14 @@ describe('userApi', () => {
 ### 2. 品質保証
 
 ```bash
-# 開発サーバー起動
+# 開発サーバー起動（React + FastAPI）
 pnpm run dev
+
+# React + FastAPI + marimo を一括起動（初回は `pnpm run enable:marimo`）
+pnpm run dev:all
+
+# marimo のみ追加起動する場合
+pnpm run dev:marimo
 
 # コード品質チェック
 pnpm run lint

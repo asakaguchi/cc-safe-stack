@@ -277,7 +277,7 @@
       <ol class="steps">
         <li>
           <strong>ターミナルパネル（左下）</strong> で以下のコマンドを実行:
-          <div class="code-block"><code>pnpm run dev</code></div>
+          <div class="code-block"><code>pnpm run dev<br/># React + FastAPI のみ<br/>pnpm run dev:all<br/># React + FastAPI + marimo（初回は pnpm run enable:marimo）</code></div>
         </li>
         <li>
           開発サーバーが起動したら、<strong>アプリプレビュー（右上・このパネル）</strong> のURL入力欄に以下を入力:
@@ -344,7 +344,11 @@
       <ul class="commands">
         <li>
           <strong>pnpm run dev</strong><br>
-          全開発サーバーを起動 (フロントエンド + バックエンド + marimo)
+          フロントエンド + バックエンドを起動
+        </li>
+        <li>
+          <strong>pnpm run dev:all</strong><br>
+          フロントエンド + バックエンド + marimo を一括起動（初回は pnpm run enable:marimo）
         </li>
         <li>
           <strong>pnpm run lint</strong><br>

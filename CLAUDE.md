@@ -92,10 +92,16 @@ pnpm run setup
 
 # 開発サーバー起動（フロント＋バック並行）
 pnpm run dev
+# marimo を含めたい場合は `pnpm run dev:all`（初回は enable:marimo）
+# または別ターミナルで `pnpm run dev:marimo`
+
+# 3 サービスをまとめて起動
+pnpm run dev:all  # 初回は enable:marimo
 
 # 個別起動
 pnpm run dev:frontend    # http://localhost:3000
 pnpm run dev:backend     # http://localhost:8000
+pnpm run dev:marimo      # http://localhost:2718（初回は enable:marimo）
 
 # 全体ビルド
 pnpm run build

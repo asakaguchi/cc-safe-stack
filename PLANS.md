@@ -136,6 +136,10 @@
   - 2025-10-23 MIGRATION.md を追加し、Streamlit → marimo 移行手順を整理
   - 2025-10-23 CI ワークフローを pnpm / apps 配下構成に合わせて更新（uv + pnpm
     ベースに刷新）
+  - 2025-10-23 `pnpm run dev` / marimo 関連ドキュメント・スクリプトの整合性を現
+    仕様に合わせて更新
+  - 2025-10-23 marimo 同時起動用スクリプト `pnpm run dev:all` を追加し、関連ド
+    キュメントを更新
 
 ### B. 驚き・発見（Surprises & Discoveries）
 
@@ -168,6 +172,11 @@
   を採用
 - 2025-10-23：GitHub Actions CI を apps/ 配下構成と pnpm 運用に合わせて刷新する
   方針を採用
+- 2025-10-23：`pnpm run dev` は React + FastAPI の開発サーバ起動に限定し、marimo
+  は `pnpm run enable:marimo` 実行後に `pnpm run dev:marimo` で個別起動する運用
+  を維持する方針を再確認
+- 2025-10-23：marimo 前提の利用シナリオ向けに `pnpm run dev:all` で 3 サービス同
+  時起動を提供しつつ、従来の個別起動運用も維持する方針を決定
 
 ### D. 未解決事項（Open Questions）
 

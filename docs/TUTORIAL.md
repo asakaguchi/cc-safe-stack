@@ -203,15 +203,23 @@ specs/examples/stock-analysis-platform.spec.md の仕様で
 pnpm install --recursive
 cd backend && uv sync && cd -
 
-# 開発サーバー起動（3つ同時）
+# 開発サーバー起動（React + FastAPI）
 pnpm run dev
+
+# React + FastAPI + marimo を一括で起動（初回のみ enable:marimo）
+pnpm run dev:all
+
+# marimo ダッシュボードだけ個別に起動したい場合（別ターミナル）
+# 初回のみ: pnpm run enable:marimo
+pnpm run dev:marimo
 ```
 
 ### アクセス先
 
 - React: <http://localhost:3000>
 - FastAPI: <http://localhost:8000>
-- marimo: <http://localhost:2718>
+- marimo: <http://localhost:2718> ※ `pnpm run dev:all` または
+  `pnpm run dev:marimo` を実行している場合
 
 ## 📚 仕様書の書き方
 

@@ -91,10 +91,10 @@ ADDITIONAL_ALLOWED_DOMAINS=example.com,api.example.com
 
 ## 開発サーバーの起動
 
-### 統合起動（推奨）
+### 統合起動（React + FastAPI）
 
 ```bash
-# 3つのサーバーを同時に起動
+# フロントエンドとバックエンドを同時に起動
 pnpm run dev
 ```
 
@@ -102,7 +102,19 @@ pnpm run dev
 
 - React: <http://localhost:3000>
 - FastAPI: <http://localhost:8000>
+
+### 統合起動（React + FastAPI + marimo）
+
+```bash
+# 3 つのサービスを一括起動（初回は pnpm run enable:marimo）
+pnpm run dev:all
+```
+
+起動後に以下へアクセスできます。
+
 - marimo: <http://localhost:2718>
+- React: <http://localhost:3000>
+- FastAPI: <http://localhost:8000>
 
 ### 個別起動
 
@@ -129,7 +141,7 @@ curl http://localhost:8000/health
 # フロントエンドの確認
 curl http://localhost:3000
 
-# marimo の確認
+# marimo の確認（起動している場合）
 curl http://localhost:2718
 ```
 

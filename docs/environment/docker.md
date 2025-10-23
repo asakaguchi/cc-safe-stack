@@ -67,7 +67,9 @@ claude
 #### 5. 開発サーバーの起動（コンテナ内で実行）
 
 ```bash
-pnpm run dev  # React(3000), FastAPI(8000), marimo(2718)
+pnpm run dev       # React(3000), FastAPI(8000)
+pnpm run dev:all   # React(3000), FastAPI(8000), marimo(2718) を一括起動（初回は enable:marimo）
+pnpm run dev:marimo # marimo のみ個別起動
 ```
 
 ### エディタの選択肢
@@ -305,8 +307,14 @@ pnpm run docker:dev:connect
 # 3. Claude Code で安全に開発
 claude  # コンテナ内で隔離実行
 
-# 4. 開発サーバー起動
+# 4. 開発サーバー起動（React + FastAPI）
 pnpm run dev
+
+# React + FastAPI + marimo をまとめて起動
+pnpm run dev:all
+
+# marimo だけ追加したい場合（初回は `pnpm run enable:marimo`）
+pnpm run dev:marimo
 ```
 
 ## トラブルシューティング
