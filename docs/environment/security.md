@@ -203,10 +203,10 @@ gcloud projects list
 
 Google Cloud のアクセストークンは約 1 時間で失効します。`gcloud projects list`
 などのコマンドを実行すると gcloud CLI が自動的にトークンを更新
-し、`access_tokens.db` ファイルを書き換えます。このため、マウントは read-only で
-はなく **書き込み可能** である必要があります。
+し、`access_tokens.db` ファイルを書き換えます。このため、マウントを read-only に
+すると更新が失敗します。必ず **書き込み可能** としてマウントしてください。
 
-read-only でマウントした場合は次のような問題が発生します。
+read-only でマウントすると次のような問題が発生します。
 
 - トークン失効後に `gcloud` コマンドが失敗する
 - `access_tokens.db` の更新ができずエラーになる

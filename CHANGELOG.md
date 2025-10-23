@@ -103,16 +103,17 @@ and this project adheres to
 
 - **DevContainer の gcloud マウント**
 
-- ネスト展開未対応の問題を修正（`${localEnv:HOME:${localEnv:USERPROFILE}}` →
-  `${localEnv:HOME}`）
+- ネスト展開未対応の問題を修正し、`${localEnv:HOME:${localEnv:USERPROFILE}}` →
+  `${localEnv:HOME}` の形式へ統一
 
   - Windows 環境でのパス連結問題を解決
   - PowerShell 認証時のパス不一致を解決（APPDATA 環境変数を使用）
 
 - **mounts 配列の上書き問題**
 
-  - テンプレートが既存のマウント（claude-code-config, python-cache）を削除する問
-    題を修正
+- テンプレートが既存のマウント（claude-code-config, python-cache）を削除する問題
+  を修正
+
   - ベースの全マウントを含めた完全な配列に修正
 
 - **ドキュメントの矛盾**

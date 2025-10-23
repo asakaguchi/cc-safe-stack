@@ -385,8 +385,8 @@ pnpm run dev:marimo
 ### アクセス先
 
 - React ポートフォリオ管理：<http://localhost:3000>
-- marimo 分析ダッシュボード：<http://localhost:2718>（`pnpm run dev:all` または
-  `pnpm run dev:marimo` 実行時）
+- marimo 分析ダッシュボード：<http://localhost:2718>
+  - 利用可能条件：`pnpm run dev:all` または `pnpm run dev:marimo` 実行時
 - FastAPI 仕様書：<http://localhost:8000/docs>
 - WebSocket：ws://localhost:8000/ws/stocks/{symbol}
 
