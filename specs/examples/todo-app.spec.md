@@ -44,7 +44,7 @@ tags: [web-app, crud, productivity, beginner-friendly]
 ```mermaid
 graph TB
     A[React UI<br/>:3000] --> C[FastAPI Backend<br/>:8000]
-    B[Streamlit Dashboard<br/>:8501] --> C
+    B[marimo Dashboard<br/>:2718] --> C
     C --> D[SQLite Database<br/>todo.db]
 ```
 
@@ -52,7 +52,7 @@ graph TB
 
 - Backend - Python 3.12+ / FastAPI / Pydantic / SQLAlchemy
 - Frontend - TypeScript / React / Vite / CSS Modules
-- Analytics - Streamlit / Plotly / Pandas
+- Analytics - marimo / Plotly / Pandas
 - Database - SQLite（ファイルベース、シンプル）
 - Testing - Pytest / Jest / React Testing Library
 
@@ -109,7 +109,7 @@ graph TB
   - データ整合性の保証
   - エラー時のデータ保護
 
-#### F-005: 統計ダッシュボード（Streamlit）
+#### F-005: 統計ダッシュボード（marimo）
 
 - 説明 - タスク管理の分析・可視化
 - 詳細 -
@@ -329,7 +329,7 @@ GET /api/tasks/stats
 - 操作性 - 大きなボタン、タッチフレンドリー
 - フィードバック - 操作後の視覚的確認
 
-### Streamlit ダッシュボード（分析画面）
+### marimo ダッシュボード（分析画面）
 
 - チャート - 直感的な可視化（円グラフ、棒グラフ）
 - インタラクティブ - フィルター・期間選択機能
@@ -353,7 +353,7 @@ GET /api/tasks/stats
 
 ### Phase 3: 拡張機能（1週間）
 
-- [ ] Streamlit 統計ダッシュボード
+- [ ] marimo 統計ダッシュボード
 - [ ] 優先度・カテゴリ機能
 - [ ] データエクスポート・インポート
 - [ ] パフォーマンス最適化
@@ -372,19 +372,26 @@ GET /api/tasks/stats
 ```bash
 # 依存関係インストール
 pnpm install
-cd backend && uv sync && uv sync --group streamlit && cd -
+cd apps/backend && uv sync && uv sync --group marimo-extensions && cd -
 
 # データベース初期化
 cd backend && uv run python -c "from database import init_db; init_db()" && cd -
 
-# 開発サーバー起動
+# 開発サーバー起動（React + FastAPI）
 pnpm run dev
+
+# React + FastAPI + marimo を一括起動（初回は `pnpm run enable:marimo`）
+pnpm run dev:all
+
+# marimo ダッシュボードのみ追加で起動したい場合（別ターミナル）
+pnpm run dev:marimo
 ```
 
 ### アクセス先
 
 - React TODO アプリ：<http://localhost:3000>
-- Streamlit ダッシュボード：<http://localhost:8501>
+- marimo ダッシュボード：<http://localhost:2718>（`pnpm run dev:all` または
+  `pnpm run dev:marimo` 実行時）
 - FastAPI 仕様書：<http://localhost:8000/docs>
 
 ## リスク・制約
@@ -413,7 +420,7 @@ TODOアプリケーションを実装してください。
 
 要件:
 - TDDでGherkinテストから開始
-- React UI + Streamlit ダッシュボードの2画面構成
+- React UI + marimo ダッシュボードの 2 画面構成
 - SQLite使用、シンプルなCRUD操作
 - 型安全性確保（Pydantic ↔ TypeScript）
 - 初学者にも理解しやすいコード構造

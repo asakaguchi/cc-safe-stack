@@ -15,7 +15,7 @@
 
 #### VS Code DevContainer（セキュア隔離・推奨）
 
-Claude Code を安全に実行するためのセキュア環境:
+Claude Code を安全に実行するためのセキュア環境です。
 
 - VS Code: 最新版
 - Dev Containers 拡張機能: Microsoft 公式拡張
@@ -24,7 +24,7 @@ Claude Code を安全に実行するためのセキュア環境:
 
 #### Docker開発環境（セキュア隔離・任意エディタ）
 
-Claude Code を隔離環境で安全実行:
+Claude Code を隔離環境で安全に実行するための構成です。
 
 - Docker: Docker Compose v2 対応版
 - pnpm: JavaScript/TypeScript パッケージマネージャー
@@ -82,7 +82,7 @@ API_PORT=8000
 VITE_API_URL=http://localhost:8000
 
 # CORS設定（開発時）
-CORS_ORIGINS=["http://localhost:3000", "http://localhost:8501"]
+CORS_ORIGINS=["http://localhost:3000", "http://localhost:2718"]
 
 # セキュア環境用（必要に応じて）
 SECURE_MODE=true
@@ -91,10 +91,10 @@ ADDITIONAL_ALLOWED_DOMAINS=example.com,api.example.com
 
 ## 開発サーバーの起動
 
-### 統合起動（推奨）
+### 統合起動（React + FastAPI）
 
 ```bash
-# 3つのサーバーを同時に起動
+# フロントエンドとバックエンドを同時に起動
 pnpm run dev
 ```
 
@@ -102,7 +102,19 @@ pnpm run dev
 
 - React: <http://localhost:3000>
 - FastAPI: <http://localhost:8000>
-- Streamlit: <http://localhost:8501>
+
+### 統合起動（React + FastAPI + marimo）
+
+```bash
+# 3 つのサービスを一括起動（初回は pnpm run enable:marimo）
+pnpm run dev:all
+```
+
+起動後に以下へアクセスできます。
+
+- marimo: <http://localhost:2718>
+- React: <http://localhost:3000>
+- FastAPI: <http://localhost:8000>
 
 ### 個別起動
 
@@ -113,8 +125,9 @@ pnpm run dev:backend
 # フロントエンド（React）
 pnpm run dev:frontend
 
-# データアプリ（Streamlit）
-pnpm run dev:streamlit
+# データアプリ（marimo）
+# 初回のみ: pnpm run enable:marimo
+pnpm run dev:marimo
 ```
 
 ### サービス確認
@@ -123,13 +136,13 @@ pnpm run dev:streamlit
 
 ```bash
 # API の動作確認
-curl http://localhost:8000/api/health
+curl http://localhost:8000/health
 
 # フロントエンドの確認
 curl http://localhost:3000
 
-# Streamlit の確認
-curl http://localhost:8501
+# marimo の確認（起動している場合）
+curl http://localhost:2718
 ```
 
 ## プラットフォーム別のセットアップ
@@ -283,16 +296,16 @@ pnpm run test
 
 ```bash
 # バックエンドテスト
-cd backend
+cd apps/backend
 uv run pytest
 
 # フロントエンドテスト
-cd frontend
+cd ../frontend
 pnpm test
 
-# Streamlit アプリのテスト
-cd streamlit
-uv run pytest
+# marimo ノートブック（UI 確認）
+cd ../..
+pnpm run dev:marimo
 ```
 
 ## プロダクションビルド
@@ -313,8 +326,8 @@ pnpm run build:backend
 # React アプリのビルド
 pnpm run build:frontend
 
-# Streamlit 依存関係の同期
-pnpm run build:streamlit
+# marimo 依存関係（必要時のみ）
+pnpm run enable:marimo
 ```
 
 ## トラブルシューティング
@@ -325,7 +338,7 @@ pnpm run build:streamlit
 
 症状: `EADDRINUSE: address already in use :::3000`
 
-解決策:
+解決策: 以下の手順でポートを解放します。
 
 ```bash
 # 使用中のポートを確認
@@ -340,7 +353,7 @@ kill -9 <PID>
 
 症状: `uv sync` や `pnpm install` が失敗。
 
-解決策:
+解決策: 次のコマンドでキャッシュを整理し、依存関係を再インストールします。
 
 ```bash
 # キャッシュをクリア
@@ -348,7 +361,7 @@ uv cache clean
 pnpm store prune
 
 # ロックファイルを削除して再インストール
-rm backend/uv.lock
+rm apps/backend/uv.lock
 rm pnpm-lock.yaml
 pnpm run setup
 ```
@@ -357,7 +370,8 @@ pnpm run setup
 
 症状: Docker コンテナが起動しない。
 
-解決策:
+解決策: 下記のコマンドで Docker の状態を確認し、バージョン情報が取得できない場合
+は再起動します。
 
 ```bash
 # Docker の状態確認

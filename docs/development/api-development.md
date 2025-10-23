@@ -8,7 +8,7 @@
 ### 基本的なAPIの作成
 
 ```python
-# backend/main.py
+# apps/backend/main.py
 from fastapi import FastAPI
 from pydantic import BaseModel
 from datetime import datetime
@@ -32,7 +32,7 @@ async def hello_name(name: str) -> MessageResponse:
 #### CRUD操作の実装
 
 ```python
-# backend/src/api/users.py
+# apps/backend/src/api/users.py
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from typing import List, Optional
@@ -82,7 +82,7 @@ async def delete_user(user_id: int):
 ### 非同期処理
 
 ```python
-# backend/src/api/tasks.py
+# apps/backend/src/api/tasks.py
 import asyncio
 from fastapi import BackgroundTasks
 
@@ -100,7 +100,7 @@ async def process_heavy_task():
 ### エラーハンドリング
 
 ```python
-# backend/src/exceptions.py
+# apps/backend/src/exceptions.py
 from fastapi import HTTPException, Request
 from fastapi.responses import JSONResponse
 
@@ -133,7 +133,7 @@ async def get_user(user_id: int):
 ### 環境変数設定
 
 ```env
-# backend/.env 例（JSON 配列）
+# apps/backend/.env 例（JSON 配列）
 CORS_ORIGINS=["http://localhost:3000", "https://example.com"]
 
 # またはカンマ区切り文字列でも可
@@ -143,7 +143,7 @@ CORS_ORIGINS=http://localhost:3000,https://example.com
 ### CORS設定の実装
 
 ```python
-# backend/main.py
+# apps/backend/main.py
 import os
 import json
 from fastapi import FastAPI
@@ -320,7 +320,7 @@ export const UserList: React.FC = () => {
 ### 型定義の管理
 
 ```typescript
-// shared/types/api.ts
+// packages/shared/types/api.ts
 export interface User {
   id: number
   name: string
@@ -354,7 +354,7 @@ export interface PaginatedResponse<T> {
 ### Pydantic との同期
 
 ```python
-# backend/src/models/user.py
+# apps/backend/src/models/user.py
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
@@ -390,7 +390,7 @@ class UpdateUserRequest(BaseModel):
 ### SQLAlchemy モデル
 
 ```python
-# backend/src/models/database.py
+# apps/backend/src/models/database.py
 from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
@@ -409,7 +409,7 @@ class UserTable(Base):
 ### データベース操作
 
 ```python
-# backend/src/services/user_service.py
+# apps/backend/src/services/user_service.py
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from .models.database import UserTable
@@ -440,7 +440,7 @@ class UserService:
 ### APIテスト
 
 ```python
-# backend/tests/test_users.py
+# apps/backend/tests/test_users.py
 import pytest
 from fastapi.testclient import TestClient
 from main import app
@@ -509,7 +509,7 @@ describe('userApi', () => {
 ### 1. 機能開発の流れ
 
 1. API 仕様の定義: OpenAPI スキーマで API を設計。
-2. 型定義の作成: shared/types/ で共有型を定義。
+2. 型定義の作成: packages/shared/types/ で共有型を定義。
 3. バックエンド実装: FastAPI でエンドポイントを実装。
 4. フロントエンド実装: React で UI を実装。
 5. テスト作成: 単体テストと統合テストを作成。
@@ -517,8 +517,14 @@ describe('userApi', () => {
 ### 2. 品質保証
 
 ```bash
-# 開発サーバー起動
+# 開発サーバー起動（React + FastAPI）
 pnpm run dev
+
+# React + FastAPI + marimo を一括起動（初回は `pnpm run enable:marimo`）
+pnpm run dev:all
+
+# marimo のみ追加起動する場合
+pnpm run dev:marimo
 
 # コード品質チェック
 pnpm run lint
@@ -546,8 +552,8 @@ FastAPI は自動的に OpenAPI ドキュメントを生成します。
 ### バックエンド最適化
 
 - 非同期処理: async/await を活用。
-- データベース最適化: パフォーマンス向上のためのインデックス設定と効率的なクエリ
-  設計。
+- データベース最適化: 例として `users.email` にインデックスを追加
+  し、`selectinload` で N+1 クエリを解消するなど具体的なクエリ調整を実施する。
 - キャッシュ: Redis などのキャッシュシステム。
 - バッチ処理: 重い処理はバックグラウンドで実行。
 

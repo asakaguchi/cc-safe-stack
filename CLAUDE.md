@@ -14,25 +14,25 @@
 
 ```text
 cc-safe-stack/
-├── backend/              # Python (FastAPI) バックエンド
-│   ├── src/              # バックエンドソースコード
-│   ├── pyproject.toml    # Python依存関係・設定
-│   └── main.py           # FastAPIアプリケーション
-├── frontend/             # TypeScript (React) フロントエンド
-│   ├── src/              # フロントエンドソースコード
-│   ├── package.json      # Node.js依存関係
-│   └── vite.config.ts    # Vite設定
-├── shared/               # 言語間共有リソース
-│   └── types/            # TypeScript型定義（Python Pydantic互換）
+├── apps/
+│   ├── backend/          # Python (FastAPI) バックエンド
+│   └── frontend/         # TypeScript (React) フロントエンド
+├── extensions/
+│   └── marimo/           # marimo ダッシュボード用ノートブック
+├── packages/
+│   └── shared/           # 言語間共有リソース
 ├── scripts/              # 統合開発スクリプト
 └── package.json          # ルートワークスペース設定
 ```
 
 ### 責任分離
 
-- backend/ - API、データ処理、業務ロジック
-- frontend/ - UI、ユーザー体験、クライアント状態管理
-- shared/ - 型定義、API 契約、共通ユーティリティ
+| パス                 | 役割                                                        |
+| -------------------- | ----------------------------------------------------------- |
+| `apps/backend/`      | バックエンド API、データ処理、業務ロジックを担当            |
+| `apps/frontend/`     | フロントエンド UI、ユーザー体験、クライアント状態管理を担当 |
+| `extensions/marimo/` | 管理ダッシュボードとデータ可視化ワークフローを担当          |
+| `packages/shared/`   | 型定義、API 契約、共通ユーティリティを集約                  |
 
 ## 統合ルール
 
@@ -77,9 +77,9 @@ cc-safe-stack/
 
 ### 3. API契約管理
 
-- shared/types/配下で TypeScript 型定義を管理
+- packages/shared/ 配下で TypeScript 型定義を管理
 - Pydantic モデルと TypeScript 型の一致を保証
-- API 変更時は両方同時更新必須
+- API 変更時は両方を同じコミットで更新することを必須条件とする
 - スキーマ破壊的変更は事前協議
 
 ## 開発コマンド
@@ -92,10 +92,16 @@ pnpm run setup
 
 # 開発サーバー起動（フロント＋バック並行）
 pnpm run dev
+# marimo を含めたい場合は `pnpm run dev:all`（初回は enable:marimo）
+# または別ターミナルで `pnpm run dev:marimo`
+
+# 3 サービスをまとめて起動
+pnpm run dev:all  # 初回は enable:marimo
 
 # 個別起動
 pnpm run dev:frontend    # http://localhost:3000
 pnpm run dev:backend     # http://localhost:8000
+pnpm run dev:marimo      # http://localhost:2718（初回は enable:marimo）
 
 # 全体ビルド
 pnpm run build
@@ -113,7 +119,7 @@ pnpm run format
 
 ### 言語別コマンド
 
-#### Python (backend/)
+#### Python (apps/backend/)
 
 ```bash
 # 依存関係同期
@@ -134,7 +140,7 @@ uv run --frozen ruff format .
 uv run --frozen mypy .
 ```
 
-#### TypeScript (frontend/)
+#### TypeScript (apps/frontend/)
 
 ```bash
 # 依存関係インストール
@@ -230,7 +236,7 @@ pnpm run lint:text:fix
 
 ### コミットメッセージ
 
-Conventional Commits 形式必須:
+Conventional Commits 形式が必須です。
 
 ```text
 feat(backend): add user authentication API
@@ -270,11 +276,11 @@ pnpm run docker:up
 
 ## 共有コンポーネント管理
 
-### 型定義 (shared/types/)
+### 型定義 (packages/shared/)
 
-- API 契約: shared/types/api.ts
+- API 契約: packages/shared/types/api.ts
 - データモデル: Python Pydantic ⟷ TypeScript interface 対応
-- 更新ルール: 破壊的変更は両言語同時対応
+- 更新ルール: 破壊的変更は Python と TypeScript の両方を同時に更新する
 
 ### ユーティリティ
 

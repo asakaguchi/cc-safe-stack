@@ -70,7 +70,7 @@ convention = "google"
 
 [tool.pytest.ini_options]
 testpaths = ["."]
-norecursedirs = ["backend", "frontend", ".git", ".venv", "node_modules", ".cache", ".ruff_cache", ".mypy_cache", "dist", "build"]
+norecursedirs = ["apps/backend/.venv", "apps/frontend", ".git", ".venv", "node_modules", ".cache", ".ruff_cache", ".mypy_cache", "dist", "build", "extensions"]
 python_files = ["test_*.py", "*_test.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]

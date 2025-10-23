@@ -10,7 +10,7 @@
 <body>
   <header>
     <h1>Safe Stack Web Workspace</h1>
-    <p>左上: VS Code / 右上: アプリプレビュー / 左下: ターミナル / 右下: メモ・ログ・追加ビュー</p>
+    <p>左上は VS Code、右上はアプリプレビュー、左下はターミナル、右下はメモ・ログ・追加ビューです。</p>
   </header>
   <main class="grid">
     <section class="tile" aria-label="VS Code">
@@ -66,7 +66,7 @@
         <div class="tile__tabs" role="tablist">
           <button type="button" class="tile__tab" data-aux-target="notes" role="tab" aria-selected="true">メモ</button>
           <button type="button" class="tile__tab" data-aux-target="logs" role="tab" aria-selected="false">ログ</button>
-          <button type="button" class="tile__tab" data-aux-target="streamlit" role="tab" aria-selected="false">Streamlit</button>
+          <button type="button" class="tile__tab" data-aux-target="marimo" role="tab" aria-selected="false">marimo</button>
           <button type="button" class="tile__tab" data-aux-target="docs" role="tab" aria-selected="false">API Docs</button>
         </div>
       </div>
@@ -81,7 +81,7 @@
             <select id="logs-service">
               <option value="frontend">フロントエンド</option>
               <option value="backend">バックエンド</option>
-              <option value="streamlit">Streamlit</option>
+              <option value="marimo">marimo</option>
             </select>
             <label class="visually-hidden" for="logs-tail">取得行数</label>
             <select id="logs-tail">
@@ -98,7 +98,7 @@
           <pre id="logs-output" class="logs__output" role="log" aria-live="polite"></pre>
           <p id="logs-status" class="logs__status" aria-live="polite"></p>
         </div>
-        <iframe class="aux aux--iframe" data-mode="streamlit" src="/streamlit/" title="Streamlit" loading="lazy" hidden></iframe>
+        <iframe class="aux aux--iframe" data-mode="marimo" src="/marimo/" title="marimo" loading="lazy" hidden></iframe>
         <iframe class="aux aux--iframe" data-mode="docs" src="/api/docs" title="API Docs" loading="lazy" hidden></iframe>
       </div>
     </section>

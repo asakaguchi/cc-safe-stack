@@ -6,6 +6,37 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2025-10-23
+
+### Added
+
+- **marimo ダッシュボード体験**
+  - `pnpm run enable:marimo` → `pnpm run dev:marimo` / `pnpm run dev:all` でサン
+    プルダッシュボードを起動可能
+  - `extensions/marimo/app.py` に管理ビューの雛形を同梱
+- **移行ドキュメントとガイド**
+  - `MIGRATION.md` に Streamlit から marimo への切り替え手順を掲載
+  - README / docs 一式を marimo + FastAPI + React 構成に合わせて全面更新
+
+### Changed
+
+- **ディレクトリ構成の再編**
+  - アプリコードを `apps/backend`, `apps/frontend`, 共有型を `packages/shared`
+    へ整理
+  - 新しい構成に合わせてスクリプト・CI・設定ファイルを刷新
+- **開発体験のシンプル化**
+  - `pnpm run dev`（React + FastAPI）と `pnpm run dev:all`（React + FastAPI +
+    marimo）を整備
+  - Docker Compose / DevContainer を Node 公式イメージベースに一本化し、セット
+    アップを短縮
+
+### Removed
+
+- **Streamlit ベースのダッシュボード**（`streamlit/` 配下）を廃止し、marimo に置
+  き換え
+- **テンプレート外サンプルコード**（`examples/python-sample/` など）を削除し、配
+  布物をスリム化
+
 ## [0.1.4] - 2025-10-06
 
 ### Added
@@ -38,7 +69,7 @@ and this project adheres to
 
 - **Google Cloud 認証マウント機能**
   - ホスト側の gcloud 認証情報を DevContainer と Docker 環境にマウント
-  - トークン自動更新のため書き込み可能でマウント（約1時間で失効）
+  - トークン自動更新のため書き込み可能でマウント（約 1 時間で失効）
   - Linux/Mac/WSL2 環境のデフォルト対応（`${HOME}/.config/gcloud`）
   - Windows PowerShell 認証のサポート（`${APPDATA}/gcloud`）
   - `.devcontainer/devcontainer.local.jsonc.gcloud-powershell` テンプレート追加
@@ -49,7 +80,7 @@ and this project adheres to
 
   - gcloud マウントパスを `GCLOUD_CONFIG_PATH` 環境変数で設定可能に
   - デフォルト値: `${HOME}/.config/gcloud` (Linux/Mac/WSL2)
-  - PowerShell用: `.env` で `GCLOUD_CONFIG_PATH=%APPDATA%/gcloud` を設定
+  - PowerShell 用: `.env` で `GCLOUD_CONFIG_PATH=%APPDATA%/gcloud` を設定
 
 - **.env.example**
 
@@ -72,8 +103,9 @@ and this project adheres to
 
 - **DevContainer の gcloud マウント**
 
-  - ネスト展開未対応の問題を修正（`${localEnv:HOME:${localEnv:USERPROFILE}}` →
-    `${localEnv:HOME}`）
+- ネスト展開未対応の問題を修正（`${localEnv:HOME:${localEnv:USERPROFILE}}` →
+  `${localEnv:HOME}`）
+
   - Windows 環境でのパス連結問題を解決
   - PowerShell 認証時のパス不一致を解決（APPDATA 環境変数を使用）
 
@@ -95,8 +127,8 @@ and this project adheres to
   - `@anthropic-ai/claude-code` インストール時の権限設定エラーを修正
   - インストール先ディレクトリが存在しない場合のビルド失敗を解決
   - `|| true` によるエラー握りつぶしを削除し、権限設定失敗を確実に検出
-  - `if` 文による適切な条件分岐に変更し、セキュリティ上の問題を見逃さない設計に
-    改善
+- `if` 文でインストール結果を明示的に評価し、失敗時は即座にビルドを停止するよう
+  処理を変更（エラーを握りつぶさず記録）
 
 ## [0.1.1] - 2025-10-03
 
@@ -127,8 +159,10 @@ and this project adheres to
   - Docker 環境で vscode ユーザーが
     `npm install -g @anthropic-ai/claude-code@latest` を実行できるように権限を修
     正
-  - `/usr/local/lib/node_modules/@anthropic-ai`、`/usr/local/bin`、`/usr/local/share`
-    に適切なグループ権限 (775) を設定
+- `/usr/local/lib/node_modules/@anthropic-ai`、`/usr/local/bin`、`/usr/local/share`
+  に sudo グループの書き込み権限 (775) を設定した。
+  - vscode ユーザーが `npm install -g` でグローバルモジュールを更新できる状態を
+    保証
 
 ### Changed
 
@@ -149,6 +183,7 @@ and this project adheres to
 - TDD/BDD サポート
 - 型安全性 (TypeScript ↔ Pydantic)
 
+[0.2.0]: https://github.com/your-username/cc-safe-stack/compare/v0.1.4...v0.2.0
 [0.1.4]: https://github.com/your-username/cc-safe-stack/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/your-username/cc-safe-stack/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/your-username/cc-safe-stack/compare/v0.1.1...v0.1.2

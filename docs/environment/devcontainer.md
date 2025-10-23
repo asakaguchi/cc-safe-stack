@@ -297,6 +297,9 @@ devcontainer exec --workspace-folder . bash
 # 開発サーバー起動
 devcontainer exec --workspace-folder . pnpm run dev
 
+# React + FastAPI + marimo を同時起動（初回は enable:marimo）
+devcontainer exec --workspace-folder . pnpm run dev:all
+
 # クリーンアップ
 devcontainer down --workspace-folder . --remove-volumes
 ```

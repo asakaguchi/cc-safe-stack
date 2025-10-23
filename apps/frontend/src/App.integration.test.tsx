@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import App from './App'
 
 describe('App (integration with MSW)', () => {
-  it('shows backend health message from /api/health', async () => {
+  it('shows backend health message from /health', async () => {
     render(<App />)
     expect(await screen.findByText(/Backend is running/i)).toBeInTheDocument()
   })

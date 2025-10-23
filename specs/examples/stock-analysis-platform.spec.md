@@ -15,7 +15,8 @@ tags: [finance, real-time, analytics, multi-frontend]
 
 ### 目的
 
-個人投資家向けに、リアルタイム株価データ分析と高度なポートフォリオ管理を提供するプラットフォーム。
+個人投資家向けに、リアルタイム株価データ分析と高度なポートフォリオ管理を提供する
+プラットフォーム。
 
 ### 成功指標
 
@@ -44,7 +45,7 @@ tags: [finance, real-time, analytics, multi-frontend]
 ```mermaid
 graph TB
     A[React Portfolio UI<br/>:3000] --> D[FastAPI Backend<br/>:8000]
-    B[Streamlit Analytics<br/>:8501] --> D
+    B[marimo Analytics<br/>:2718] --> D
     C[FastAPI Docs<br/>:8000/docs] --> D
     D --> E[yfinance API]
     D --> F[SQLite DB]
@@ -55,7 +56,7 @@ graph TB
 
 - Backend: Python 3.12+ / FastAPI / Pydantic / SQLAlchemy
 - Frontend: TypeScript / React / Vite
-- Analytics: Streamlit / Plotly / Pandas / NumPy
+- Analytics: marimo / Plotly / Pandas / NumPy
 - Database: SQLite（時系列最適化）
 - Real-time: WebSocket / Server-Sent Events
 - Data Source: yfinance / Alpha Vantage（フォールバック）
@@ -115,7 +116,7 @@ yfinance API 経由での株価データ取得・更新機能。
 - 計算速度 < 100ms（100 日分データ）
 - カスタマイズ可能なパラメータ
 
-#### F-004: 高度分析ダッシュボード（Streamlit）
+#### F-004: 高度分析ダッシュボード（marimo）
 
 データ分析・可視化専用インターフェース。
 
@@ -344,7 +345,7 @@ POST /api/portfolios/{portfolio_id}/transactions
 - [ ] WebSocket リアルタイム配信
 - [ ] React ポートフォリオ UI
 - [ ] テクニカル指標計算エンジン
-- [ ] Streamlit 分析ダッシュボード
+- [ ] marimo 分析ダッシュボード
 
 ### Phase 3: 高度機能（2週間）
 
@@ -366,19 +367,26 @@ POST /api/portfolios/{portfolio_id}/transactions
 ```bash
 # 依存関係インストール
 pnpm install
-cd backend && uv sync && uv sync --group streamlit && cd -
+cd apps/backend && uv sync && uv sync --group marimo-extensions && cd -
 
 # 金融データライブラリ追加
 uv add yfinance plotly pandas numpy scipy
 
-# 開発サーバー起動（3つ同時）
+# 開発サーバー起動（React + FastAPI）
 pnpm run dev
+
+# React + FastAPI + marimo を一括起動（初回は `pnpm run enable:marimo`）
+pnpm run dev:all
+
+# marimo ダッシュボードのみ追加で起動したい場合（別ターミナル）
+pnpm run dev:marimo
 ```
 
 ### アクセス先
 
 - React ポートフォリオ管理：<http://localhost:3000>
-- Streamlit 分析ダッシュボード：<http://localhost:8501>
+- marimo 分析ダッシュボード：<http://localhost:2718>（`pnpm run dev:all` または
+  `pnpm run dev:marimo` 実行時）
 - FastAPI 仕様書：<http://localhost:8000/docs>
 - WebSocket：ws://localhost:8000/ws/stocks/{symbol}
 
@@ -414,7 +422,7 @@ pnpm run dev
 
 要件:
 - TDDでGherkinテストから開始
-- 3つのフロントエンド並列実装（React, Streamlit, FastAPI Docs）
+- 3つのフロントエンド並列実装（React, marimo, FastAPI Docs）
 - yfinance統合でリアルタイムデータ取得
 - WebSocketによる価格配信
 - 型安全性確保（Pydantic ↔ TypeScript）

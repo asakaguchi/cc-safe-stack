@@ -50,14 +50,14 @@ fi
 
 # Python環境の初期化
 echo "🐍 Python環境を確認中..."
-if [ -f "/workspace/backend/pyproject.toml" ]; then
+if [ -f "/workspace/apps/backend/pyproject.toml" ]; then
     echo "📦 Python依存関係を同期中..."
-    gosu ${USER_NAME} bash -c "cd /workspace/backend && uv sync" || echo "⚠️  uv sync failed"
+    gosu ${USER_NAME} bash -c "cd /workspace/apps/backend && uv sync" || echo "⚠️  uv sync failed"
 fi
 
 # Node.js環境の初期化
 echo "📦 Node.js環境を確認中..."
-if [ -f "/workspace/frontend/package.json" ]; then
+if [ -f "/workspace/apps/frontend/package.json" ]; then
     echo "📦 Node.js依存関係をインストール中..."
     gosu ${USER_NAME} bash -c "cd /workspace && pnpm install --recursive" || echo "⚠️  pnpm install failed"
 fi
@@ -68,14 +68,16 @@ echo "🎉 Docker開発環境の初期化完了！"
 echo ""
 echo "📋 利用可能なコマンド:"
 echo "   claude           # Claude Code CLIを起動"
-echo "   pnpm run dev     # 全サーバーを起動"
+echo "   pnpm run dev     # React + FastAPI を起動"
+echo "   pnpm run dev:all # React + FastAPI + marimo（初回は enable:marimo）"
+echo "   pnpm run dev:marimo  # marimo ダッシュボード単独"
 echo "   pnpm run lint    # コード品質チェック"
 echo "   vim/nano         # エディタ"
 echo ""
 echo "🔧 開発サーバー:"
 echo "   - React(frontend): http://localhost:3000"
-echo "   - FastAPI(backend): http://localhost:8000"  
-echo "   - Streamlit: http://localhost:8501"
+echo "   - FastAPI(backend): http://localhost:8000"
+echo "   - marimo(必要に応じて): http://localhost:2718"
 echo ""
 
 # 実行モードに応じた処理

@@ -269,8 +269,7 @@
     <div class="intro">
       <p>
         <strong>Safe Stack</strong> は、Claude Code AI 駆動のフルスタック開発テンプレートです。
-        Python (FastAPI) バックエンド、TypeScript (React) フロントエンド、Streamlit ダッシュボードを統合した開発環境を提供します。
-      </p>
+        Python (FastAPI) バックエンド、TypeScript (React) フロントエンド、marimo ダッシュボードを統合した開発環境を提供します。</p>
     </div>
 
     <div class="section">
@@ -278,7 +277,7 @@
       <ol class="steps">
         <li>
           <strong>ターミナルパネル（左下）</strong> で以下のコマンドを実行:
-          <div class="code-block"><code>pnpm run dev</code></div>
+          <div class="code-block"><code>pnpm run dev<br/># React + FastAPI のみ<br/>pnpm run dev:all<br/># React + FastAPI + marimo（初回は pnpm run enable:marimo）</code></div>
         </li>
         <li>
           開発サーバーが起動したら、<strong>アプリプレビュー（右上・このパネル）</strong> のURL入力欄に以下を入力:
@@ -294,9 +293,9 @@
           <strong>API Docs</strong>
           <small>/api/docs - FastAPI Swagger UI</small>
         </a>
-        <a href="/streamlit/" class="link-card">
-          <strong>Streamlit</strong>
-          <small>/streamlit/ - ダッシュボード</small>
+        <a href="/marimo/" class="link-card">
+          <strong>marimo</strong>
+          <small>/marimo/ - ダッシュボード</small>
         </a>
       </div>
     </div>
@@ -333,7 +332,7 @@
           <ul>
             <li>メモ: 作業メモを保存</li>
             <li>ログ: サービスログ確認</li>
-            <li>Streamlit: ダッシュボード</li>
+            <li>marimo: 管理ダッシュボード</li>
             <li>API Docs: FastAPI仕様</li>
           </ul>
         </div>
@@ -345,7 +344,11 @@
       <ul class="commands">
         <li>
           <strong>pnpm run dev</strong><br>
-          全開発サーバーを起動 (フロントエンド + バックエンド + Streamlit)
+          フロントエンド + バックエンドを起動
+        </li>
+        <li>
+          <strong>pnpm run dev:all</strong><br>
+          フロントエンド + バックエンド + marimo を一括起動（初回は pnpm run enable:marimo）
         </li>
         <li>
           <strong>pnpm run lint</strong><br>
@@ -401,9 +404,9 @@
       <h2>🛠️ トラブルシューティング</h2>
       <h3>開発サーバーが起動しない</h3>
       <ul>
-        <li>ターミナルで <code>pnpm run dev</code> を実行していますか?</li>
-        <li>ポート 3000, 8000, 8501 が既に使用されていませんか?</li>
-        <li><code>pnpm install</code> で依存関係をインストールしましたか?</li>
+        <li>ターミナルで <code>pnpm run dev</code> を実行しているか確認してください。</li>
+        <li>ポート 3000・8000・2718 が他のプロセスで利用されていないか確認してください。</li>
+        <li><code>pnpm install</code> で依存関係をインストール済みであることを確認してください。</li>
       </ul>
 
       <h3>VS Code が表示されない</h3>

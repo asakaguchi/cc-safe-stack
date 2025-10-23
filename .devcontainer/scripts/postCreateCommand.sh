@@ -8,7 +8,7 @@ echo "🐍 Python 環境セットアップ中..."
 # ルートの Python ツール群（pre-commit など）
 uv sync --frozen
 # バックエンド（FastAPI）の依存関係
-pushd backend >/dev/null
+pushd apps/backend >/dev/null
 uv sync --frozen
 popd >/dev/null
 

@@ -45,7 +45,7 @@ LOG_DIRECTORY.mkdir(parents=True, exist_ok=True)
 SERVICE_LOG_FILES: Final[dict[str, Path]] = {
     "backend": LOG_DIRECTORY / "backend.log",
     "frontend": LOG_DIRECTORY / "frontend.log",
-    "streamlit": LOG_DIRECTORY / "streamlit.log",
+    "marimo": LOG_DIRECTORY / "marimo.log",
 }
 
 

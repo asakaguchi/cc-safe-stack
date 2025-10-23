@@ -6,7 +6,7 @@
 ## 目的
 
 Claude Code が誤って `rm -rf *` などの破壊的コマンドを実行してもホスト環境を保護
-するため、完全に隔離されたセキュアな開発環境を提供します。
+するため、ホストから隔離したセキュアな開発環境を提供します。
 
 ## 環境構成
 
@@ -67,7 +67,9 @@ claude
 #### 5. 開発サーバーの起動（コンテナ内で実行）
 
 ```bash
-pnpm run dev  # React(3000), FastAPI(8000), Streamlit(8501)
+pnpm run dev       # React(3000), FastAPI(8000)
+pnpm run dev:all   # React(3000), FastAPI(8000), marimo(2718) を一括起動（初回は enable:marimo）
+pnpm run dev:marimo # marimo のみ個別起動
 ```
 
 ### エディタの選択肢
@@ -148,7 +150,7 @@ pnpm run dev:frontend
 docker compose up
 
 # アクセス先
-# - React: http://localhost:3000
+# - Web ダッシュボード（Caddy 経由 React/Docs/ターミナル）: http://localhost:8080
 # - FastAPI: http://localhost:8000
 ```
 
@@ -162,11 +164,13 @@ docker compose up
 
 ### サービス一覧
 
-| サービス名 | 説明                 | ポート | プロファイル |
-| ---------- | -------------------- | ------ | ------------ |
-| `app`      | FastAPI バックエンド | 8000   | デフォルト   |
-| `frontend` | React フロントエンド | 3000   | デフォルト   |
-| `dev`      | セキュア開発環境     | -      | `dev`        |
+| サービス名  | 説明                                        | ポート               | プロファイル |
+| ----------- | ------------------------------------------- | -------------------- | ------------ |
+| `app`       | FastAPI バックエンド                        | 8000                 | デフォルト   |
+| `frontend`  | React フロントエンド（Node 20 ランタイム）  | 3001（内部のみ）     | デフォルト   |
+| `workspace` | セキュア開発用 VS Code / CLI 環境           | 3000（エディタ接続） | デフォルト   |
+| `proxy`     | Caddy リバースプロキシ + Web ダッシュボード | 8080                 | デフォルト   |
+| `dev`       | セキュア開発環境（手動起動用プロファイル）  | -                    | `dev`        |
 
 ### コマンド例
 
@@ -239,10 +243,13 @@ source ~/.bashrc
 
 ### 権限同期の仕組み
 
-- app サービス・streamlit サービス: `entrypoint.sh`で gosu を使った動的ユーザー
-  作成
-- frontend サービス: `user`ディレクティブで UID/GID 指定
+- app サービス・marimo サービス: `entrypoint.sh`で gosu を使った動的ユーザー作成
+- frontend サービス: Node 20 の公式イメージ上で稼働し、起動時に
+  `npm install -g pnpm@9` を実行してから `pnpm dev` を起動（UID/GID は共有ボ
+  リューム経由でホストと同期される）
 - dev サービス: `entrypoint-dev.sh`で完全な権限管理
+- proxy サービス: Caddy で `/welcome.html` と各サービスへのリバースプロキシを提
+  供
 
 ### トラブルシューティング（権限関連）
 
@@ -300,8 +307,14 @@ pnpm run docker:dev:connect
 # 3. Claude Code で安全に開発
 claude  # コンテナ内で隔離実行
 
-# 4. 開発サーバー起動
+# 4. 開発サーバー起動（React + FastAPI）
 pnpm run dev
+
+# React + FastAPI + marimo をまとめて起動
+pnpm run dev:all
+
+# marimo だけ追加したい場合（初回は `pnpm run enable:marimo`）
+pnpm run dev:marimo
 ```
 
 ## トラブルシューティング
@@ -341,7 +354,7 @@ docker compose up
 解決策として、次の方法を試してください。
 
 ```bash
-# backend/uv.lock を作成
+# apps/backend/uv.lock を作成
 cd backend && uv sync && cd -
 docker compose build app
 ```

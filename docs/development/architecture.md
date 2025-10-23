@@ -7,42 +7,40 @@
 
 ### コンセプト
 
-本プロジェクトは、Python（FastAPI）、TypeScript（React）、Streamlit を組み合わせ
-たモダンなフルスタック開発環境です。モノリポ構成により、3 つのフロントエンドを統
+本プロジェクトは、Python（FastAPI）、TypeScript（React）、marimo を組み合わせた
+モダンなフルスタック開発環境です。モノリポ構成により、3 つのインターフェースを統
 合的に開発できます。
 
 ### 3つのフロントエンド構成
 
 - React はプロダクション向けのモダン UI
-- Streamlit はデータ分析・管理者ダッシュボード
+- marimo はデータ分析・管理者ダッシュボード
 - FastAPI Docs は自動生成される API 仕様書
 
 ## プロジェクト構造
 
 ```text
 cc-safe-stack/
-├── backend/              # Python FastAPI アプリケーション
-│   ├── main.py           # FastAPI エントリーポイント
-│   ├── pyproject.toml    # Python 依存関係設定
-│   └── src/              # バックエンドソースコード
-├── frontend/             # TypeScript React アプリケーション
-│   ├── src/              # フロントエンドソースコード
-│   ├── package.json      # Node.js 依存関係
-│   ├── tsconfig.json     # TypeScript設定
-│   └── vite.config.ts    # Vite設定
-├── streamlit/            # Streamlit データアプリケーション
-│   └── app.py            # Streamlit メインアプリ
-├── shared/               # 共有型定義・ユーティリティ
-│   └── types/            # TypeScript 型定義
+├── apps/
+│   ├── backend/          # Python FastAPI アプリケーション
+│   │   ├── main.py       # FastAPI エントリーポイント
+│   │   ├── pyproject.toml
+│   │   └── src/          # バックエンドソースコード
+│   └── frontend/         # TypeScript React アプリケーション
+│       ├── src/          # フロントエンドソースコード
+│       ├── package.json
+│       ├── tsconfig.json
+│       └── vite.config.ts
+├── extensions/
+│   └── marimo/           # marimo ダッシュボード用ノートブック
+├── packages/
+│   └── shared/           # TypeScript 共有型定義
 ├── scripts/              # 開発用スクリプト
 │   ├── setup.sh          # 初期セットアップ
 │   ├── dev.sh            # 開発サーバー起動
-│   ├── build.sh          # プロダクションビルド
+│   ├── dev-marimo.sh     # marimo ノートブック起動
 │   └── lint.sh           # コード品質チェック
 ├── .devcontainer/        # VS Code DevContainer設定
-│   ├── devcontainer.json # 標準（デフォルトでセキュア）
-│   ├── Dockerfile.base   # 共通基盤イメージ
-│   └── secure/           # セキュア開発環境
 ├── docker/               # Docker関連ファイル
 └── docs/                 # プロジェクトドキュメント
 ```
@@ -51,7 +49,7 @@ cc-safe-stack/
 
 ### 責任分離
 
-#### backend/ - APIとビジネスロジック
+#### apps/backend/ - APIとビジネスロジック
 
 役割として、以下を担当します。
 
@@ -69,7 +67,7 @@ cc-safe-stack/
 - uv: 高速パッケージマネージャー
 - Ruff: コードリンター・フォーマッター
 
-#### frontend/ - ユーザーインターフェース
+#### apps/frontend/ - ユーザーインターフェース
 
 役割として、以下を担当します。
 
@@ -86,23 +84,22 @@ cc-safe-stack/
 - ESLint + Prettier: コード品質管理
 - pnpm: 高速・省スペースなパッケージマネージャー
 
-#### streamlit/ - データアプリケーション
+#### extensions/marimo/ - データアプリケーション
 
 役割として、以下を担当します。
 
 - データ分析ダッシュボード
 - 管理者向けインターフェース
-- リアルタイムデータ可視化
+- API との連携検証
 - プロトタイピング環境
 
 技術スタックには、以下を使用します。
 
-- Streamlit: Python でのデータアプリ構築
-- Pandas: データ分析・処理
-- Plotly: インタラクティブな可視化
+- marimo: Python でのインタラクティブノートブック構築
+- duckdb / polars（オプション）: データ処理
 - HTTPX: FastAPI 統合の HTTP クライアント
 
-#### shared/ - 共有リソース
+#### packages/shared/ - 共有リソース
 
 役割として、以下を担当します。
 
@@ -143,6 +140,7 @@ pnpm add -D @types/node typescript
 
 # 高速な実行環境
 pnpm run dev
+# marimo を含める場合は pnpm run dev:all（初回は enable:marimo）
 ```
 
 ### 型安全性の確保
@@ -199,7 +197,7 @@ export async function createUser(data: CreateUserRequest): Promise<User> {
 
 ```text
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   React App     │    │  Streamlit App  │    │   FastAPI Docs  │
+│   React App     │    │   marimo App    │    │   FastAPI Docs  │
 │  (Frontend)     │    │  (Analytics)    │    │   (API Spec)    │
 └─────────┬───────┘    └─────────┬───────┘    └─────────┬───────┘
           │                      │                      │
@@ -226,7 +224,7 @@ export async function createUser(data: CreateUserRequest): Promise<User> {
    Frontend Request → API Router → Business Logic → Database → Response
    ```
 
-2. **Streamlit → FastAPI**
+2. **marimo → FastAPI**
 
    ```text
    Dashboard Request → API Client → FastAPI → Data Processing → Visualization

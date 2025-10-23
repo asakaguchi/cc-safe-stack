@@ -38,14 +38,14 @@ safe_remove() {
 }
 
 # Check if we're in the right directory
-if [ ! -f "$PROJECT_ROOT/package.json" ] || [ ! -f "$PROJECT_ROOT/backend/pyproject.toml" ]; then
+if [ ! -f "$PROJECT_ROOT/package.json" ] || [ ! -f "$PROJECT_ROOT/apps/backend/pyproject.toml" ]; then
     echo "❌ Could not find project files in $PROJECT_ROOT"
     exit 1
 fi
 
 # Clean Backend (Python)
 log_info "Cleaning Python backend artifacts..."
-cd "$PROJECT_ROOT/backend"
+cd "$PROJECT_ROOT/apps/backend"
 
 # Remove Python cache and build artifacts
 safe_remove "__pycache__" "Python cache"
@@ -63,7 +63,7 @@ find . -name "*.pyo" -delete 2>/dev/null || true
 
 # Clean Frontend (TypeScript/React)
 log_info "Cleaning TypeScript frontend artifacts..."
-cd "$PROJECT_ROOT/frontend"
+cd "$PROJECT_ROOT/apps/frontend"
 
 safe_remove "node_modules" "Node.js modules"
 safe_remove "dist" "Frontend build artifacts"
@@ -99,6 +99,8 @@ echo ""
 echo "💡 To restore the project:"
 echo "  📦 Install dependencies: pnpm run setup"
 echo "  🔧 Start development:   pnpm run dev"
+echo "  🚀 Full stack (with marimo): pnpm run dev:all"
+echo "  🧮 Marimo dashboard:   pnpm run dev:marimo  # 初回は pnpm run enable:marimo"
 echo "  🏗️  Build project:       pnpm run build"
 echo ""
 echo "⚠️  Note: You'll need to run 'pnpm run setup' to reinstall dependencies."

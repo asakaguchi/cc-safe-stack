@@ -14,9 +14,12 @@ Claude Code（Anthropic の AI 開発パートナー）を使って、仕様書�
 ### このテンプレート + Claude Code で実現すること
 
 - 数時間で動作するプロトタイプ完成 - 仕様書提示から動作確認まで
-- 3 つのインターフェース構築 - React UI + Streamlit 管理画面 + API Docs
+- 3 つのインターフェース構築 - React UI + marimo ダッシュボード + API Docs
 - 品質重視開発 - TDD/BDD、型安全性、高テストカバレッジ推奨
 - 効率的開発 - バックエンド・フロントエンドの迅速な実装
+
+> 既存の Streamlit ベース（v0.1.x）から移行する場合は
+> [MIGRATION ガイド](MIGRATION.md) を参照してください。
 
 ## Claude Code 最適化技術スタック
 
@@ -41,10 +44,10 @@ Claude Code（Anthropic の AI 開発パートナー）を使って、仕様書�
 - **Vite** - 高速ビルドで繰り返し測定を加速
 - **pnpm** - 高速・省ストレージなワークスペース対応パッケージマネージャー
 
-#### データ分析（Streamlit - 管理者ダッシュボード）
+#### データ分析（marimo - 管理者ダッシュボード）
 
-- **Streamlit** - Python で高機能ダッシュボードを瞬時構築
-- **Pandas** + **Plotly** - インタラクティブなデータ可視化
+- **marimo** - Python でインタラクティブなノートブックダッシュボードを構築
+- **duckdb** + **polars**（オプション）- 高速データ処理と可視化
 
 ### 自動品質担保
 
@@ -225,10 +228,10 @@ cp .env.example .env
   pnpm run docker:dev:connect # シェルで接続
   claude                     # CLI から直接実行
 
-  pnpm run dev               # 必要に応じて開発サーバー起動
+  pnpm run dev               # React + FastAPI の開発サーバーを起動
   # - React: http://localhost:3000
   # - FastAPI: http://localhost:8000
-  # - Streamlit: http://localhost:8501
+  # - marimo を含める場合: `pnpm run dev:all`（初回は `pnpm run enable:marimo`）
   ```
 
 ##### Web ダッシュボードで 4 分割ワークスペースを利用する
@@ -244,7 +247,7 @@ cp .env.example .env
    ```
 
    バックグラウンドで実行したい場合は `pnpm run docker:dashboard -- -d` を利用で
-   きます。`proxy` サービスの依存として `frontend` / `app` / `streamlit` /
+   きます。`proxy` サービスの依存として `frontend` / `app` / `marimo` /
    `workspace` が自動的に立ち上がります。
 
 2. ブラウザで <http://localhost:8080> にアクセスすると以下の 4 画面が表示されま
@@ -255,7 +258,7 @@ cp .env.example .env
      力で変更可能）
    - 左下: `/terminal/`（ttyd ベースのシェル。同じセキュア開発コンテナに接続して
      おり `claude` コマンドも利用可能）
-   - 右下: ローカルストレージ保存メモ／`Streamlit`／`API Docs` を切り替え
+   - 右下: ローカルストレージ保存メモ／`marimo`／`API Docs` を切り替え
 
    ダッシュボード上部のショートカット説明にある通り、`Ctrl + Shift + Alt + D` で
    全画面表示をトグルできます。
@@ -294,11 +297,14 @@ cp .env.example .env
 # 依存関係セットアップ
 pnpm run setup
 
-# 環境の正常性確認
-pnpm run verify-setup
-
-# 全サービス並列起動
+# React + FastAPI を起動
 pnpm run dev
+
+# React + FastAPI + marimo を同時起動（初回は `pnpm run enable:marimo`）
+pnpm run dev:all
+
+# marimo のみ個別に起動したい場合
+pnpm run dev:marimo
 ```
 
 重要な注意事項は次のとおりです。
@@ -328,7 +334,7 @@ specs/examples/todo-app.spec.md の仕様で実装してください
 
    これにより、プロジェクトスコープの `.mcp.json` が正しく認識されます。
 
-2. **2回目以降は高速モード利用可能** 一度認識された後は、パーミッション確認をス
+2. **2回目以降は高速モードを利用可能** 一度認識された後はパーミッション確認をス
    キップできます:
 
    ```bash
@@ -349,7 +355,7 @@ specs/examples/todo-app.spec.md の仕様で実装してください
 
 - **React** <http://localhost:3000>
 - **FastAPI** <http://localhost:8000>
-- **Streamlit** <http://localhost:8501>
+- **marimo** <http://localhost:2718>
 
 ### ステップ 5: カスタマイズ
 
@@ -377,6 +383,7 @@ Code に実装を依頼してください。
 - **[アーキテクチャガイド](docs/development/architecture.md)** - 技術構成と設計
   思想
 - **[API開発ガイド](docs/development/api-development.md)** - 従来的な開発手法
+- **[marimo 拡張ガイド](docs/extensions/marimo.md)** - ダッシュボード拡張方法
 
 ## このテンプレートの特徴
 
@@ -384,8 +391,9 @@ Code に実装を依頼してください。
 
 このテンプレートは **Claude Code による実装生成** を前提として設計されています。
 
-- **backend/src/** - ディレクトリ構造のみ提供、実装は Claude Code が生成
-- **streamlit/pages/** - UI 構造の例示、実際の API 接続は Claude Code が実装
+- **apps/backend/src/** - ディレクトリ構造のみ提供、実装は Claude Code が生成
+- **extensions/marimo/** - サンプルノートブックを提供、API 接続は Claude Code が
+  実装
 - **specs/examples/** - 豊富な仕様書テンプレートから選択して実装依頼
 
 既存の実装例がないことで、Claude Code が仕様書に忠実な実装を生成できます。
@@ -405,7 +413,7 @@ Code に実装を依頼してください。
 ### 3つのインターフェースが構築される
 
 - **React** - エンドユーザー向けのモダン UI
-- **Streamlit** - データ分析・管理者ダッシュボード（Python）
+- **marimo** - データ分析・管理者ダッシュボード（Python）
 - **FastAPI Docs** - 開発者向け API 仕様書（Swagger 自動生成）
 
 ### 品質・セキュリティ標準装備

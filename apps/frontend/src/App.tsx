@@ -6,6 +6,14 @@ interface ApiResponse {
   timestamp: string
 }
 
+const rawApiBaseUrl = (import.meta.env.VITE_API_URL ?? '').trim()
+const API_BASE_URL = rawApiBaseUrl ? rawApiBaseUrl.replace(/\/$/, '') : ''
+
+const buildApiUrl = (path: string): string => {
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`
+  return `${API_BASE_URL}${normalizedPath}`
+}
+
 function App() {
   const [backendMessage, setBackendMessage] = useState<string>('Loading...')
   const [name, setName] = useState<string>('')
@@ -13,22 +21,36 @@ function App() {
 
   // Fetch message from backend on component mount
   useEffect(() => {
-    fetch('/api/health')
-      .then(response => response.json())
-      .then((data: { message: string }) => {
+    const controller = new AbortController()
+
+    const fetchBackendStatus = async () => {
+      try {
+        const response = await fetch(buildApiUrl('/health'), {
+          signal: controller.signal,
+        })
+        const data: { message: string } = await response.json()
         setBackendMessage(data.message)
-      })
-      .catch(error => {
+      } catch (error) {
+        if ((error as Error).name === 'AbortError') {
+          return
+        }
         console.error('Error fetching from backend:', error)
         setBackendMessage('バックエンドへの接続に失敗しました')
-      })
+      }
+    }
+
+    fetchBackendStatus()
+
+    return () => {
+      controller.abort()
+    }
   }, [])
 
   const handleGreeting = async () => {
     if (!name.trim()) return
 
     try {
-      const response = await fetch(`/api/hello/${encodeURIComponent(name)}`)
+      const response = await fetch(buildApiUrl(`/api/hello/${encodeURIComponent(name)}`))
       const data: ApiResponse = await response.json()
       setGreeting(data.message)
     } catch (error) {
