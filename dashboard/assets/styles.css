@@ -55,6 +55,11 @@ header p {
   background: var(--bg-light);
 }
 
+.grid--single {
+  grid-template-columns: 1fr;
+  grid-template-rows: minmax(0, 1fr);
+}
+
 .tile {
   display: flex;
   flex-direction: column;
@@ -235,6 +240,12 @@ header p {
   align-items: center;
 }
 
+.tile__header-buttons {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
 .tile__actions--preview {
   justify-content: flex-end;
   flex-wrap: wrap;
@@ -405,6 +416,23 @@ header p {
   flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem;
+}
+
+.logs__hint {
+  margin: 0.5rem 0 0.25rem;
+  padding: 0 0.25rem;
+  font-size: 0.75rem;
+  color: rgba(203, 213, 225, 0.85);
+}
+
+.logs__hint code {
+  font-family: 'Fira Code', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', monospace;
+  font-size: 0.75rem;
+  background: rgba(15, 23, 42, 0.65);
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.35rem;
+  color: rgba(148, 163, 184, 0.95);
 }
 
 .logs__controls select,

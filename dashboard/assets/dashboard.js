@@ -21,6 +21,7 @@ const previewIframe = document.querySelector('[data-preview-frame]')
 const previewLink = document.querySelector('[data-preview-link]')
 const terminalTabs = document.querySelectorAll('[data-terminal-target]')
 const terminalFrames = document.querySelectorAll('.terminal-frame')
+const terminalExternalLink = document.querySelector('[data-terminal-link]')
 
 const logsContainer = document.querySelector('[data-mode="logs"]')
 const logsOutput = document.getElementById('logs-output')
@@ -43,6 +44,26 @@ let quill = null
 let currentAuxMode = 'notes'
 let isNotesReady = false
 let quillLoaderPromise = null
+
+function getTerminalLinkBasePath() {
+  if (!terminalExternalLink) {
+    return '/terminal'
+  }
+  const raw = terminalExternalLink.dataset.basePath || '/terminal'
+  return raw.endsWith('/') ? raw.slice(0, -1) : raw
+}
+
+function updateTerminalExternalLink(targetId) {
+  if (!terminalExternalLink) {
+    return
+  }
+  const sanitized = String(targetId ?? '').replace(/[^0-9]/g, '')
+  if (!sanitized) {
+    return
+  }
+  const basePath = getTerminalLinkBasePath()
+  terminalExternalLink.href = `${basePath}/${sanitized}/`
+}
 
 async function loadQuill() {
   if (window.Quill) {
@@ -826,6 +847,7 @@ function setupTerminalTabs() {
         const isActive = t.dataset.terminalTarget === targetId
         t.setAttribute('aria-selected', String(isActive))
       })
+      updateTerminalExternalLink(targetId)
 
       terminalFrames.forEach(frame => {
         const frameId = frame.dataset.terminalId
@@ -841,6 +863,13 @@ function setupTerminalTabs() {
       })
     })
   })
+
+  const initiallySelected =
+    Array.from(terminalTabs).find(tab => tab.getAttribute('aria-selected') === 'true')?.dataset
+      .terminalTarget ?? terminalTabs[0]?.dataset.terminalTarget
+  if (initiallySelected) {
+    updateTerminalExternalLink(initiallySelected)
+  }
 }
 
 updateAuxMode(currentAuxMode)
