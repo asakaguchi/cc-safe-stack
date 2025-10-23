@@ -6,6 +6,37 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2025-10-23
+
+### Added
+
+- **marimo ダッシュボード体験**
+  - `pnpm run enable:marimo` → `pnpm run dev:marimo` / `pnpm run dev:all` でサン
+    プルダッシュボードを起動可能
+  - `extensions/marimo/app.py` に管理ビューの雛形を同梱
+- **移行ドキュメントとガイド**
+  - `MIGRATION.md` に Streamlit から marimo への切り替え手順を掲載
+  - README / docs 一式を marimo + FastAPI + React 構成に合わせて全面更新
+
+### Changed
+
+- **ディレクトリ構成の再編**
+  - アプリコードを `apps/backend`, `apps/frontend`, 共有型を `packages/shared`
+    へ整理
+  - 新しい構成に合わせてスクリプト・CI・設定ファイルを刷新
+- **開発体験のシンプル化**
+  - `pnpm run dev`（React + FastAPI）と `pnpm run dev:all`（React + FastAPI +
+    marimo）を整備
+  - Docker Compose / DevContainer を Node 公式イメージベースに一本化し、セット
+    アップを短縮
+
+### Removed
+
+- **Streamlit ベースのダッシュボード**（`streamlit/` 配下）を廃止し、marimo に置
+  き換え
+- **テンプレート外サンプルコード**（`examples/python-sample/` など）を削除し、配
+  布物をスリム化
+
 ## [0.1.4] - 2025-10-06
 
 ### Added
@@ -152,6 +183,7 @@ and this project adheres to
 - TDD/BDD サポート
 - 型安全性 (TypeScript ↔ Pydantic)
 
+[0.2.0]: https://github.com/your-username/cc-safe-stack/compare/v0.1.4...v0.2.0
 [0.1.4]: https://github.com/your-username/cc-safe-stack/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/your-username/cc-safe-stack/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/your-username/cc-safe-stack/compare/v0.1.1...v0.1.2

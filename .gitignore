@@ -320,3 +320,7 @@ extensions/marimo/.enabled
 
 # Backup of npm lockfile
 package-lock.json.backup
+
+# Local planning docs (kept in repo but ignored in git)
+PLANS.md
+AGENTS.md
