@@ -390,8 +390,8 @@ pnpm run dev:marimo
 ### アクセス先
 
 - React TODO アプリ：<http://localhost:3000>
-- marimo ダッシュボード：<http://localhost:2718>（`pnpm run dev:all` または
-  `pnpm run dev:marimo` 実行時）
+- marimo ダッシュボード：<http://localhost:2718>
+  - 利用可能条件：`pnpm run dev:all` または `pnpm run dev:marimo` 実行時
 - FastAPI 仕様書：<http://localhost:8000/docs>
 
 ## リスク・制約
