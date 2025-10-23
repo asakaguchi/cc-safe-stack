@@ -309,6 +309,8 @@ header p {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  flex: 1;
+  min-height: 0;
 }
 
 .notes__editor {
@@ -467,6 +469,7 @@ header p {
 .logs__output {
   flex: 1;
   min-height: 0;
+  max-height: 100%;
   padding: 0.75rem;
   border: 1px solid var(--border);
   border-radius: 0.5rem;
@@ -477,7 +480,8 @@ header p {
   line-height: 1.4;
   white-space: pre-wrap;
   word-break: break-word;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .logs__output.is-empty {

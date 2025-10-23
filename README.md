@@ -259,10 +259,10 @@ cp .env.example .env
      え、リンクから別タブで表示できる。
    - 左下: `/terminal/` - ttyd ベースのシェルで 3 セッションをタブ切り替えでき
      る。選択中のセッションは「別タブで開く」で独立表示できる。
-   - 右下: ユーティリティ - メモ／ログ追尾／`marimo`／`API Docs` を切り替え。ロ
-     グは `./.logs/` 以下に出力された backend/frontend/marimo のログを tail し、
-     ヘッダーのリンクからユーティリティ専用ビュー `/utilities.html` を全画面で開
-     ける。
+   - 右下: ユーティリティ - メモ／ログ追尾／`marimo`／`API Docs` を切り替える。
+     ログは `./.logs/` 以下に出力された backend/frontend/marimo のログを tail す
+     る。ヘッダーのリンクからユーティリティ専用ビュー `/utilities.html` を全画面
+     で開ける。
 
    ダッシュボード上部のショートカット説明にある通り、`Ctrl + Shift + Alt + D` で
    全画面表示をトグルできます。
