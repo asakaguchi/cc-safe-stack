@@ -28,28 +28,30 @@ flowchart TD
 
 ### 重要な原則
 
-- **Claude Code使用時**: 必ずセキュア環境（DevContainer/Docker）
-- **手動開発時**: ローカル環境でも可（パフォーマンス重視）
-- **デフォルト**: すべてのコンテナ環境は SECURE_MODE=true
+- Claude Code を使用する場合は DevContainer または Docker のセキュア環境を利用す
+  る。
+- 手動開発を選ぶ場合はローカル環境でも運用できるが、パフォーマンス重視モードとし
+  て扱う。
+- すべてのコンテナ環境は既定で `SECURE_MODE=true` に設定されている。
 
 ## 📚 ドキュメント構成
 
 ### 🚀 クイックスタート
 
-| ドキュメント                 | 説明                       | 対象者            |
-| ---------------------------- | -------------------------- | ----------------- |
-| [README.md](../README.md)    | プロジェクト概要・環境選択 | 全員必読          |
-| [TUTORIAL.md](./TUTORIAL.md) | Claude Code実践ガイド      | Claude Code利用者 |
+| ドキュメント                 | 説明                                     | 対象者             |
+| ---------------------------- | ---------------------------------------- | ------------------ |
+| [README.md](../README.md)    | プロジェクト概要・環境選択               | 全員必読           |
+| [TUTORIAL.md](./TUTORIAL.md) | Claude Code 実践ガイド（React + marimo） | Claude Code 利用者 |
 
 ### 🔧 環境構築
 
-| ドキュメント                                                                                       | 説明                             | 対象者                         |
-| -------------------------------------------------------------------------------------------------- | -------------------------------- | ------------------------------ |
-| [DevContainer ガイド](environment/devcontainer.md)                                                 | VS Code DevContainer設定         | VS Code利用者                  |
-| [Docker ガイド](environment/docker.md)                                                             | Docker開発環境設定               | 任意エディタ利用者             |
-| [README: Web ダッシュボード手順](../README.md#web-ダッシュボードで-4-分割ワークスペースを利用する) | ブラウザで使える Docker 開発環境 | Claude Code をブラウザから操作 |
-| [セキュリティ設定](environment/security.md)                                                        | ネットワーク制限・セキュリティ   | セキュリティ重視               |
-| [インストールガイド](getting-started/installation.md)                                              | 詳細セットアップ                 | 手動構築希望者                 |
+| ドキュメント                                                                                       | 説明                                                              | 対象者                         |
+| -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------------------------------ |
+| [DevContainer ガイド](environment/devcontainer.md)                                                 | VS Code DevContainer設定                                          | VS Code利用者                  |
+| [Docker ガイド](environment/docker.md)                                                             | Docker開発環境設定                                                | 任意エディタ利用者             |
+| [README: Web ダッシュボード手順](../README.md#web-ダッシュボードで-4-分割ワークスペースを利用する) | ブラウザで使える Docker 開発環境（React + marimo + FastAPI Docs） | Claude Code をブラウザから操作 |
+| [セキュリティ設定](environment/security.md)                                                        | ネットワーク制限・セキュリティ                                    | セキュリティ重視               |
+| [インストールガイド](getting-started/installation.md)                                              | 詳細セットアップ                                                  | 手動構築を希望する開発者       |
 
 ### 🏗️ 開発・設計
 

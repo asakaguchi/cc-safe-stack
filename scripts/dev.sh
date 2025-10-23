@@ -7,11 +7,14 @@ if [ -f "/.dockerenv" ]; then
     exec "$(dirname "$0")/dev-docker.sh"
 fi
 
-echo "🚀 Starting Full-Stack Development Servers (React + FastAPI + Streamlit)..."
+echo "🚀 Starting Full-Stack Development Servers (React + FastAPI)..."
 
 # Get script directory for absolute paths
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+
+export UV_CACHE_DIR="${PROJECT_ROOT}/.cache/uv"
+mkdir -p "$UV_CACHE_DIR"
 
 # Colors for output
 GREEN='\033[0;32m'
@@ -42,50 +45,36 @@ cleanup() {
 trap cleanup SIGINT SIGTERM
 
 # Check if we're in the right directory
-if [ ! -f "$PROJECT_ROOT/package.json" ] || [ ! -f "$PROJECT_ROOT/backend/pyproject.toml" ]; then
+if [ ! -f "$PROJECT_ROOT/package.json" ] || [ ! -f "$PROJECT_ROOT/apps/backend/pyproject.toml" ]; then
     echo "❌ Could not find project files in $PROJECT_ROOT"
     exit 1
 fi
 
 # Check if dependencies are installed
-if [ ! -d "$PROJECT_ROOT/backend/.venv" ]; then
+if [ ! -d "$PROJECT_ROOT/apps/backend/.venv" ]; then
     log_warning "Backend dependencies not found. Running setup..."
     "$PROJECT_ROOT/scripts/setup.sh"
 fi
 
-if [ ! -d "$PROJECT_ROOT/frontend/node_modules" ]; then
+if [ ! -d "$PROJECT_ROOT/apps/frontend/node_modules" ]; then
     log_warning "Frontend dependencies not found. Running setup..."
     "$PROJECT_ROOT/scripts/setup.sh"
 fi
 
-# Check if Streamlit is available (now included in base dependencies)
-log_info "Checking Streamlit availability..."
-cd "$PROJECT_ROOT/backend"
-if ! uv run python -c "import streamlit" 2>/dev/null; then
-    log_warning "Streamlit not found. Syncing dependencies..."
-    uv sync
-fi
-
 log_info "Starting backend server (Python/FastAPI)..."
-cd "$PROJECT_ROOT/backend"
+cd "$PROJECT_ROOT/apps/backend"
 uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000 &
 BACKEND_PID=$!
 
 log_info "Starting frontend server (TypeScript/React)..."
 cd "$PROJECT_ROOT"
-pnpm --dir "$PROJECT_ROOT/frontend" dev -- --host 0.0.0.0 &
+pnpm --dir "$PROJECT_ROOT/apps/frontend" dev -- --host 0.0.0.0 &
 FRONTEND_PID=$!
-
-log_info "Starting Streamlit server (Data Application)..."
-cd "$PROJECT_ROOT/backend"
-uv run streamlit run "$PROJECT_ROOT/streamlit/app.py" --server.port 8501 --server.address 0.0.0.0 &
-STREAMLIT_PID=$!
 
 log_success "All development servers started!"
 echo ""
 echo "🌐 React UI:    http://localhost:3000"
 echo "🐍 FastAPI:     http://localhost:8000"
-echo "🎈 Streamlit:   http://localhost:8501"
 echo "📚 API Docs:    http://localhost:8000/docs"
 echo ""
 echo "Press Ctrl+C to stop all servers"

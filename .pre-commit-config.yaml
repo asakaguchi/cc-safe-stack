@@ -21,7 +21,7 @@ repos:
         name: uv lock (backend)
         language: system
         entry: bash
-        args: ["-lc", "cd backend && uv lock"]
+        args: ["-lc", "cd apps/backend && uv lock"]
   
   # JavaScript/TypeScript linting and formatting
   - repo: https://github.com/pre-commit/mirrors-prettier

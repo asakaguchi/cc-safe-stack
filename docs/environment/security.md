@@ -51,7 +51,7 @@ docker compose --profile dev up -d dev
 
 #### 方法1: 環境変数設定（推奨）
 
-設定ファイルの作成:
+設定ファイルの作成手順は以下のとおりです。
 
 ```bash
 # Yahoo Finance用（株式分析の場合）
@@ -61,7 +61,7 @@ cp .devcontainer/devcontainer.local.json.clean-yfinance .devcontainer/devcontain
 cp .devcontainer/devcontainer.local.json.clean-sample .devcontainer/devcontainer.local.json
 ```
 
-設定例:
+設定例は次のとおりです。
 
 ```json
 {
@@ -72,13 +72,14 @@ cp .devcontainer/devcontainer.local.json.clean-sample .devcontainer/devcontainer
 }
 ```
 
-反映手順:
+反映手順は次のとおりです。
 
-VS Code で「Rebuild and Reopen in Container」を実行。
+VS Code で「Rebuild and Reopen in Container」を実行します。
 
 #### 方法2: 実行時追加（一時的）
 
-DevContainer 起動後に追加のドメインを許可。
+DevContainer 起動後に追加のドメインを許可します。永続化されないため、再起動のた
+びに再設定が必要です。
 
 ```bash
 # Yahoo Finance の場合
@@ -88,11 +89,28 @@ DevContainer 起動後に追加のドメインを許可。
 ./scripts/allow-additional-domain.sh your-api-domain.com
 ```
 
-注意: 方法 2 は一時的な解決策です。恒久的な設定には方法 1 を推奨します。
+##### allow-additional-domain.sh の使い方
+
+1. `SECURE_MODE=true` のコンテナで実行します。セキュアモード以外では実行不要で
+   す。
+2. 引数に許可したいドメインを列挙します。スキームやパスが含まれていても自動で正
+   規化されます。
+3. スクリプトは `dig` で IP を解決し、`ipset` の `allowed-domains` セットへ追加
+   します。
+4. 追加後は即時反映されます。永続化したい場合は方法 1 で環境変数に設定してくださ
+   い。
+
+エラーになる場合は以下を確認してください。
+
+- `SECURE_MODE` が `true` になっているか
+- `ipset` コマンドが利用可能か（DevContainer では標準でインストール済み）
+- DNS で IP が引けるか (`dig example.com +short`)
+- sudo 権限が必要な場合は `sudo ./scripts/allow-additional-domain.sh ...` を使用
+  する
 
 ### 設定書式
 
-追加ドメインの指定では以下の書式が利用可能。
+追加ドメインの指定では以下の書式が利用可能です。
 
 - 区切り文字: カンマ`,`、セミコロン`;`、スペースのいずれも可
 - スキーム付き URL: `https://cdn.company.com/packages` など
@@ -117,9 +135,11 @@ DevContainer 起動後に追加のドメインを許可。
 
 この方式では、`gcloud auth login` をホスト側で実行し、認証情報をコンテナにマウン
 トします。トークン自動更新のため書き込み可能でマウントされます（約 1 時間で失
-効）。これにより、セキュアモードを維持したまま gcloud コマンドが使用できます。
+効）ため、セキュアモードを維持したまま gcloud コマンドが使用できます。
 
-**ホスト側で認証（初回のみ）**:
+**ホスト側で認証（初回のみ）**
+
+次のコマンドをホストで実行します。
 
 ```bash
 # ホスト側（WSL/Linux/Mac）で実行
@@ -127,11 +147,11 @@ gcloud auth login
 gcloud auth application-default login
 ```
 
-**Docker環境の場合**:
+**Docker環境の場合**
 
 認証情報は自動的にマウントされます。コンテナを起動するだけで使用可能です。
 
-Linux/Mac/WSL2 の場合:
+Linux/Mac/WSL2 の場合は以下の手順を実施します。
 
 ```bash
 # コンテナ起動（認証情報は自動マウント）
@@ -143,7 +163,7 @@ gcloud auth list
 gcloud projects list
 ```
 
-Windows PowerShell の場合:
+Windows PowerShell の場合は以下を追加します。
 
 ```bash
 # .env ファイルに以下を追加
@@ -160,7 +180,7 @@ gcloud projects list
 
 **DevContainer環境の場合**:
 
-認証情報は自動的にマウントされます。VS Codeでコンテナを開くだけで使用可能です。
+認証情報は自動的にマウントされます。VS Code でコンテナを開くだけで使用可能です。
 
 ```bash
 # コンテナ内で確認
@@ -179,31 +199,32 @@ gcloud projects list
   - 認証情報（`credentials.db`）
   - 設定ファイル（`configurations/config_default`）
 
-**トークン更新の仕組み**:
+**トークン更新の仕組み**
 
-Google Cloud のアクセストークンは約1時間で失効します。`gcloud projects list` な
-どのコマンドを実行する際、gcloud CLI は自動的にトークンを更新
+Google Cloud のアクセストークンは約 1 時間で失効します。`gcloud projects list`
+などのコマンドを実行すると gcloud CLI が自動的にトークンを更新
 し、`access_tokens.db` ファイルを書き換えます。このため、マウントは read-only で
 はなく **書き込み可能** である必要があります。
 
-read-only でマウントした場合、以下のような問題が発生します:
+read-only でマウントした場合は次のような問題が発生します。
 
 - トークン失効後に `gcloud` コマンドが失敗する
 - `access_tokens.db` の更新ができずエラーになる
 - 毎回ホスト側で `gcloud auth login` を再実行する必要がある
 
-**セキュリティ上の利点**:
+**セキュリティ上の利点**
 
-- ✅ セキュアモード（SECURE_MODE=true）を維持
-- ✅ ファイアウォール設定変更不要
-- ✅ IPアドレス変更の影響を受けない（認証済み）
-- ✅ コンテナ再作成時も認証情報が保持される
-- ✅ トークン自動更新により長時間の作業が可能
+- セキュアモード（SECURE_MODE=true）を維持できる
+- ファイアウォール設定の変更が不要になる
+- IP アドレス変更の影響を受けない（認証済みであるため）
+- コンテナ再作成時も認証情報が保持される
+- トークン自動更新により長時間の作業が可能になる
 
 **Windows（WSL2）での注意事項**:
 
-Windows環境では、WSL2内で `gcloud auth login` を実行してください。PowerShellやコ
-マンドプロンプトで認証した場合、パスが異なるためコンテナからアクセスできません。
+- WSL2 内で `gcloud auth login` を実行する（PowerShell / CMD での認証は不可）
+- 認証情報は `${HOME}/.config/gcloud`（WSL2）または
+  `${APPDATA}/gcloud`（Windows）に保存され、自動でマウントされる
 
 ```bash
 # WSL2内で実行
@@ -230,13 +251,13 @@ cp .devcontainer/devcontainer.local.jsonc.gcloud-powershell .devcontainer/devcon
 # Ctrl+Shift+P → "Dev Containers: Rebuild Container"
 ```
 
-**注意**: WSL2 で認証した場合は、このテンプレートは不要です。`devcontainer.json`
-のデフォルト設定（`HOME` 環境変数）がそのまま使用できます。
+注意：WSL2 で認証した場合は、このテンプレートは不要です。`devcontainer.json` の
+デフォルト設定（`HOME` 環境変数）がそのまま使用できます。
 
 ### 株式分析（Yahoo Finance）
 
-株式分析プラットフォーム等で外部 API（Yahoo Finance など）を使用する場合の設定
-例。
+株式分析プラットフォーム等で外部 API（Yahoo Finance など）を使用する場合の設定例
+です。
 
 ```json
 {
@@ -249,7 +270,7 @@ cp .devcontainer/devcontainer.local.jsonc.gcloud-powershell .devcontainer/devcon
 
 ### その他の外部API
 
-企業プライベートレジストリ:
+企業プライベートレジストリの場合は次のとおりです。
 
 ```json
 {
@@ -259,7 +280,7 @@ cp .devcontainer/devcontainer.local.jsonc.gcloud-powershell .devcontainer/devcon
 }
 ```
 
-CDN サービス:
+CDN サービスの場合は次のとおりです。
 
 ```json
 {
@@ -273,7 +294,7 @@ CDN サービス:
 
 ### 利用可能な設定ファイル
 
-`.devcontainer/` フォルダ内の設定ファイル。
+`.devcontainer/` フォルダ内の設定ファイルを以下に示します。
 
 - `devcontainer.json`: メインの設定（リポジトリにコミット済み）
 - `devcontainer.local.json`: **ユーザー固有の設定（.gitignore に含まれる）**
@@ -282,13 +303,13 @@ CDN サービス:
 
 ### テンプレートファイル
 
-Yahoo Finance 用設定:
+Yahoo Finance 用設定の例です。
 
 ```bash
 cp .devcontainer/devcontainer.local.json.clean-yfinance .devcontainer/devcontainer.local.json
 ```
 
-サンプル設定:
+サンプル設定の例です。
 
 ```bash
 cp .devcontainer/devcontainer.local.json.clean-sample .devcontainer/devcontainer.local.json
@@ -300,11 +321,11 @@ cp .devcontainer/devcontainer.local.json.clean-sample .devcontainer/devcontainer
 
 #### 外部API接続エラー
 
-症状: Yahoo Finance 等の外部 API に接続できない。
+症状：Yahoo Finance 等の外部 API に接続できない。
 
-原因: セキュアモードでドメインが許可されていない。
+原因：セキュアモードでドメインが許可されていない。
 
-解決策:
+解決策：次の手順を順に実施します。
 
 1. **設定確認**
 
@@ -316,14 +337,14 @@ cp .devcontainer/devcontainer.local.json.clean-sample .devcontainer/devcontainer
    sudo ipset list allowed-domains | grep -E "(yahoo|finance)"
    ```
 
-2. **即座に修正**
+2. **即座に修正する**
 
    ```bash
    # 必要なドメインを追加
    ./scripts/allow-additional-domain.sh fc.yahoo.com query1.finance.yahoo.com
    ```
 
-3. **恒久的な修正**
+3. **恒久的な修正を実施する**
 
    ```bash
    # 設定ファイルを作成
@@ -333,20 +354,20 @@ cp .devcontainer/devcontainer.local.json.clean-sample .devcontainer/devcontainer
 
 #### DevContainer 設定が反映されない
 
-症状: `devcontainer.local.json` を作成したが環境変数が設定されない。
+症状：`devcontainer.local.json` を作成したが環境変数が設定されない。
 
-原因: DevContainer の再ビルドまたは再起動が必要。
+原因：DevContainer の再ビルドまたは再起動が必要。
 
-解決策:
+解決策：以下のいずれかを実行します。
 
 - VS Code: `Ctrl+Shift+P` → `Dev Containers: Rebuild Container`
 - または、設定後に `./scripts/allow-additional-domain.sh` を使用
 
 #### 権限エラー
 
-症状: `ipset` コマンドで権限エラー。
+症状：`ipset` コマンドで権限エラーが発生する。
 
-解決策:
+解決策：以下の手順を実行します。
 
 ```bash
 # スクリプト経由で実行（推奨）

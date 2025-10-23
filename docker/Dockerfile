@@ -27,15 +27,15 @@ WORKDIR /app
 
 # Sync backend dependencies (without installing project)
 RUN --mount=type=cache,target=/root/.cache/uv \
-    --mount=type=bind,source=backend/pyproject.toml,target=pyproject.toml \
+    --mount=type=bind,source=apps/backend/pyproject.toml,target=pyproject.toml \
     --mount=type=bind,source=.python-version,target=.python-version \
-    --mount=type=bind,source=backend/uv.lock,target=uv.lock \
+    --mount=type=bind,source=apps/backend/uv.lock,target=uv.lock \
     ulimit -n 8192 \
     && uv sync --locked --no-install-project --no-editable
 
 # Sync this project (backend)
 COPY . .
-WORKDIR /app/backend
+WORKDIR /app/apps/backend
 RUN --mount=type=cache,target=/root/.cache/uv \
     ulimit -n 8192 \
     && uv sync --locked --no-editable

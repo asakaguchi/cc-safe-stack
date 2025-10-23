@@ -21,10 +21,10 @@
     /* Path mapping */
     "baseUrl": ".",
     "paths": {
-      "@shared/*": ["./shared/*"]
+      "@shared/*": ["./packages/shared/*"]
     }
   },
-  "include": ["shared/**/*"],
-  "exclude": ["node_modules", "dist", "backend", "frontend/node_modules", "frontend/dist"],
-  "references": [{ "path": "./frontend" }]
+  "include": ["packages/shared/**/*"],
+  "exclude": ["node_modules", "dist", "apps/backend", "apps/frontend/node_modules", "apps/frontend/dist"],
+  "references": [{ "path": "./apps/frontend" }]
 }

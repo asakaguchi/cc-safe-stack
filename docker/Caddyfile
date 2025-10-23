@@ -54,10 +54,10 @@
     }
   }
 
-  @streamlit path_regexp streamlit ^/streamlit(?:/.*)?$
-  handle @streamlit {
-    uri strip_prefix /streamlit
-    reverse_proxy streamlit:8501 {
+  @marimo path_regexp marimo ^/marimo(?:/.*)?$
+  handle @marimo {
+    uri strip_prefix /marimo
+    reverse_proxy marimo:2718 {
       header_down -X-Frame-Options
       header_down -Content-Security-Policy
     }

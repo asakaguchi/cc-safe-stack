@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-echo "🐳 Starting Full-Stack Development Servers in Docker (React + FastAPI + Streamlit)..."
+echo "🐳 Starting Full-Stack Development Servers in Docker (React + FastAPI)..."
 
 # Docker環境用の動的パス設定
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -16,9 +16,11 @@ elif [ -d "/app" ] && [ -f "/app/package.json" ]; then
     WORKSPACE_ROOT="/app"
 fi
 
-BACKEND_DIR="$WORKSPACE_ROOT/backend"
-FRONTEND_DIR="$WORKSPACE_ROOT/frontend" 
-STREAMLIT_DIR="$WORKSPACE_ROOT/streamlit"
+BACKEND_DIR="$WORKSPACE_ROOT/apps/backend"
+FRONTEND_DIR="$WORKSPACE_ROOT/apps/frontend" 
+
+export UV_CACHE_DIR="${WORKSPACE_ROOT}/.cache/uv"
+mkdir -p "$UV_CACHE_DIR"
 
 # Colors for output
 GREEN='\033[0;32m'
@@ -49,7 +51,6 @@ cleanup() {
     jobs -p | xargs -r kill 2>/dev/null || true
     # Dockerコンテナ内では追加のクリーンアップを実行
     pkill -f "uvicorn main:app" 2>/dev/null || true
-    pkill -f "streamlit run" 2>/dev/null || true
     pkill -f "vite" 2>/dev/null || true
     exit 0
 }
@@ -90,14 +91,6 @@ if [ ! -d "$FRONTEND_DIR/node_modules" ]; then
     pnpm install --recursive
 fi
 
-# Streamlitの確認
-log_info "Streamlit availability checking..."
-cd "$BACKEND_DIR"
-if ! uv run python -c "import streamlit" 2>/dev/null; then
-    log_warning "Streamlit not found. Syncing dependencies..."
-    uv sync
-fi
-
 # バックエンドサーバーの起動
 log_info "Starting backend server (Python/FastAPI)..."
 cd "$BACKEND_DIR"
@@ -126,44 +119,21 @@ if ! kill -0 $FRONTEND_PID 2>/dev/null; then
     exit 1
 fi
 
-# Streamlitサーバーの起動
-log_info "Starting Streamlit server (Data Application)..."
-cd "$BACKEND_DIR"
-if [ -f "$STREAMLIT_DIR/app.py" ]; then
-    uv run streamlit run "$STREAMLIT_DIR/app.py" --server.port 8501 --server.address 0.0.0.0 > /tmp/streamlit.log 2>&1 &
-    STREAMLIT_PID=$!
-    
-    # 少し待ってからStreamlitの起動確認
-    sleep 3
-    if ! kill -0 $STREAMLIT_PID 2>/dev/null; then
-        log_warning "Streamlit server failed to start. Check logs:"
-        cat /tmp/streamlit.log
-    else
-        log_success "Streamlit server started!"
-    fi
-else
-    log_warning "Streamlit app.py not found at $STREAMLIT_DIR/app.py"
-    STREAMLIT_PID=""
-fi
-
 log_success "Development servers started in Docker environment!"
 echo ""
 echo "🌐 服务端口 (Docker内部):"
 echo "   React UI:    http://0.0.0.0:3000"
 echo "   FastAPI:     http://0.0.0.0:8000"
-echo "   Streamlit:   http://0.0.0.0:8501"
 echo "   API Docs:    http://0.0.0.0:8000/docs"
 echo ""
 echo "🌐 ホストからのアクセス:"
 echo "   React UI:    http://localhost:3000"
 echo "   FastAPI:     http://localhost:8000"
-echo "   Streamlit:   http://localhost:8501"
 echo "   API Docs:    http://localhost:8000/docs"
 echo ""
 echo "📋 ログファイル:"
 echo "   Backend:     /tmp/backend.log"
 echo "   Frontend:    /tmp/frontend.log"
-echo "   Streamlit:   /tmp/streamlit.log"
 echo ""
 echo "Press Ctrl+C to stop all servers"
 echo ""
@@ -187,14 +157,6 @@ monitor_processes() {
             cd "$FRONTEND_DIR"
             pnpm dev -- --host 0.0.0.0 --port 3000 > /tmp/frontend.log 2>&1 &
             FRONTEND_PID=$!
-        fi
-        
-        # Streamlit monitoring
-        if [ -n "${STREAMLIT_PID:-}" ] && ! kill -0 $STREAMLIT_PID 2>/dev/null; then
-            log_warning "Streamlit server stopped unexpectedly. Restarting..."
-            cd "$BACKEND_DIR"
-            uv run streamlit run "$STREAMLIT_DIR/app.py" --server.port 8501 --server.address 0.0.0.0 > /tmp/streamlit.log 2>&1 &
-            STREAMLIT_PID=$!
         fi
     done
 }

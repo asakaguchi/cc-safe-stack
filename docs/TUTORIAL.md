@@ -43,7 +43,9 @@ Claude Code は強力な AI ですが、誤って破壊的なコマンド（`rm 
    - 左上: VS Code（セキュアコンテナ上）
    - 左下: ターミナル（`claude` が利用可能）
    - 右上: フロントエンドプレビュー
-   - 右下: メモ／Streamlit／API Docs の切り替え
+
+- 右下: メモ／marimo／API Docs の切り替え
+
 3. 利用後は停止
    ```bash
    pnpm run docker:dashboard:down
@@ -96,14 +98,14 @@ specs/examples/todo-app.spec.md の仕様で実装してください
 
 ```text
 TODOアプリを FastAPI + React + SQLite で実装して。
- 基本的なCRUD操作とStreamlit分析ダッシュボード付きで
+ 基本的なCRUD操作と marimo 分析ダッシュボード付きで
 ```
 
 **結果**:
 
 - FastAPI バックエンド（CRUD API）
 - React フロントエンド（タスク管理 UI）
-- Streamlit ダッシュボード（進捗可視化）
+- marimo ダッシュボード（進捗可視化）
 - 型安全性（TypeScript ↔ Pydantic）
 - テスト（80%カバレッジ）
 
@@ -122,6 +124,8 @@ cp .devcontainer/devcontainer.local.json.clean-yfinance .devcontainer/devcontain
 
 # または実行時追加（一時的）
 ./scripts/allow-additional-domain.sh fc.yahoo.com query1.finance.yahoo.com
+
+# スクリプトで追加したドメインはコンテナ再起動でリセットされます
 ```
 
 ### 本格例（30分で完了）
@@ -132,33 +136,33 @@ specs/examples/stock-analysis-platform.spec.md の仕様で
 
 要件:
 - backend/src/に完全なAPI実装を生成
-- React UIとStreamlitダッシュボードの連携
+- React UI と marimo ダッシュボードの連携
 - 型安全性確保（Pydantic ↔ TypeScript）
 - 高テストカバレッジ
 ```
 
 ## 📚 Claude Code 実装パターン集
 
-### パターン1: backend/src への実装生成
+### パターン1: apps/backend/src への実装生成
 
 ```text
-backend/src/models/task.py にPydanticモデルを作成し、
-backend/src/routers/tasks.py にCRUD APIエンドポイントを実装してください。
-shared/types/api.tsの型定義と完全に一致するようにお願いします。
+apps/backend/src/models/task.py にPydanticモデルを作成し、
+apps/backend/src/routers/tasks.py にCRUD APIエンドポイントを実装してください。
+packages/shared/types/api.ts の型定義と完全に一致するようにお願いします。
 ```
 
 **生成される実装例:**
 
-- `backend/src/models/task.py` - SQLAlchemy + Pydantic モデル
-- `backend/src/routers/tasks.py` - FastAPI ルーター
-- `backend/src/services/task_service.py` - ビジネスロジック
-- `shared/types/api.ts` - TypeScript 型定義（自動更新）
+- `apps/backend/src/models/task.py` - SQLAlchemy + Pydantic モデル
+- `apps/backend/src/routers/tasks.py` - FastAPI ルーター
+- `apps/backend/src/services/task_service.py` - ビジネスロジック
+- `packages/shared/types/api.ts` - TypeScript 型定義（自動更新）
 
-### パターン2: Streamlit と API の連携実装
+### パターン2: marimo と API の連携実装
 
 ```text
-streamlit/pages/1_📝_Todo_Manager.py のモックデータを
-実際のFastAPI接続に変更してください。リアルタイムでデータが
+extensions/marimo/app.py のモックデータセルを
+実際の FastAPI 接続に変更してください。リアルタイムでデータが
 反映されるダッシュボードに改修お願いします。
 ```
 
@@ -186,7 +190,7 @@ specs/examples/stock-analysis-platform.spec.md の仕様で
 **結果**:
 
 - 🌐 React ポートフォリオ管理 (localhost:3000)
-- 🎈 Streamlit 高度分析 (localhost:8501)
+- 🧮 marimo ダッシュボード (localhost:2718)
 - 📚 FastAPI 仕様書 (localhost:8000/docs)
 - WebSocket によるリアルタイム配信
 
@@ -207,7 +211,7 @@ pnpm run dev
 
 - React: <http://localhost:3000>
 - FastAPI: <http://localhost:8000>
-- Streamlit: <http://localhost:8501>
+- marimo: <http://localhost:2718>
 
 ## 📚 仕様書の書き方
 

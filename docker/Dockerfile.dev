@@ -173,7 +173,7 @@ WORKDIR /workspace
 RUN chsh -s /usr/bin/zsh vscode || true
 
 # ポート設定（開発サーバー用）
-EXPOSE 3000 7681 8000 8300 8501
+EXPOSE 3000 7681 8000 8300 2718
 
 # エントリポイントの設定
 ENTRYPOINT ["/usr/local/bin/entrypoint-dev.sh"]

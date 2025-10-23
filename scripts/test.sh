@@ -7,6 +7,11 @@ echo "🧪 Running Full-Stack Tests..."
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
+export UV_CACHE_DIR="${PROJECT_ROOT}/.cache/uv"
+mkdir -p "$UV_CACHE_DIR"
+export UV_NO_SYNC=1
+export UV_PROJECT_ENVIRONMENT="${PROJECT_ROOT}/.venv"
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -33,14 +38,19 @@ log_error() {
 ERRORS=0
 
 # Check if we're in the right directory
-if [ ! -f "$PROJECT_ROOT/package.json" ] || [ ! -f "$PROJECT_ROOT/backend/pyproject.toml" ]; then
+if [ ! -f "$PROJECT_ROOT/package.json" ] || [ ! -f "$PROJECT_ROOT/apps/backend/pyproject.toml" ]; then
     log_error "Could not find project files in $PROJECT_ROOT"
     exit 1
 fi
 
 # Test Backend (Python)
 log_info "Testing Python backend..."
-cd "$PROJECT_ROOT/backend"
+cd "$PROJECT_ROOT/apps/backend"
+
+if [ ! -d ".venv" ]; then
+    log_info "Backend virtual environmentが見つかりません。依存関係を同期します..."
+    uv sync --frozen || log_warning "uv sync に失敗しました (キャッシュ未整備の可能性があります)"
+fi
 
 if [ -d "tests" ] && [ "$(ls -A tests)" ]; then
     log_info "Running pytest..."
@@ -107,12 +117,12 @@ fi
 
 # Test Frontend (TypeScript/React)
 log_info "Testing TypeScript frontend..."
-cd "$PROJECT_ROOT/frontend"
+cd "$PROJECT_ROOT/apps/frontend"
 
 # Check if test scripts exist
 if grep -q '"test"' package.json && [ -d "src" ]; then
     log_info "Running frontend tests..."
-    if pnpm run test -- --run; then
+    if pnpm exec vitest run; then
         log_success "Frontend tests passed"
     else
         log_error "Frontend tests failed"

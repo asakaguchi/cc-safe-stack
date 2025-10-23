@@ -11,8 +11,8 @@ version: 1.0.0
 ## このガイドの目的
 
 Claude Code と効率的に協創するための**仕様書作成のベストプラクティス**を提供しま
-す。構造化された詳細な仕様書があることで、Claude Code は高品質なアプリケーションを自律的に実
-装できます。
+す。構造化された詳細な仕様書があることで、Claude Code は高品質なアプリケーション
+を自律的に実装できます。
 
 ## ディレクトリ構成
 
@@ -47,7 +47,8 @@ specs/
 ### おすすめ実装例
 
 - 初回利用: `todo-app.spec.md` をベースに小さく始める
-- 本格的な仕様書作成: `stock-analysis-platform.spec.md` を参考に本格的な仕様書を作成
+- 本格的な仕様書作成: `stock-analysis-platform.spec.md` を参考に本格的な仕様書を
+  作成
 
 ## MVD（最小文書セット）の使い方
 
@@ -231,8 +232,8 @@ tags: [web-app, crud] # タグ（検索用）
 ### 2. 並列実行を意識した設計
 
 ```markdown
-✅ 推奨:「FastAPI バックエンド、React フロントエンド、Streamlit ダッシュボードを
-並列実装」
+✅ 推奨:「FastAPI バックエンド、React フロントエンド、marimo ダッシュボードを並
+列実装」
 
 ❌ 非推奨:「まずAPIを作って、次にフロントを作って」（逐次実行）
 ```
@@ -255,8 +256,7 @@ tags: [web-app, crud] # タグ（検索用）
 ### 4. 型安全性の重視
 
 ```markdown
-必須: TypeScript ↔ Pydantic の型定義一致
-推奨: OpenAPI schema からの自動型生成
+必須: TypeScript ↔ Pydantic の型定義一致推奨: OpenAPI schema からの自動型生成
 ```
 
 **効果**: 実行時エラーの大幅削減。
@@ -266,24 +266,22 @@ tags: [web-app, crud] # タグ（検索用）
 ### パターン1: MVPアプローチ
 
 ```markdown
-Phase 1: 最小限（Must Have のみ）
-Phase 2: 価値向上（Should Have 追加）
-Phase 3: 差別化（Could Have 追加）
+Phase 1: 最小限（Must Have のみ）Phase 2: 価値向上（Should Have 追加）Phase 3:
+差別化（Could Have 追加）
 ```
 
 ### パターン2: マルチフロントエンド
 
 ```markdown
-- React: メイン操作UI（ユーザー向け）
-- Streamlit: 分析ダッシュボード（管理者向け）
-- FastAPI Docs: API仕様書（開発者向け）
+- React: メイン操作 UI（ユーザー向け）
+- marimo: 分析ダッシュボード（管理者向け）
+- FastAPI Docs: API 仕様書（開発者向け）
 ```
 
 ### パターン3: Real-time アプリ
 
 ```markdown
-必須技術: WebSocket / Server-Sent Events
-必須要件: 接続管理、自動再接続、差分更新
+必須技術: WebSocket / Server-Sent Events必須要件: 接続管理、自動再接続、差分更新
 ```
 
 ## 実装指示のベストプラクティス
@@ -337,7 +335,8 @@ Phase 3: 差別化（Could Have 追加）
 4. **並列実行**を意識した設計
 5. **継続改善**による精度向上
 
-これらのベストプラクティスに従うことで、Claude Code との協創効率が向上し、**高い開発速度**と**高い品質**を両立できます。
+これらのベストプラクティスに従うことで、Claude Code との協創効率が向上し、**高い
+開発速度**と**高い品質**を両立できます。
 
 ---
 

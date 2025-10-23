@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: docker/Dockerfile
     restart: unless-stopped
-    working_dir: /app/backend
+    working_dir: /app/apps/backend
     environment:
       # ホストとの権限同期用環境変数
       USER_ID: ${USER_ID:-1000}
@@ -24,54 +24,31 @@ services:
       bash -lc "set -o pipefail; mkdir -p /app/.logs && uv run --no-sync uvicorn main:app --host 0.0.0.0 --port 8000 2>&1 | tee -a /app/.logs/backend.log"
 
   frontend:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.frontend
-    working_dir: /app
+    image: node:20-bullseye
     restart: unless-stopped
+    working_dir: /workspace
     environment:
-      # When running both services in containers, proxy to backend service name
-      VITE_BACKEND_ORIGIN: http://app:8000
       NODE_ENV: development
       CI: "true"
-      # ホストとの権限同期用環境変数（参考用）
-      USER_ID: ${USER_ID:-1000}
-      GROUP_ID: ${GROUP_ID:-1000}
+      VITE_BACKEND_ORIGIN: http://app:8000
+      VITE_API_URL: http://app:8000
     volumes:
-      - .:/app
-      # Use anonymous volume for node_modules inside container
-      - /app/node_modules
-      - /app/frontend/node_modules
+      - .:/workspace
+      - /workspace/apps/frontend/node_modules
+      - /workspace/.pnpm-store
     expose:
       - "3001"
-    command: >-
-      bash -lc "set -o pipefail; mkdir -p /app/.logs && pnpm install --recursive --force && pnpm --dir frontend dev -- --host 0.0.0.0 --port 3001 2>&1 | tee -a /app/.logs/frontend.log"
-    depends_on:
-      - app
-
-  streamlit:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
-    restart: unless-stopped
-    working_dir: /app/backend
-    environment:
-      # Point to backend service for API calls
-      API_BASE_URL: http://app:8000
-      # ホストとの権限同期用環境変数
-      USER_ID: ${USER_ID:-1000}
-      GROUP_ID: ${GROUP_ID:-1000}
-      USER_NAME: ${USER_NAME:-developer}
-      GROUP_NAME: ${USER_NAME:-developer}
-    volumes:
-      - .:/app
-      # Use anonymous volumes to avoid sharing host's .venv
-      - /app/.venv
-    ports:
-      - "8501:8501"
-    entrypoint: ["/usr/local/bin/entrypoint.sh"]
-    command: >-
-      bash -lc "set -o pipefail; mkdir -p /app/.logs && uv run --no-sync --group streamlit streamlit run ../streamlit/app.py --server.port 8501 --server.address 0.0.0.0 2>&1 | tee -a /app/.logs/streamlit.log"
+    command: >
+      bash -lc "
+        set -o pipefail;
+        if ! command -v pnpm >/dev/null 2>&1; then
+          npm install -g pnpm@9.12.0;
+        fi;
+        if [ ! -d /workspace/apps/frontend/node_modules ]; then
+          pnpm install --recursive --frozen-lockfile;
+        fi;
+        pnpm --dir apps/frontend dev -- --host 0.0.0.0 --port 3001 2>&1 | tee -a /tmp/frontend.log
+      "
     depends_on:
       - app
 
@@ -99,7 +76,7 @@ services:
       - claude-config:/home/developer/.claude
       - dev-cache:/workspace/.cache
       - /workspace/.venv
-      - /workspace/frontend/node_modules
+      - /workspace/apps/frontend/node_modules
       # Google Cloud認証情報のマウント（トークン更新のため書き込み可能）
       # Linux/Mac/WSL2の場合: GCLOUD_CONFIG_PATH=${HOME}/.config/gcloud
       # Windows PowerShellの場合: GCLOUD_CONFIG_PATH=${APPDATA}/gcloud
@@ -126,7 +103,6 @@ services:
     depends_on:
       - frontend
       - app
-      - streamlit
       - workspace
 
   # セキュア開発環境（Claude Code + ファイアウォール）
@@ -165,7 +141,7 @@ services:
       - dev-cache:/workspace/.cache
       # 仮想環境の分離
       - /workspace/.venv
-      - /workspace/frontend/node_modules
+      - /workspace/apps/frontend/node_modules
       # Google Cloud認証情報のマウント（トークン更新のため書き込み可能）
       # Linux/Mac/WSL2の場合: GCLOUD_CONFIG_PATH=${HOME}/.config/gcloud
       # Windows PowerShellの場合: GCLOUD_CONFIG_PATH=${APPDATA}/gcloud
@@ -177,7 +153,6 @@ services:
     ports:
       - "3000:3000"  # React開発サーバー
       - "8000:8000"  # FastAPI
-      - "8501:8501"  # Streamlit
     
     # インタラクティブモードを有効化
     stdin_open: true

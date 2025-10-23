@@ -7,6 +7,9 @@ echo "🚀 Setting up Full-Stack Development Environment..."
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
+export UV_CACHE_DIR="${PROJECT_ROOT}/.cache/uv"
+mkdir -p "$UV_CACHE_DIR"
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -31,7 +34,7 @@ log_error() {
 }
 
 # Check if we're in the right directory
-if [ ! -f "$PROJECT_ROOT/package.json" ] || [ ! -f "$PROJECT_ROOT/backend/pyproject.toml" ]; then
+if [ ! -f "$PROJECT_ROOT/package.json" ] || [ ! -f "$PROJECT_ROOT/apps/backend/pyproject.toml" ]; then
     log_error "Could not find project files in $PROJECT_ROOT"
     exit 1
 fi
@@ -73,7 +76,7 @@ log_success "All required tools are available"
 
 # Setup Backend (Python)
 log_info "Setting up Python backend..."
-cd "$PROJECT_ROOT/backend"
+cd "$PROJECT_ROOT/apps/backend"
 
 # Install Python dependencies
 log_info "Installing Python dependencies with uv..."
@@ -98,9 +101,9 @@ pnpm install --recursive
 log_success "Frontend setup completed"
 
 # Create .env files if they don't exist
-if [ ! -f "$PROJECT_ROOT/backend/.env" ]; then
+if [ ! -f "$PROJECT_ROOT/apps/backend/.env" ]; then
     log_info "Creating backend .env file..."
-    cat > "$PROJECT_ROOT/backend/.env" << EOF
+    cat > "$PROJECT_ROOT/apps/backend/.env" << EOF
 # Backend Environment Variables
 DEBUG=true
 HOST=0.0.0.0
@@ -109,9 +112,9 @@ CORS_ORIGINS=["http://localhost:3000"]
 EOF
 fi
 
-if [ ! -f "$PROJECT_ROOT/frontend/.env" ]; then
+if [ ! -f "$PROJECT_ROOT/apps/frontend/.env" ]; then
     log_info "Creating frontend .env file..."
-    cat > "$PROJECT_ROOT/frontend/.env" << EOF
+    cat > "$PROJECT_ROOT/apps/frontend/.env" << EOF
 # Frontend Environment Variables
 VITE_API_URL=http://localhost:8000
 VITE_DEV_PORT=3000
@@ -125,8 +128,8 @@ if [ ! -d "$PROJECT_ROOT/.vscode" ]; then
     
     cat > "$PROJECT_ROOT/.vscode/settings.json" << EOF
 {
-  "python.defaultInterpreterPath": "./backend/.venv/bin/python",
-  "eslint.workingDirectories": ["frontend"],
+  "python.defaultInterpreterPath": "./apps/backend/.venv/bin/python",
+  "eslint.workingDirectories": ["apps/frontend"],
   "typescript.preferences.importModuleSpecifier": "relative",
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {

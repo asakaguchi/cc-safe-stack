@@ -7,6 +7,9 @@ echo "🏗️  Building Full-Stack Application..."
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
+export UV_CACHE_DIR="${PROJECT_ROOT}/.cache/uv"
+mkdir -p "$UV_CACHE_DIR"
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -31,14 +34,14 @@ log_error() {
 }
 
 # Check if we're in the right directory
-if [ ! -f "$PROJECT_ROOT/package.json" ] || [ ! -f "$PROJECT_ROOT/backend/pyproject.toml" ]; then
+if [ ! -f "$PROJECT_ROOT/package.json" ] || [ ! -f "$PROJECT_ROOT/apps/backend/pyproject.toml" ]; then
     log_error "Could not find project files in $PROJECT_ROOT"
     exit 1
 fi
 
 # Build Backend (Python)
 log_info "Building Python backend..."
-cd "$PROJECT_ROOT/backend"
+cd "$PROJECT_ROOT/apps/backend"
 
 # Ensure dependencies are up to date
 log_info "Syncing Python dependencies..."
@@ -71,7 +74,7 @@ cd "$PROJECT_ROOT"
 log_info "Installing frontend dependencies..."
 pnpm install --recursive
 
-cd "$PROJECT_ROOT/frontend"
+cd "$PROJECT_ROOT/apps/frontend"
 
 # Run type checking
 log_info "Running TypeScript type checks..."
@@ -108,7 +111,7 @@ cat > build-info.json << EOF
   "frontend": {
     "framework": "React + TypeScript",
     "buildTool": "Vite",
-    "outputDir": "frontend/dist"
+    "outputDir": "apps/frontend/dist"
   },
   "backend": {
     "framework": "FastAPI + Python",
@@ -122,7 +125,7 @@ log_success "🎉 Build completed successfully!"
 echo ""
 echo "📦 Build artifacts:"
 echo "  🐍 Backend: Dependencies synced and tested"
-echo "  ⚛️  Frontend: frontend/dist/"
+echo "  ⚛️  Frontend: apps/frontend/dist/"
 echo "  📄 Build info: build-info.json"
 echo ""
 echo "🚀 Ready for deployment!"

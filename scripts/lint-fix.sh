@@ -7,6 +7,9 @@ echo "🔧 Auto-fixing lint issues..."
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
+export UV_CACHE_DIR="${PROJECT_ROOT}/.cache/uv"
+mkdir -p "$UV_CACHE_DIR"
+
 # Colors for output
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
@@ -21,14 +24,14 @@ log_success() {
 }
 
 # Check if we're in the right directory
-if [ ! -f "$PROJECT_ROOT/package.json" ] || [ ! -f "$PROJECT_ROOT/backend/pyproject.toml" ]; then
+if [ ! -f "$PROJECT_ROOT/package.json" ] || [ ! -f "$PROJECT_ROOT/apps/backend/pyproject.toml" ]; then
     echo "❌ Could not find project files in $PROJECT_ROOT"
     exit 1
 fi
 
 # Fix Backend (Python)
 log_info "Auto-fixing Python backend issues..."
-cd "$PROJECT_ROOT/backend"
+cd "$PROJECT_ROOT/apps/backend"
 
 # Run Ruff auto-fix
 log_info "Running Ruff auto-fix..."
@@ -37,7 +40,7 @@ log_success "Python linting issues fixed"
 
 # Fix Frontend (TypeScript/React)
 log_info "Auto-fixing TypeScript frontend issues..."
-cd "$PROJECT_ROOT/frontend"
+cd "$PROJECT_ROOT/apps/frontend"
 
 # Run ESLint auto-fix
 log_info "Running ESLint auto-fix..."
@@ -50,7 +53,7 @@ cd "$PROJECT_ROOT"
 
 # Run textlint auto-fix
 log_info "Running textlint auto-fix..."
-textlint --fix '**/*.{md,html}' || true
+pnpm exec textlint --fix '**/*.{md,html}' || true
 log_success "Documentation issues fixed"
 
 log_success "🎉 Auto-fix completed!"

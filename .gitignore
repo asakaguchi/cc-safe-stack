@@ -302,11 +302,14 @@ package-lock.json
 /.pnpm-store/
 
 # Frontend build files  
-frontend/dist/
-frontend/.vite/
+apps/frontend/dist/
+apps/frontend/.vite/
 
 # Temporary test files
 test.tsx
+
+# marimo enable state
+extensions/marimo/.enabled
 
 # DevContainer local overrides (do not commit)
 .devcontainer/devcontainer.local.json

@@ -33,7 +33,7 @@ const logsRefreshButton = document.getElementById('logs-refresh')
 const logLabels = new Map([
   ['frontend', 'フロントエンド'],
   ['backend', 'バックエンド'],
-  ['streamlit', 'Streamlit'],
+  ['marimo', 'marimo'],
 ])
 
 let logsAutoTimer = null

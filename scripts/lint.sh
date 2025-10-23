@@ -7,6 +7,11 @@ echo "🔍 Running Code Quality Checks..."
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
+export UV_CACHE_DIR="${PROJECT_ROOT}/.cache/uv"
+mkdir -p "$UV_CACHE_DIR"
+export UV_NO_SYNC=1
+export UV_PROJECT_ENVIRONMENT="${PROJECT_ROOT}/.venv"
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -33,14 +38,14 @@ log_error() {
 ERRORS=0
 
 # Check if we're in the right directory
-if [ ! -f "$PROJECT_ROOT/package.json" ] || [ ! -f "$PROJECT_ROOT/backend/pyproject.toml" ]; then
+if [ ! -f "$PROJECT_ROOT/package.json" ] || [ ! -f "$PROJECT_ROOT/apps/backend/pyproject.toml" ]; then
     log_error "Could not find project files in $PROJECT_ROOT"
     exit 1
 fi
 
 # Lint Backend (Python)
 log_info "Linting Python backend..."
-cd "$PROJECT_ROOT/backend"
+cd "$PROJECT_ROOT/apps/backend"
 
 # Run Ruff linting
 log_info "Running Ruff checks..."
@@ -75,7 +80,7 @@ fi
 
 # Lint Frontend (TypeScript/React)
 log_info "Linting TypeScript frontend..."
-cd "$PROJECT_ROOT/frontend"
+cd "$PROJECT_ROOT/apps/frontend"
 
 # Run ESLint
 log_info "Running ESLint..."
@@ -97,7 +102,7 @@ fi
 
 # Check Prettier formatting
 log_info "Checking code formatting..."
-if prettier --check .; then
+if pnpm exec prettier --check .; then
     log_success "Code formatting is correct"
 else
     log_warning "Code needs formatting (run: pnpm run format:frontend)"

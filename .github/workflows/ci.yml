@@ -13,30 +13,40 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Install uv
         uses: astral-sh/setup-uv@v6
 
-      - name: Set up Bun
-        uses: oven-sh/setup-bun@v1
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Enable pnpm
+        run: corepack enable pnpm
+
+      - name: Install Node.js dependencies
+        run: pnpm install --recursive
 
       - name: Python | Sync backend deps (incl. dev)
-        working-directory: backend
+        working-directory: apps/backend
         run: uv sync --frozen --group dev
 
       - name: Python | Ruff format check
-        working-directory: backend
+        working-directory: apps/backend
         run: uv run ruff format . --check --diff
 
       - name: Python | Ruff lint
-        working-directory: backend
+        working-directory: apps/backend
         run: uv run ruff check --output-format=github .
 
       - name: Python | mypy
-        working-directory: backend
+        working-directory: apps/backend
         run: uv run mypy .
 
-      - name: Python | pytest (backend)
-        working-directory: backend
+      - name: Python | pytest
+        working-directory: apps/backend
         run: |
           set +e
           uv run pytest -q
@@ -47,35 +57,16 @@ jobs:
           fi
           exit "$ec"
 
-      - name: Python | pytest (root)
-        run: |
-          set -e
-          uv sync --frozen --group dev
-          set +e
-          uv run pytest -q
-          ec=$?
-          if [ "$ec" -eq 5 ]; then
-            echo "No root-level tests found. Skipping."
-            exit 0
-          fi
-          exit "$ec"
-
-      - name: Node | Install workspace deps
-        run: bun install
-
       - name: Frontend | Type check
-        working-directory: frontend
-        run: bun run type-check
+        run: pnpm --dir apps/frontend run type-check
 
       - name: Frontend | ESLint
-        working-directory: frontend
-        run: bun run lint
+        run: pnpm --dir apps/frontend run lint
 
       - name: Frontend | Unit tests
-        working-directory: frontend
-        run: bun run test --run
+        run: pnpm run test:frontend
 
       - name: Docs | textlint
         if: ${{ hashFiles('**/*.md', '**/*.html') != '' }}
-        run: bun run lint:text
+        run: pnpm run lint:text
         continue-on-error: true
