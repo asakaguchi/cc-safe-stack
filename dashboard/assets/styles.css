@@ -316,9 +316,8 @@ header p {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  flex: 1;
+  flex: 1 1 auto;
   min-height: 0;
-  height: 100%;
   overflow: hidden;
 }
 
@@ -476,9 +475,9 @@ header p {
 }
 
 .logs__output {
-  flex: 1;
+  flex: 1 1 auto;
   min-height: 0;
-  max-height: 100%;
+  max-height: clamp(16rem, 60vh, 32rem);
   padding: 0.75rem;
   border: 1px solid var(--border);
   border-radius: 0.5rem;
