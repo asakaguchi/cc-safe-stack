@@ -6,6 +6,7 @@
   --accent: #38bdf8;
   --border: rgba(148, 163, 184, 0.4);
   font-family: 'Segoe UI', system-ui, sans-serif;
+  --logs-output-max: clamp(16rem, 60vh, 32rem);
 }
 
 * {
@@ -15,10 +16,17 @@
 body {
   margin: 0;
   min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   background: var(--bg);
   color: var(--fg);
+}
+
+main {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
 }
 
 header,
@@ -53,11 +61,24 @@ header p {
   gap: 0.75rem;
   padding: 0.75rem;
   background: var(--bg-light);
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.grid--single {
+  grid-template-columns: 1fr;
+  grid-template-rows: minmax(0, 1fr);
+  min-height: 0;
+  height: 100%;
+  --logs-output-max: clamp(24rem, calc(100vh - 10rem), 80vh);
 }
 
 .tile {
   display: flex;
   flex-direction: column;
+  height: 100%;
+  min-height: 0;
   border: 1px solid var(--border);
   border-radius: 0.75rem;
   overflow: hidden;
@@ -235,6 +256,12 @@ header p {
   align-items: center;
 }
 
+.tile__header-buttons {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
 .tile__actions--preview {
   justify-content: flex-end;
   flex-wrap: wrap;
@@ -281,6 +308,8 @@ header p {
   flex-direction: column;
   padding: 0.75rem;
   gap: 0.5rem;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .aux {
@@ -298,6 +327,9 @@ header p {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .notes__editor {
@@ -407,6 +439,23 @@ header p {
   gap: 0.5rem;
 }
 
+.logs__hint {
+  margin: 0.5rem 0 0.25rem;
+  padding: 0 0.25rem;
+  font-size: 0.75rem;
+  color: rgba(203, 213, 225, 0.85);
+}
+
+.logs__hint code {
+  font-family: 'Fira Code', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', monospace;
+  font-size: 0.75rem;
+  background: rgba(15, 23, 42, 0.65);
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.35rem;
+  color: rgba(148, 163, 184, 0.95);
+}
+
 .logs__controls select,
 .logs__controls button {
   background: none;
@@ -437,8 +486,9 @@ header p {
 }
 
 .logs__output {
-  flex: 1;
+  flex: 1 1 auto;
   min-height: 0;
+  max-height: var(--logs-output-max);
   padding: 0.75rem;
   border: 1px solid var(--border);
   border-radius: 0.5rem;
@@ -449,7 +499,8 @@ header p {
   line-height: 1.4;
   white-space: pre-wrap;
   word-break: break-word;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .logs__output.is-empty {

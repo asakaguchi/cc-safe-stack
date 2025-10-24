@@ -47,7 +47,8 @@ services:
         if [ ! -d /workspace/apps/frontend/node_modules ]; then
           pnpm install --recursive --frozen-lockfile;
         fi;
-        pnpm --dir apps/frontend dev -- --host 0.0.0.0 --port 3001 2>&1 | tee -a /tmp/frontend.log
+        mkdir -p /workspace/.logs;
+        pnpm --dir apps/frontend dev -- --host 0.0.0.0 --port 3001 2>&1 | tee -a /workspace/.logs/frontend.log
       "
     depends_on:
       - app

@@ -40,13 +40,45 @@ app.add_middleware(
 )
 
 
-LOG_DIRECTORY: Final[Path] = (Path(__file__).resolve().parent.parent / ".logs").resolve()
-LOG_DIRECTORY.mkdir(parents=True, exist_ok=True)
-SERVICE_LOG_FILES: Final[dict[str, Path]] = {
-    "backend": LOG_DIRECTORY / "backend.log",
-    "frontend": LOG_DIRECTORY / "frontend.log",
-    "marimo": LOG_DIRECTORY / "marimo.log",
+LOG_FILENAMES: Final[dict[str, str]] = {
+    "backend": "backend.log",
+    "frontend": "frontend.log",
+    "marimo": "marimo.log",
 }
+
+
+def _build_log_directories() -> list[Path]:
+    """Return candidate directories (deduplicated) that may contain service logs."""
+
+    candidates: list[Path] = []
+
+    env_override = os.getenv("DASHBOARD_LOG_DIR")
+    if env_override:
+        candidates.append(Path(env_override).expanduser())
+
+    # プロジェクトルート配下 ./.logs
+    candidates.append(Path(__file__).resolve().parents[2] / ".logs")
+    # 互換性のための従来パス
+    candidates.append(Path(__file__).resolve().parent / ".logs")
+    candidates.append(Path(__file__).resolve().parent.parent / ".logs")
+
+    unique: list[Path] = []
+    seen: set[Path] = set()
+    for candidate in candidates:
+        resolved = candidate.resolve()
+        if resolved in seen:
+            continue
+        seen.add(resolved)
+        unique.append(resolved)
+
+    if not unique:
+        raise RuntimeError("ログディレクトリ候補が構成できませんでした")
+    return unique
+
+
+LOG_DIRECTORIES: Final[list[Path]] = _build_log_directories()
+PRIMARY_LOG_DIRECTORY: Final[Path] = LOG_DIRECTORIES[0]
+PRIMARY_LOG_DIRECTORY.mkdir(parents=True, exist_ok=True)
 
 
 def tail_file(path: Path, lines: int) -> str:
@@ -61,6 +93,21 @@ def tail_file(path: Path, lines: int) -> str:
             return "".join(deque(file, maxlen=lines))
     except OSError:
         return ""
+
+
+def resolve_log_path(service: str) -> Path | None:
+    """Resolve the most appropriate log path for the given service."""
+
+    filename = LOG_FILENAMES.get(service)
+    if not filename:
+        return None
+
+    for directory in LOG_DIRECTORIES:
+        candidate = directory / filename
+        if candidate.exists():
+            return candidate
+
+    return PRIMARY_LOG_DIRECTORY / filename
 
 
 class HealthResponse(BaseModel):
@@ -112,7 +159,7 @@ async def hello_name(name: str) -> MessageResponse:
 async def list_available_logs() -> list[str]:
     """Return the list of available log identifiers."""
 
-    return sorted(SERVICE_LOG_FILES.keys())
+    return sorted(LOG_FILENAMES.keys())
 
 
 @app.get("/logs/{service}", response_class=PlainTextResponse)
@@ -123,7 +170,7 @@ async def get_service_logs(
     """Return recent log lines for the requested service."""
 
     normalized = service.lower()
-    log_path = SERVICE_LOG_FILES.get(normalized)
+    log_path = resolve_log_path(normalized)
     if not log_path:
         raise HTTPException(status_code=404, detail="指定されたログ種別は存在しません")
 

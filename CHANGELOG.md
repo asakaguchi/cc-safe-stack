@@ -6,6 +6,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2025-10-23
+
+### Added
+
+- Docker ダッシュボード向けにユーティリティ専用ビュー
+  （`dashboard/utilities.html`）と Swagger UI ページ
+  （`dashboard/api-docs.html`）を追加。いずれもパネル単体を全画面で確認できる専
+  用タブとして利用できる。
+
+### Changed
+
+- ターミナル／ユーティリティタイルへ「別タブで開く」リンクを追加し、ターミナルは
+  選択中のセッション番号を引き継いで新しいタブを開くよう改善。
+- ユーティリティのログタブに対象サービスの案内を追加。さらに `compose.yml` と
+  バックエンドのログ検索ロジックを更新し、`./.logs/*.log` に出力されるフロントエ
+  ンド／バックエンド／marimo のログを確実に参照できるよう改善。
+- API Docs タブをスタンドアロンの Swagger UI ページへ切り替
+  え、`/api/openapi.json` を参照するよう調整。
+
+### Fixed
+
+- `/api/docs` の iframe 表示時に `openapi.json` 取得が失敗しエラー画面になる問題
+  を解消。
+
 ## [0.2.0] - 2025-10-23
 
 ### Added
@@ -184,6 +208,7 @@ and this project adheres to
 - TDD/BDD サポート
 - 型安全性 (TypeScript ↔ Pydantic)
 
+[0.2.1]: https://github.com/your-username/cc-safe-stack/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/your-username/cc-safe-stack/compare/v0.1.4...v0.2.0
 [0.1.4]: https://github.com/your-username/cc-safe-stack/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/your-username/cc-safe-stack/compare/v0.1.2...v0.1.3

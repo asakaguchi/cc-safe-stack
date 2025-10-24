@@ -253,12 +253,16 @@ cp .env.example .env
 2. ブラウザで <http://localhost:8080> にアクセスすると以下の 4 画面が表示されま
    す。
 
-   - 左上: `/vscode/`（OpenVSCode Server - セキュア開発コンテナ内で動作）
-   - 右上: アプリプレビュー（デフォルト: `/api/docs` FastAPI Swagger UI、URL 入
-     力で変更可能）
-   - 左下: `/terminal/`（ttyd ベースのシェル。同じセキュア開発コンテナに接続して
-     おり `claude` コマンドも利用可能）
-   - 右下: ローカルストレージ保存メモ／`marimo`／`API Docs` を切り替え
+   - 左上: `/vscode/` - OpenVSCode Server がセキュア開発コンテナ内で動作し、ヘッ
+     ダーから別タブにも切り替え可能。
+   - 右上: アプリプレビュー - 初期値は `/preview/`。入力欄で任意 URL に切り替
+     え、リンクから別タブで表示できる。
+   - 左下: `/terminal/` - ttyd ベースのシェルで 3 セッションをタブ切り替えでき
+     る。選択中のセッションは「別タブで開く」で独立表示できる。
+   - 右下: ユーティリティ - メモ／ログ追尾／`marimo`／`API Docs` を切り替える。
+     ログは `./.logs/` 以下に出力された backend/frontend/marimo のログを tail す
+     る。ヘッダーのリンクからユーティリティ専用ビュー `/utilities.html` を全画面
+     で開ける。
 
    ダッシュボード上部のショートカット説明にある通り、`Ctrl + Shift + Alt + D` で
    全画面表示をトグルできます。

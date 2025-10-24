@@ -3,64 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Safe Stack Dashboard</title>
+  <title>Safe Stack Utilities</title>
   <link rel="stylesheet" href="assets/vendor/quill.snow.css" />
   <link rel="stylesheet" href="assets/styles.css" />
 </head>
 <body>
   <header>
-    <h1>Safe Stack Web Workspace</h1>
-    <p>左上は VS Code、右上はアプリプレビュー、左下はターミナル、右下はメモ・ログ・追加ビューです。</p>
+    <h1>ユーティリティ専用ビュー</h1>
+    <p>メモ、ログ追尾、marimo、API Docs をフルサイズで確認できます。Docker ダッシュボードと同じショートカットが使えます。</p>
   </header>
-  <main class="grid">
-    <section class="tile" aria-label="VS Code">
-      <div class="tile__header">
-        <div class="tile__header-row">
-          <h2>VS Code</h2>
-          <a data-service-link="vscode" data-base-path="/vscode/" href="#" target="_blank" rel="noreferrer noopener">別タブで開く</a>
-        </div>
-      </div>
-      <iframe data-service="vscode" data-base-path="/vscode/" src="about:blank" title="VS Code" allow="clipboard-read; clipboard-write" loading="lazy"></iframe>
-    </section>
-    <section class="tile" aria-label="アプリプレビュー">
-      <div class="tile__header">
-        <div class="tile__header-row">
-          <h2>アプリプレビュー</h2>
-        </div>
-        <form id="preview-controls" class="tile__actions tile__actions--preview">
-          <label class="visually-hidden" for="preview-url">プレビュー URL</label>
-          <input id="preview-url" name="preview-url" type="text" inputmode="url" placeholder="/preview/ または http://..." autocomplete="off" />
-          <button type="submit" title="入力した URL を適用">適用</button>
-          <button id="reload-preview" type="button" title="プレビューだけを再読込">リロード</button>
-          <a data-preview-link href="/preview/" target="_blank" rel="noreferrer noopener">別タブで開く</a>
-        </form>
-      </div>
-      <iframe data-preview-frame src="/preview/" title="アプリプレビュー" loading="lazy"></iframe>
-    </section>
-    <section class="tile" aria-label="ターミナル">
-      <div class="tile__header">
-        <div class="tile__header-row">
-          <h2>ターミナル</h2>
-          <a data-terminal-link data-base-path="/terminal/" href="/terminal/1/" target="_blank" rel="noreferrer noopener">別タブで開く</a>
-        </div>
-        <div class="tile__tabs" role="tablist">
-          <button type="button" class="tile__tab" data-terminal-target="1" role="tab" aria-selected="true">ターミナル 1</button>
-          <button type="button" class="tile__tab" data-terminal-target="2" role="tab" aria-selected="false">ターミナル 2</button>
-          <button type="button" class="tile__tab" data-terminal-target="3" role="tab" aria-selected="false">ターミナル 3</button>
-        </div>
-      </div>
-      <div class="tile__content">
-        <iframe class="terminal-frame" data-terminal-id="1" src="/terminal/1/" title="ターミナル 1" allow="clipboard-read; clipboard-write" loading="lazy"></iframe>
-        <iframe class="terminal-frame" data-terminal-id="2" src="/terminal/2/" title="ターミナル 2" allow="clipboard-read; clipboard-write" loading="lazy" hidden></iframe>
-        <iframe class="terminal-frame" data-terminal-id="3" src="/terminal/3/" title="ターミナル 3" allow="clipboard-read; clipboard-write" loading="lazy" hidden></iframe>
-      </div>
-    </section>
+  <main class="grid grid--single">
     <section class="tile" aria-label="ユーティリティ">
       <div class="tile__header">
         <div class="tile__header-row">
           <h2>ユーティリティ</h2>
           <div class="tile__header-buttons">
-            <a data-utilities-link href="/utilities.html" target="_blank" rel="noreferrer noopener">別タブで開く</a>
+            <a href="/index.html" rel="noreferrer noopener">ダッシュボード全体を開く</a>
             <div class="tile__actions tile__actions--notes" data-actions-for="notes">
               <button id="clear-notes" type="button" title="メモをクリア">クリア</button>
               <button id="download-notes" type="button" title="メモをダウンロード">ダウンロード</button>

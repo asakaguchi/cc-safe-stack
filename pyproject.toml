@@ -1,6 +1,6 @@
 [project]
 name = "cc-safe-stack"
-version = "0.2.0"
+version = "0.2.1"
 description = "Full-stack development environment with Python + TypeScript"
 requires-python = ">=3.12"
 dependencies = []
