@@ -15,10 +15,17 @@
 body {
   margin: 0;
   min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   background: var(--bg);
   color: var(--fg);
+}
+
+main {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
 }
 
 header,
@@ -54,6 +61,7 @@ header p {
   padding: 0.75rem;
   background: var(--bg-light);
   min-height: 0;
+  height: 100%;
   overflow: hidden;
 }
 
@@ -61,6 +69,7 @@ header p {
   grid-template-columns: 1fr;
   grid-template-rows: minmax(0, 1fr);
   min-height: 0;
+  height: 100%;
 }
 
 .tile {
