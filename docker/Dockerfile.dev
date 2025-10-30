@@ -122,11 +122,12 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
 
 # Claude Code CLIのインストール（正しいパッケージ名）
-# vscodeユーザーでも更新可能にするため、グローバルインストール後に所有者と権限を調整
-# /usr/local/bin と /usr/local/share もsudoグループ書き込み可能にする
-RUN npm install -g @anthropic-ai/claude-code@latest && \
+# npmのプレフィックスを明示的に/usr/localに設定してから、グローバルインストール
+# sudoグループのメンバーが更新可能にするため、所有者と権限を調整
+RUN npm config set prefix /usr/local && \
+    npm install -g @anthropic-ai/claude-code@latest && \
     if [ -d /usr/local/lib/node_modules/@anthropic-ai ]; then \
-        chown -R vscode:sudo /usr/local/lib/node_modules/@anthropic-ai && \
+        chown -R root:sudo /usr/local/lib/node_modules/@anthropic-ai && \
         chmod -R 775 /usr/local/lib/node_modules/@anthropic-ai; \
     fi && \
     chgrp sudo /usr/local/bin && \
