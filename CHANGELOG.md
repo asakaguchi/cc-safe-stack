@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.2] - 2025-10-30
+
+### Fixed
+
+- **Docker環境でのClaude Code CLI自動アップデートが正常に動作するよう改善**
+  - `claude doctor`実行時に表示されていた「複数インストール検出」「sudo権限が必
+    要」という警告を解消
+  - Docker環境でClaude Code CLIの最新版が自動的にインストールされるようになりま
+    した
+  - イメージ再ビルド（`pnpm run docker:build`）により、問題なくClaude Codeが利用
+    できます
+
 ## [0.2.1] - 2025-10-23
 
 ### Added
@@ -208,6 +220,7 @@ and this project adheres to
 - TDD/BDD サポート
 - 型安全性 (TypeScript ↔ Pydantic)
 
+[0.2.2]: https://github.com/your-username/cc-safe-stack/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/your-username/cc-safe-stack/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/your-username/cc-safe-stack/compare/v0.1.4...v0.2.0
 [0.1.4]: https://github.com/your-username/cc-safe-stack/compare/v0.1.3...v0.1.4
